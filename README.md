@@ -1,29 +1,17 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* This repository contains source code for EasyOrg application for Android
+* EasyOrg is an organizer application which allows comfortable time and task management
+* Current version is 0.1
 
-### How do I get set up? ###
+### Deployment instructions ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
+This application is written in Android Studio v.2.2 and so this IDE is recommended for
+ building this project; however, you can build it in another IDE if you like.
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+My name is Denis Kondarattsev, feel free to ask any questions about EasyOrg app,
+you can contact me via e-mail deniskond@yandex.ru
