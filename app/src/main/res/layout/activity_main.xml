@@ -26,6 +26,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/new_task_button"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
@@ -49,7 +50,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="6"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Новая запись"
+                        android:text="Новая задача"
                         android:textColor="#000000" />
                 </LinearLayout>
 
