@@ -15,7 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity  	android:name=".NewTask" android:label="Новая задача" >
+        <activity  	android:name=".NewTaskFirstScreen" android:label="Новая задача" >
+        </activity>
+        <activity  	android:name=".NewTaskSecondScreen" android:label="Новая задача" >
+        </activity>
+        <activity  	android:name=".NewTaskThirdScreen" android:label="Новая задача" >
         </activity>
     </application>
 
