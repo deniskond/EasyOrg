@@ -21,6 +21,8 @@
         </activity>
         <activity  	android:name=".NewTaskThirdScreen" android:label="Новая задача" >
         </activity>
+        <activity  	android:name=".NewTaskShoppingList" android:label="Новая задача" >
+        </activity>
     </application>
 
 </manifest>

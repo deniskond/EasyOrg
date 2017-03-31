@@ -139,7 +139,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="6"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Список покупок"
+                        android:text="Списки покупок"
                         android:textColor="#000000" />
                 </LinearLayout>
 
