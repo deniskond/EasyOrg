@@ -1,17 +1,26 @@
 package nosfie.easyorg;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class NewTaskSecondScreen extends AppCompatActivity {
 
     String taskName, taskCount;
     NewTaskFirstScreen.TASK_TYPE taskType;
     Button button_next, button_back;
+    Calendar dateAndTime = Calendar.getInstance();
+    RadioGroup startDateRadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +88,41 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             }
         });
 
+        startDateRadioGroup = (RadioGroup)findViewById(R.id.startDateRadioGroup);
+        startDateRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()  {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
+                int radioButtonID = radioGroup.getCheckedRadioButtonId();
+                View radioButton = radioGroup.findViewById(radioButtonID);
+                int idx = radioGroup.indexOfChild(radioButton);
+                switch (idx) {
+                    case 2:
+                        setDate();
+                        break;
+                }
+            }
+        });
+
     }
+
+    public void setDate() {
+
+        DatePickerDialog datePickerDialog =
+            new DatePickerDialog(
+                    NewTaskSecondScreen.this,
+                    AlertDialog.THEME_HOLO_LIGHT,
+                    onDateSetListener,
+                    dateAndTime.get(Calendar.YEAR),
+                    dateAndTime.get(Calendar.MONTH),
+                    dateAndTime.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            Toast.makeText(getApplicationContext(), "EEEE", Toast.LENGTH_SHORT).show();
+        }
+    };
 
 }
