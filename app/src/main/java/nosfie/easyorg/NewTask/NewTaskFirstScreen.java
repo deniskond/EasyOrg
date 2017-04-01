@@ -1,4 +1,4 @@
-package nosfie.easyorg;
+package nosfie.easyorg.NewTask;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import nosfie.easyorg.MainActivity;
+import nosfie.easyorg.R;
 
 public class NewTaskFirstScreen extends AppCompatActivity {
 

@@ -8,7 +8,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -168,130 +171,6 @@
                         android:layout_marginLeft="20dp"
                         android:layout_weight="5"
                         android:text="5"
-                        android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/customDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="95"
-                        android:background="@drawable/border_small"
-                        android:gravity="bottom"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="#000000"
-                        android:textSize="17sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="5"
-                        android:text="6"
-                        android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/customDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="95"
-                        android:background="@drawable/border_small"
-                        android:gravity="bottom"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="#000000"
-                        android:textSize="17sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="5"
-                        android:text="7"
-                        android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/customDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="95"
-                        android:background="@drawable/border_small"
-                        android:gravity="bottom"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="#000000"
-                        android:textSize="17sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="5"
-                        android:text="8"
-                        android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/customDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="95"
-                        android:background="@drawable/border_small"
-                        android:gravity="bottom"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="#000000"
-                        android:textSize="17sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="5"
-                        android:text="9"
                         android:textSize="18sp" />
 
                     <EditText

@@ -1,34 +1,35 @@
-package nosfie.easyorg;
+package nosfie.easyorg.NewTask;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class NewTaskSecondScreen extends AppCompatActivity {
+import nosfie.easyorg.MainActivity;
+import nosfie.easyorg.R;
+
+public class NewTaskThirdScreen extends AppCompatActivity {
 
     String taskName, taskCount;
     NewTaskFirstScreen.TASK_TYPE taskType;
-    Button button_next, button_back;
     Calendar dateAndTime = Calendar.getInstance();
-    RadioGroup startDateRadioGroup;
+    RadioGroup deadlineRadioGroup;
+    TextView customDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_task_second_screen);
+        setContentView(R.layout.new_task_third_screen);
 
-        button_next = (Button)findViewById(R.id.buttonNext);
-        button_back = (Button)findViewById(R.id.buttonBack);
+        customDate = (TextView)findViewById(R.id.customDate);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -41,11 +42,6 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     break;
                 case "SHOPPING_LIST":
                     taskType = NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST;
-                    button_next.setText("Готово");
-                    TextView startDateText = (TextView)findViewById(R.id.startDateText);
-                    startDateText.setText("Дата");
-                    TextView startTimeText = (TextView)findViewById(R.id.startTimeText);
-                    startTimeText.setText("Время");
                     break;
                 case "COUNTABLE":
                     taskType = NewTaskFirstScreen.TASK_TYPE.COUNTABLE;
@@ -56,14 +52,11 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             }
         }
 
+        Button button_back = (Button)findViewById(R.id.buttonBack);
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                if (taskType == NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST)
-                    intent = new Intent(NewTaskSecondScreen.this, NewTaskShoppingList.class);
-                else
-                    intent = new Intent(NewTaskSecondScreen.this, NewTaskFirstScreen.class);
+                Intent intent = new Intent(NewTaskThirdScreen.this, NewTaskSecondScreen.class);
                 intent.putExtra("taskName", taskName);
                 intent.putExtra("taskType", taskType.toString());
                 intent.putExtra("taskCount", taskCount);
@@ -71,57 +64,51 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             }
         });
 
-
-        button_next.setOnClickListener(new View.OnClickListener() {
+        Button button_complete = (Button)findViewById(R.id.buttonComplete);
+        button_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                if (taskType == NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST)
-                    intent = new Intent(NewTaskSecondScreen.this, MainActivity.class);
-                else {
-                    intent = new Intent(NewTaskSecondScreen.this, NewTaskThirdScreen.class);
-                    intent.putExtra("taskName", taskName);
-                    intent.putExtra("taskType", taskType.toString());
-                    intent.putExtra("taskCount", taskCount);
-                }
+                Intent intent = new Intent(NewTaskThirdScreen.this, MainActivity.class);
                 startActivity(intent);
             }
         });
 
-        startDateRadioGroup = (RadioGroup)findViewById(R.id.startDateRadioGroup);
-        startDateRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()  {
+        deadlineRadioGroup = (RadioGroup)findViewById(R.id.deadlineRadioGroup);
+        deadlineRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()  {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checked) {
                 int radioButtonID = radioGroup.getCheckedRadioButtonId();
                 View radioButton = radioGroup.findViewById(radioButtonID);
                 int idx = radioGroup.indexOfChild(radioButton);
                 switch (idx) {
-                    case 2:
+                    case 5:
                         setDate();
                         break;
                 }
             }
         });
-
     }
 
     public void setDate() {
 
         DatePickerDialog datePickerDialog =
-            new DatePickerDialog(
-                    NewTaskSecondScreen.this,
-                    AlertDialog.THEME_HOLO_LIGHT,
-                    onDateSetListener,
-                    dateAndTime.get(Calendar.YEAR),
-                    dateAndTime.get(Calendar.MONTH),
-                    dateAndTime.get(Calendar.DAY_OF_MONTH));
+                new DatePickerDialog(
+                        NewTaskThirdScreen.this,
+                        AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,
+                        onDateSetListener,
+                        dateAndTime.get(Calendar.YEAR),
+                        dateAndTime.get(Calendar.MONTH),
+                        dateAndTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-            Toast.makeText(getApplicationContext(), "EEEE", Toast.LENGTH_SHORT).show();
+
+            customDate.setText(String.format("%02d", dayOfMonth) + "." +
+                    String.format("%02d", monthOfYear) + "." +
+                    String.format("%04d", year));
         }
     };
 
