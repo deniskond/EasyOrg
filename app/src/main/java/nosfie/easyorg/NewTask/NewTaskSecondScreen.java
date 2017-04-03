@@ -20,12 +20,11 @@ import nosfie.easyorg.R;
 
 public class NewTaskSecondScreen extends AppCompatActivity {
 
-    String taskName, taskCount;
-    NewTaskFirstScreen.TASK_TYPE taskType;
     Button button_next, button_back;
     Calendar dateAndTime = Calendar.getInstance();
     RadioGroup startDateRadioGroup, startTimeRadioGroup;
     TextView customDate, customTime;
+    Task task = new Task();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +38,20 @@ public class NewTaskSecondScreen extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            taskName = extras.getString("taskName");
-            taskCount = extras.getString("taskCount");
-            String taskTypeString = extras.getString("taskType");
-            switch (taskTypeString) {
-                case "SIMPLE":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SIMPLE;
+            task = new Task(extras);
+            switch (task.type) {
+                case SIMPLE:
                     break;
-                case "SHOPPING_LIST":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST;
+                case SHOPPING_LIST:
                     button_next.setText("Готово");
                     TextView startDateText = (TextView)findViewById(R.id.startDateText);
                     startDateText.setText("Дата");
                     TextView startTimeText = (TextView)findViewById(R.id.startTimeText);
                     startTimeText.setText("Время");
                     break;
-                case "COUNTABLE":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.COUNTABLE;
+                case COUNTABLE:
                     break;
                 default:
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SIMPLE;
                     break;
             }
         }
@@ -67,13 +60,12 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                if (taskType == NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST)
+                if (task.type == Task.TYPE.SHOPPING_LIST)
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskShoppingList.class);
                 else
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskFirstScreen.class);
-                intent.putExtra("taskName", taskName);
-                intent.putExtra("taskType", taskType.toString());
-                intent.putExtra("taskCount", taskCount);
+
+                intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
         });
@@ -83,13 +75,11 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                if (taskType == NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST)
+                if (task.type == Task.TYPE.SHOPPING_LIST)
                     intent = new Intent(NewTaskSecondScreen.this, MainActivity.class);
                 else {
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskThirdScreen.class);
-                    intent.putExtra("taskName", taskName);
-                    intent.putExtra("taskType", taskType.toString());
-                    intent.putExtra("taskCount", taskCount);
+                    intent = task.formIntent(intent, task);
                 }
                 startActivity(intent);
             }

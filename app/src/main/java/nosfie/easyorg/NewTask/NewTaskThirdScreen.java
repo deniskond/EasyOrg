@@ -18,11 +18,10 @@ import nosfie.easyorg.R;
 
 public class NewTaskThirdScreen extends AppCompatActivity {
 
-    String taskName, taskCount;
-    NewTaskFirstScreen.TASK_TYPE taskType;
     Calendar dateAndTime = Calendar.getInstance();
     RadioGroup deadlineRadioGroup;
     TextView customDate;
+    Task task = new Task();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,23 +32,7 @@ public class NewTaskThirdScreen extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            taskName = extras.getString("taskName");
-            taskCount = extras.getString("taskCount");
-            String taskTypeString = extras.getString("taskType");
-            switch (taskTypeString) {
-                case "SIMPLE":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SIMPLE;
-                    break;
-                case "SHOPPING_LIST":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST;
-                    break;
-                case "COUNTABLE":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.COUNTABLE;
-                    break;
-                default:
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SIMPLE;
-                    break;
-            }
+            task = new Task(extras);
         }
 
         Button button_back = (Button)findViewById(R.id.buttonBack);
@@ -57,9 +40,7 @@ public class NewTaskThirdScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskThirdScreen.this, NewTaskSecondScreen.class);
-                intent.putExtra("taskName", taskName);
-                intent.putExtra("taskType", taskType.toString());
-                intent.putExtra("taskCount", taskCount);
+                intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
         });

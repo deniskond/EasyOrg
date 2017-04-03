@@ -18,12 +18,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
 
     EditText taskEdit, countEdit;
     TextView countText;
-    String taskName, taskCount;
-    TASK_TYPE taskType;
-
-    enum TASK_TYPE {
-        SIMPLE, SHOPPING_LIST, COUNTABLE
-    };
+    Task task = new Task();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +30,19 @@ public class NewTaskFirstScreen extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            taskName = extras.getString("taskName");
-            taskEdit.setText(taskName);
-            taskCount = extras.getString("taskCount");
-            countEdit.setText(taskCount);
-            String taskTypeString = extras.getString("taskType");
-            switch (taskTypeString) {
-                case "SIMPLE":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SIMPLE;
+            task = new Task(extras);
+            taskEdit.setText(task.name);
+            countEdit.setText(Integer.toString(task.count));
+            switch (task.type) {
+                case SIMPLE:
                     RadioButton optionSimple = (RadioButton)findViewById(R.id.optionSimple);
                     optionSimple.setChecked(true);
                     break;
-                case "SHOPPING_LIST":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.SHOPPING_LIST;
+                case SHOPPING_LIST:
                     RadioButton optionShoppingList = (RadioButton)findViewById(R.id.optionShoppingList);
                     optionShoppingList.setChecked(true);
                     break;
-                case "COUNTABLE":
-                    taskType = NewTaskFirstScreen.TASK_TYPE.COUNTABLE;
+                case COUNTABLE:
                     RadioButton optionCountable = (RadioButton)findViewById(R.id.optionCountable);
                     optionCountable.setChecked(true);
                     countText.setVisibility(View.VISIBLE);
@@ -105,45 +95,48 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         button_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskName = taskEdit.getText().toString();
-                taskCount = countEdit.getText().toString();
-                taskType = getTaskType();
-                if (taskName.equals("")) {
+                task.name = taskEdit.getText().toString();
+                String countEditString = countEdit.getText().toString();
+                if (!countEditString.equals(""))
+                    task.count = Integer.parseInt(countEdit.getText().toString());
+                else
+                    task.count = 0;
+                task.type = getTaskType();
+                if (task.name.equals("")) {
                     Toast.makeText(getApplicationContext(), "Введите название задачи",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (taskType == TASK_TYPE.COUNTABLE && taskCount.equals("")) {
+                if (task.type == Task.TYPE.COUNTABLE && task.count == 0) {
                     Toast.makeText(getApplicationContext(), "Введите количественную цель",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent;
-                if (taskType == TASK_TYPE.SHOPPING_LIST)
+                if (task.type == Task.TYPE.SHOPPING_LIST)
                     intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
                 else
                     intent = new Intent(NewTaskFirstScreen.this, NewTaskSecondScreen.class);
-                intent.putExtra("taskName", taskName);
-                intent.putExtra("taskType", getTaskType().toString());
-                intent.putExtra("taskCount", taskCount);
+
+                intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
         });
 
     }
 
-    protected TASK_TYPE getTaskType() {
+    protected Task.TYPE getTaskType() {
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
         View radioButton = radioGroup.findViewById(radioButtonID);
         int idx = radioGroup.indexOfChild(radioButton);
         switch (idx) {
             case 0:
-                return TASK_TYPE.SIMPLE;
+                return Task.TYPE.SIMPLE;
             case 1:
-                return TASK_TYPE.SHOPPING_LIST;
+                return Task.TYPE.SHOPPING_LIST;
             case 2:
-                return TASK_TYPE.COUNTABLE;
+                return Task.TYPE.COUNTABLE;
             default:
-                return TASK_TYPE.SIMPLE;
+                return Task.TYPE.SIMPLE;
         }
     }
 
