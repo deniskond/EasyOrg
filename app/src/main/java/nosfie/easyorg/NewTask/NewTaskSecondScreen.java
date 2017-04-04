@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,6 +27,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     RadioGroup startDateRadioGroup, startTimeRadioGroup;
     TextView customDate, customTime;
     Task task = new Task();
+    CheckBox reminderCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +38,51 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         button_back = (Button)findViewById(R.id.buttonBack);
         customDate = (TextView)findViewById(R.id.customDate);
         customTime = (TextView)findViewById(R.id.customTime);
+        reminderCheckbox = (CheckBox)findViewById(R.id.reminderCheckbox);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             task = new Task(extras);
-            switch (task.type) {
-                case SIMPLE:
+
+            switch (task.startDate) {
+                case TODAY:
+                    RadioButton optionToday = (RadioButton)findViewById(R.id.optionToday);
+                    optionToday.setChecked(true);
                     break;
-                case SHOPPING_LIST:
-                    button_next.setText("Готово");
-                    TextView startDateText = (TextView)findViewById(R.id.startDateText);
-                    startDateText.setText("Дата");
-                    TextView startTimeText = (TextView)findViewById(R.id.startTimeText);
-                    startTimeText.setText("Время");
+                case TOMORROW:
+                    RadioButton optionTomorrow = (RadioButton)findViewById(R.id.optionTomorrow);
+                    optionTomorrow.setChecked(true);
                     break;
-                case COUNTABLE:
+                case CUSTOM:
+                    RadioButton optionCustomDate = (RadioButton)findViewById(R.id.optionCustomDate);
+                    optionCustomDate.setChecked(true);
+                    customDate.setText(String.format("%02d", task.customStartDate.day) + "." +
+                        String.format("%02d", task.customStartDate.month) + "." +
+                        String.format("%04d", task.customStartDate.year));
                     break;
-                default:
+            }
+
+            switch (task.startTime) {
+                case NONE:
+                    RadioButton optionDuringDay = (RadioButton)findViewById(R.id.optionDuringDay);
+                    optionDuringDay.setChecked(true);
                     break;
+                case CUSTOM:
+                    RadioButton optionCustomTime = (RadioButton)findViewById(R.id.optionCustomTime);
+                    optionCustomTime.setChecked(true);
+                    customTime.setText(String.format("%02d", task.customStartTime.hours) + ":" +
+                            String.format("%02d", task.customStartTime.minutes));
+                    break;
+            }
+
+            reminderCheckbox.setChecked(task.needReminder);
+
+            if (task.type == Task.TYPE.SHOPPING_LIST) {
+                button_next.setText("Готово");
+                TextView startDateText = (TextView)findViewById(R.id.startDateText);
+                startDateText.setText("Дата");
+                TextView startTimeText = (TextView)findViewById(R.id.startTimeText);
+                startTimeText.setText("Время");
             }
         }
 
@@ -64,7 +94,9 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskShoppingList.class);
                 else
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskFirstScreen.class);
-
+                task.startDate = Task.START_DATE.TODAY;
+                task.startTime = Task.START_TIME.NONE;
+                task.needReminder = false;
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
@@ -75,10 +107,13 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                if (task.type == Task.TYPE.SHOPPING_LIST)
+                if (task.type == Task.TYPE.SHOPPING_LIST) {
                     intent = new Intent(NewTaskSecondScreen.this, MainActivity.class);
+                    // task is ready
+                }
                 else {
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskThirdScreen.class);
+                    task.needReminder = reminderCheckbox.isChecked();
                     intent = task.formIntent(intent, task);
                 }
                 startActivity(intent);
@@ -93,7 +128,14 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 View radioButton = radioGroup.findViewById(radioButtonID);
                 int idx = radioGroup.indexOfChild(radioButton);
                 switch (idx) {
+                    case 0:
+                        task.startDate = Task.START_DATE.TODAY;
+                        break;
+                    case 1:
+                        task.startDate = Task.START_DATE.TOMORROW;
+                        break;
                     case 2:
+                        task.startDate = Task.START_DATE.CUSTOM;
                         setDate();
                         break;
                 }
@@ -108,7 +150,11 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 View radioButton = radioGroup.findViewById(radioButtonID);
                 int idx = radioGroup.indexOfChild(radioButton);
                 switch (idx) {
+                    case 0:
+                        task.startTime = Task.START_TIME.NONE;
+                        break;
                     case 1:
+                        task.startTime = Task.START_TIME.CUSTOM;
                         setTime();
                         break;
                 }
@@ -118,7 +164,6 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     }
 
     public void setDate() {
-
         DatePickerDialog datePickerDialog =
             new DatePickerDialog(
                     NewTaskSecondScreen.this,
@@ -133,15 +178,16 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-
             customDate.setText(String.format("%02d", dayOfMonth) + "." +
                     String.format("%02d", monthOfYear) + "." +
                     String.format("%04d", year));
+            task.customStartDate.day = dayOfMonth;
+            task.customStartDate.month = monthOfYear;
+            task.customStartDate.year = year;
         }
     };
 
     public void setTime() {
-
         TimePickerDialog timePickerDialog =
                 new TimePickerDialog(
                         NewTaskSecondScreen.this,
@@ -158,6 +204,8 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
             customTime.setText(String.format("%02d", hours) + ":" +
                     String.format("%02d", minutes));
+            task.customStartTime.hours = hours;
+            task.customStartTime.minutes = minutes;
         }
     };
 

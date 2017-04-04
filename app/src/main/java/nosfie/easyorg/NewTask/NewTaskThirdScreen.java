@@ -40,6 +40,7 @@ public class NewTaskThirdScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskThirdScreen.this, NewTaskSecondScreen.class);
+                task.deadline = Task.DEADLINE.TODAY;
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
@@ -50,6 +51,7 @@ public class NewTaskThirdScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskThirdScreen.this, MainActivity.class);
+                // task is ready
                 startActivity(intent);
             }
         });
@@ -62,7 +64,23 @@ public class NewTaskThirdScreen extends AppCompatActivity {
                 View radioButton = radioGroup.findViewById(radioButtonID);
                 int idx = radioGroup.indexOfChild(radioButton);
                 switch (idx) {
+                    case 0:
+                        task.deadline = Task.DEADLINE.TODAY;
+                        break;
+                    case 1:
+                        task.deadline = Task.DEADLINE.WEEK;
+                        break;
+                    case 2:
+                        task.deadline = Task.DEADLINE.MONTH;
+                        break;
+                    case 3:
+                        task.deadline = Task.DEADLINE.YEAR;
+                        break;
+                    case 4:
+                        task.deadline = Task.DEADLINE.NONE;
+                        break;
                     case 5:
+                        task.deadline = Task.DEADLINE.CUSTOM;
                         setDate();
                         break;
                 }
@@ -71,7 +89,6 @@ public class NewTaskThirdScreen extends AppCompatActivity {
     }
 
     public void setDate() {
-
         DatePickerDialog datePickerDialog =
                 new DatePickerDialog(
                         NewTaskThirdScreen.this,
@@ -86,10 +103,12 @@ public class NewTaskThirdScreen extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-
             customDate.setText(String.format("%02d", dayOfMonth) + "." +
                     String.format("%02d", monthOfYear) + "." +
                     String.format("%04d", year));
+            task.customEndDate.day = dayOfMonth;
+            task.customEndDate.month = monthOfYear;
+            task.customEndDate.year = year;
         }
     };
 

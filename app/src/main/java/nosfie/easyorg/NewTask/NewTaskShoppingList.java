@@ -31,6 +31,20 @@ public class NewTaskShoppingList extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             task = new Task(extras);
+            int num = 1;
+            for (String item: task.shoppingList) {
+                if (item != null && !item.isEmpty()) {
+                    TableRow tableRow = (TableRow) tableLayout.findViewWithTag("row" + Integer.toString(num));
+                    LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
+                    EditText editText = (EditText) linearLayout.getChildAt(1);
+                    editText.setText(item);
+                    if (num >= insertRowIndex) {
+                        insertRowIndex++;
+                        tableRow.setVisibility(View.VISIBLE);
+                    }
+                    num++;
+                }
+            }
         }
 
         Button button_add = (Button)findViewById(R.id.buttonAdd);
@@ -48,6 +62,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskShoppingList.this, NewTaskFirstScreen.class);
+                task.shoppingList.clear();
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
@@ -58,6 +73,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskShoppingList.this, NewTaskSecondScreen.class);
+                task.shoppingList.clear();
                 for (int i = 1; i <= 20; i++) {
                     TableRow tableRow = (TableRow) tableLayout.findViewWithTag("row" + Integer.toString(i));
                     LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
@@ -65,11 +81,9 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     String item = editText.getText().toString();
                     if (item != null && !item.isEmpty()) {
                         task.shoppingList.add(item);
-                        Toast.makeText(getApplicationContext(), item, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), item, Toast.LENGTH_SHORT).show();
                     }
-
                 }
-
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
