@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
+import nosfie.easyorg.TaskList.TaskList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,8 +17,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LinearLayout new_task = (LinearLayout)findViewById(R.id.new_task_button);
-        new_task.setOnClickListener(new View.OnClickListener() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String toast = extras.getString("toast");
+            Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
+        }
+
+        LinearLayout newTask = (LinearLayout)findViewById(R.id.new_task_button);
+        newTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NewTaskFirstScreen.class);
@@ -24,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        LinearLayout currentTaskList = (LinearLayout)findViewById(R.id.current_task_list);
+        currentTaskList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TaskList.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

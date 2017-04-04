@@ -1,41 +1,47 @@
-package nosfie.easyorg.NewTask;
+package nosfie.easyorg.DataStructures;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import nosfie.easyorg.Constants;
+import nosfie.easyorg.Database.TasksConnector;
+
 public class Task {
 
-    enum TYPE {
+    public enum TYPE {
         SIMPLE, SHOPPING_LIST, COUNTABLE
     }
 
-    enum START_DATE {
+    public enum START_DATE {
         TODAY, TOMORROW, CUSTOM
     }
 
-    enum START_TIME {
+    public enum START_TIME {
         NONE, CUSTOM
     }
 
-    enum DEADLINE {
+    public enum DEADLINE {
         TODAY, WEEK, MONTH, YEAR, NONE, CUSTOM
     }
 
-    class Daytime {
-        int hours;
-        int minutes;
+    public class Daytime {
+        public int hours;
+        public int minutes;
         Daytime() {
             this.hours = 0;
             this.minutes = 0;
         }
     }
 
-    class Date {
-        int day;
-        int month;
-        int year;
+    public class Date {
+        public int day;
+        public int month;
+        public int year;
         Date() {
             this.day = 0;
             this.month = 0;
@@ -43,17 +49,16 @@ public class Task {
         }
     }
 
-    String name;
-    int count;
-    boolean needReminder;
-    Date customStartDate = new Date(), customEndDate = new Date();
-    TYPE type;
-    START_DATE startDate;
-    START_TIME startTime;
-    DEADLINE deadline;
-    Daytime customStartTime = new Daytime();
-
-    ArrayList<String> shoppingList = new ArrayList<>();
+    public String name;
+    public int count;
+    public boolean needReminder;
+    public Date customStartDate = new Date(), customEndDate = new Date();
+    public TYPE type;
+    public START_DATE startDate;
+    public START_TIME startTime;
+    public DEADLINE deadline;
+    public Daytime customStartTime = new Daytime();
+    public ArrayList<String> shoppingList = new ArrayList<>();
 
     public Task() {
         this.startDate = START_DATE.TODAY;
@@ -110,6 +115,42 @@ public class Task {
         intent.putExtra("endMonth", task.customEndDate.month);
         intent.putExtra("endYear", task.customEndDate.year);
         return intent;
+    }
+
+    public void insertIntoDatabase(Context context) {
+        TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
+        SQLiteDatabase DB = tasksConnector.getWritableDatabase();
+        DB.execSQL(tasksConnector.CREATE_TABLE);
+        ContentValues CV = new ContentValues();
+        CV.put("name", this.name);
+        CV.put("type", this.type.toString());
+        CV.put("startDate",
+                String.format("%04d", this.customStartDate.year) + "." +
+                String.format("%02d", this.customStartDate.month) + "." +
+                String.format("%02d", this.customStartDate.day));
+        CV.put("startTime",
+                String.format("%02d", this.customStartTime.hours) + "-" +
+                String.format("%02d", this.customStartTime.minutes));
+        CV.put("count", this.count);
+        if (this.needReminder)
+            CV.put("reminder", 1);
+        else
+            CV.put("reminder", 0);
+        CV.put("endDate",
+                String.format("%04d", this.customEndDate.year) + "." +
+                String.format("%02d", this.customEndDate.month) + "." +
+                String.format("%02d", this.customEndDate.day));
+        String strShoppingList = "";
+        for (int i = 0; i < this.shoppingList.size(); i++) {
+            String item = this.shoppingList.get(i).replaceAll("|", "");
+            if (i != this.shoppingList.size() - 1)
+                strShoppingList += item + "|";
+            else
+                strShoppingList += item;
+        }
+        CV.put("shoppingList", strShoppingList);
+        DB.insert("tasks", null, CV);
+        DB.close();
     }
 
 }

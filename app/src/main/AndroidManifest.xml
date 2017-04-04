@@ -23,6 +23,8 @@
         </activity>
         <activity  	android:name=".NewTask.NewTaskShoppingList" android:label="Новая задача" >
         </activity>
+        <activity  	android:name=".TaskList.TaskList" android:label="Текущий список дел" >
+        </activity>
     </application>
 
 </manifest>

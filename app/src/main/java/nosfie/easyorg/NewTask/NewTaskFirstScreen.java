@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 

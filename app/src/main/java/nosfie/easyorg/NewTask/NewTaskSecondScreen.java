@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
@@ -109,7 +110,8 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 Intent intent;
                 if (task.type == Task.TYPE.SHOPPING_LIST) {
                     intent = new Intent(NewTaskSecondScreen.this, MainActivity.class);
-                    // task is ready
+                    task.insertIntoDatabase(getApplicationContext());
+                    intent.putExtra("toast", "Задача успешно добавлена!");
                 }
                 else {
                     intent = new Intent(NewTaskSecondScreen.this, NewTaskThirdScreen.class);

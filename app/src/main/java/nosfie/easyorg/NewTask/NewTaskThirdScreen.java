@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
@@ -51,7 +52,8 @@ public class NewTaskThirdScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskThirdScreen.this, MainActivity.class);
-                // task is ready
+                task.insertIntoDatabase(getApplicationContext());
+                intent.putExtra("toast", "Задача успешно добавлена!");
                 startActivity(intent);
             }
         });

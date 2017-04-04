@@ -4,15 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.R;
 
 public class NewTaskShoppingList extends AppCompatActivity {
@@ -79,10 +77,8 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
                     EditText editText = (EditText) linearLayout.getChildAt(1);
                     String item = editText.getText().toString();
-                    if (item != null && !item.isEmpty()) {
+                    if (item != null && !item.isEmpty())
                         task.shoppingList.add(item);
-                        //Toast.makeText(getApplicationContext(), item, Toast.LENGTH_SHORT).show();
-                    }
                 }
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
