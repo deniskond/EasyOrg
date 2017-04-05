@@ -1,158 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:layout_height="match_parent">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/deadlineText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Срок выполнения:"
-            android:textSize="18sp" />
-
-    </TableRow>
-
-    <TableRow
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        tools:ignore="UselessParent">
 
-        <LinearLayout
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="100">
+            android:layout_height="wrap_content">
 
-            <RadioGroup
-                android:id="@+id/deadlineRadioGroup"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="60"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/optionDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="До конца дня"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionWeek"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="До конца недели"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionMonth"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="До конца месяца"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionYear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="До конца года"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionUnlimited"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Бессрочно"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionCustomDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Другая дата"
-                    android:textSize="18sp" />
-
-            </RadioGroup>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_weight="40"
-                android:gravity="bottom"
-                android:orientation="vertical">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/customDate"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/deadlineText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:width="150dip"
-                    android:background="@drawable/border_small"
-                    android:gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="5dp"
-                    android:text="Не выбрана"
-                    android:textColor="#000000"
-                    android:textSize="17sp" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:layout_weight="1"
+                    android:padding="20dp"
+                    android:text="@string/deadline"
+                    android:textSize="18sp" />
 
-    </TableRow>
+            </TableRow>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="bottom">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonBack"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:background="#d6d7d7"
-            android:text="Назад"
-            tools:ignore="ButtonStyle" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
 
-        <Button
-            android:id="@+id/buttonComplete"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_marginLeft="1dp"
-            android:layout_weight="1"
-            android:background="#d6d7d7"
-            android:text="Готово"
-            tools:ignore="ButtonStyle" />
+                    <RadioGroup
+                        android:id="@+id/deadlineRadioGroup"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="60"
+                        android:orientation="vertical">
 
-    </TableRow>
+                        <RadioButton
+                            android:id="@+id/optionDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="@string/deadline_day"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
 
-</TableLayout>
+                        <RadioButton
+                            android:id="@+id/optionWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/deadline_week"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionMonth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/deadline_month"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionYear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/deadline_year"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionUnlimited"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/deadline_none"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionCustomDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/deadline_custom"
+                            android:textSize="18sp" />
+
+                    </RadioGroup>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="40"
+                        android:gravity="bottom"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/customDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:width="150dip"
+                            android:background="@drawable/border_small"
+                            android:gravity="bottom"
+                            android:paddingBottom="5dp"
+                            android:paddingEnd="5dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="5dp"
+                            android:paddingStart="8dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/date_not_set"
+                            android:textColor="#000000"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom">
+
+                <Button
+                    android:id="@+id/buttonBack"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dip"
+                    android:layout_height="50dip"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="#d6d7d7"
+                    android:text="@string/back"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/buttonComplete"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dip"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="#d6d7d7"
+                    android:text="@string/done"
+                    tools:ignore="ButtonStyle" />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

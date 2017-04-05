@@ -1,227 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:layout_height="match_parent">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/startDateText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Дата начала:"
-            android:textSize="18sp" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <RadioGroup
-                android:id="@+id/startDateRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/optionToday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="Сегодня"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionTomorrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
-                    android:text="Завтра"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionCustomDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
-                    android:text="Другая дата"
-                    android:textSize="18sp" />
-
-            </RadioGroup>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/customDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:width="150dip"
-                    android:background="@drawable/border_small"
-                    android:gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="5dp"
-                    android:text="Не выбрана"
-                    android:textColor="#000000"
-                    android:textSize="17sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/startTimeText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Время начала:"
-            android:textSize="18sp" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <RadioGroup
-                android:id="@+id/startTimeRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/optionDuringDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="В течение дня"
-                    android:textSize="18sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <RadioButton
-                    android:id="@+id/optionCustomTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
-                    android:text="Конкретное"
-                    android:textSize="18sp" />
-
-            </RadioGroup>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/customTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:width="150dip"
-                    android:background="@drawable/border_small"
-                    android:gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="5dp"
-                    android:text="Не выбрано"
-                    android:textColor="#000000"
-                    android:textSize="17sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <CheckBox
-            android:id="@+id/reminderCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:text="Нужно напоминание"
-            android:textSize="18sp" />
-    </TableRow>
-
-    <TableRow
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="bottom">
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        tools:ignore="UselessParent">
 
-        <Button
-            android:id="@+id/buttonBack"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:background="#d6d7d7"
-            android:text="Назад"
-            tools:ignore="ButtonStyle" />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/buttonNext"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_marginLeft="1dp"
-            android:layout_weight="1"
-            android:background="#d6d7d7"
-            android:text="Дальше"
-            tools:ignore="ButtonStyle" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    </TableRow>
+                <TextView
+                    android:id="@+id/startDateText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp"
+                    android:text="@string/start_date"
+                    android:textSize="18sp" />
 
-</TableLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/startDateRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/optionToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="@string/date_today"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionTomorrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/date_tomorrow"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionCustomDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/date_custom"
+                            android:textSize="18sp" />
+
+                    </RadioGroup>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/customDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:width="150dip"
+                            android:background="@drawable/border_small"
+                            android:gravity="bottom"
+                            android:paddingBottom="5dp"
+                            android:paddingEnd="5dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="5dp"
+                            android:paddingStart="8dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/date_not_set"
+                            android:textColor="#000000"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/startTimeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp"
+                    android:text="@string/start_time"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/startTimeRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/optionDuringDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="@string/time_during_day"
+                            android:textSize="18sp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <RadioButton
+                            android:id="@+id/optionCustomTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/time_custom"
+                            android:textSize="18sp" />
+
+                    </RadioGroup>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/customTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:width="150dip"
+                            android:background="@drawable/border_small"
+                            android:gravity="bottom"
+                            android:paddingBottom="5dp"
+                            android:paddingEnd="5dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="5dp"
+                            android:paddingStart="8dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/time_not_set"
+                            android:textColor="#000000"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/reminderCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/need_reminder"
+                    android:textSize="18sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom">
+
+                <Button
+                    android:id="@+id/buttonBack"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dip"
+                    android:layout_height="50dip"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="#d6d7d7"
+                    android:text="@string/back"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/buttonNext"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dip"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="#d6d7d7"
+                    android:text="@string/next"
+                    tools:ignore="ButtonStyle" />
+
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+</RelativeLayout>

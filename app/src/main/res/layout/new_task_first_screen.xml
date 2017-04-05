@@ -1,163 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:layout_height="match_parent">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/taskTypeText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Тип задачи:"
-            android:textSize="18sp" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/optionSimple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Обычная"
-                android:textSize="18sp"
-                tools:ignore="RtlHardcoded" />
-
-            <RadioButton
-                android:id="@+id/optionShoppingList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_weight="1"
-                android:text="Список покупок"
-                android:textSize="18sp"
-                tools:ignore="RtlHardcoded" />
-
-            <RadioButton
-                android:id="@+id/optionCountable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_weight="1"
-                android:text="Количественная"
-                android:textSize="18sp" />
-
-        </RadioGroup>
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/taskNameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Название задачи:"
-            android:textSize="18sp" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <EditText
-            android:id="@+id/taskName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/border"
-            android:ems="8"
-            android:inputType="textPersonName" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/countText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Количественная цель:"
-            android:textSize="18sp"
-            android:visibility="invisible" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <EditText
-            android:id="@+id/count"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/border"
-            android:ems="8"
-            android:inputType="number"
-            android:visibility="invisible" />
-
-    </TableRow>
-
-    <TableRow
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="bottom">
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        tools:ignore="UselessParent">
 
-        <Button
-            android:id="@+id/buttonCancel"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:background="#d6d7d7"
-            android:text="Отмена"
-            tools:ignore="ButtonStyle" />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/buttonNext"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_marginLeft="1dp"
-            android:layout_weight="1"
-            android:background="#d6d7d7"
-            android:text="Дальше"
-            tools:ignore="ButtonStyle" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    </TableRow>
+                <TextView
+                    android:id="@+id/taskTypeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp"
+                    android:text="@string/task_type"
+                    android:textSize="18sp" />
 
-</TableLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    tools:ignore="UselessParent">
+
+                    <RadioButton
+                        android:id="@+id/optionSimple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/simple_task"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/optionShoppingList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/shopping_list"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/optionCountable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/countable_task"
+                        android:textSize="18sp" />
+
+                </RadioGroup>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/taskNameText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp"
+                    android:text="@string/task_name"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/taskName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:ems="8"
+                    android:inputType="textPersonName" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/countText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="20dp"
+                    android:text="@string/count_goal"
+                    android:textSize="18sp"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/count"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:ems="8"
+                    android:inputType="number"
+                    android:visibility="invisible" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom">
+
+                <Button
+                    android:id="@+id/buttonCancel"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dip"
+                    android:layout_height="50dip"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="#d6d7d7"
+                    android:text="@string/cancel"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/buttonNext"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dip"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="#d6d7d7"
+                    android:text="@string/next"
+                    tools:ignore="ButtonStyle" />
+
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+</RelativeLayout>

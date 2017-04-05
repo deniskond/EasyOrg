@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">EasyOrg</string>
+    <string name="new_task">Новая задача</string>
+    <string name="task_list">Текущий список дел</string>
+    <string name="calendar">Календарь</string>
+    <string name="shopping_lists">Списки покупок</string>
+    <string name="finances">Финансы</string>
+    <string name="settings">Настройки</string>
+    <string name="cancel">Отмена</string>
+    <string name="next">Дальше</string>
+    <string name="done">Готово</string>
+    <string name="simple_task">Обычная</string>
+    <string name="shopping_list">Список покупок</string>
+    <string name="countable_task">Количественная</string>
+    <string name="task_type">Тип задачи:</string>
+    <string name="task_name">Название задачи:</string>
+    <string name="count_goal">Количественная цель:</string>
+    <string name="back">Назад</string>
+    <string name="start_date">Дата начала:</string>
+    <string name="date_today">Сегодня</string>
+    <string name="date_tomorrow">Завтра</string>
+    <string name="date_custom">Другая дата:</string>
+    <string name="start_time">Время начала:</string>
+    <string name="time_during_day">В течение дня</string>
+    <string name="time_custom">Конкретное:</string>
+    <string name="need_reminder">Нужно напоминание</string>
+    <string name="date_not_set">Не выбрана</string>
+    <string name="time_not_set">Не выбрано</string>
+    <string name="add">Добавить</string>
+    <string name="deadline">Срок выполнения:</string>
+    <string name="deadline_day">До конца дня</string>
+    <string name="deadline_week">До конца недели</string>
+    <string name="deadline_month">До конца месяца</string>
+    <string name="deadline_year">До конца года</string>
+    <string name="deadline_none">Бессрочно</string>
+    <string name="deadline_custom">Другая дата:</string>
 </resources>
