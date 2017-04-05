@@ -30,20 +30,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="100">
 
             <RadioGroup
                 android:id="@+id/deadlineRadioGroup"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="48"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="60"
                 android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/optionDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:text="До конца дня"
@@ -54,7 +55,6 @@
                     android:id="@+id/optionWeek"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="До конца недели"
                     android:textSize="18sp"
@@ -64,7 +64,6 @@
                     android:id="@+id/optionMonth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="До конца месяца"
                     android:textSize="18sp"
@@ -74,7 +73,6 @@
                     android:id="@+id/optionYear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="До конца года"
                     android:textSize="18sp"
@@ -84,7 +82,6 @@
                     android:id="@+id/optionUnlimited"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="Бессрочно"
                     android:textSize="18sp"
@@ -94,7 +91,6 @@
                     android:id="@+id/optionCustomDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="Другая дата"
                     android:textSize="18sp" />
@@ -102,11 +98,11 @@
             </RadioGroup>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="20dip"
-                android:layout_weight="55"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="40"
                 android:gravity="bottom"
                 android:orientation="vertical">
 

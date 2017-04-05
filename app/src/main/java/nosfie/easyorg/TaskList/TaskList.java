@@ -9,7 +9,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import nosfie.easyorg.Constants;
+import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.R;
 
@@ -19,6 +22,7 @@ public class TaskList extends AppCompatActivity {
     Button deleteDbButton;
     SQLiteDatabase DB;
     TasksConnector tasksConnector;
+    ArrayList<Task> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +61,29 @@ public class TaskList extends AppCompatActivity {
             cursor.moveToFirst();
             if (cursor.moveToFirst()) {
                 do {
+                    Task task = new Task(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getInt(5),
+                        cursor.getInt(6),
+                        cursor.getString(7),
+                        cursor.getString(8)
+                    );
+                    tasks.add(task);
                     result.setText(
-                            result.getText().toString() + "\n" +
-                                    cursor.getString(0) + ") " +
-                                    cursor.getString(1) + ", " +
-                                    cursor.getString(2) + ", " +
-                                    cursor.getString(3) + ", " +
-                                    cursor.getString(4) + ", " +
-                                    cursor.getInt(5) + ", " +
-                                    cursor.getInt(6) + ", " +
-                                    cursor.getString(7) + "\n" +
-                                    "shoppingList:\n" +
-                                    cursor.getString(8)
+                        result.getText().toString() + "\n" +
+                            cursor.getString(0) + ") " +
+                            cursor.getString(1) + ", " +
+                            cursor.getString(2) + ", " +
+                            cursor.getString(3) + ", " +
+                            cursor.getString(4) + ", " +
+                            cursor.getInt(5) + ", " +
+                            cursor.getInt(6) + ", " +
+                            cursor.getString(7) + "\n" +
+                            "shoppingList:\n" +
+                            cursor.getString(8)
                     );
                 } while (cursor.moveToNext());
             }

@@ -3,6 +3,7 @@ package nosfie.easyorg.NewTask;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     TextView customDate, customTime;
     Task task = new Task();
     CheckBox reminderCheckbox;
+    RadioButton optionToday, optionTomorrow, optionCustomDate, optionDuringDay, optionCustomTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,11 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         customDate = (TextView)findViewById(R.id.customDate);
         customTime = (TextView)findViewById(R.id.customTime);
         reminderCheckbox = (CheckBox)findViewById(R.id.reminderCheckbox);
+        optionToday = (RadioButton)findViewById(R.id.optionToday);
+        optionTomorrow = (RadioButton)findViewById(R.id.optionTomorrow);
+        optionCustomDate = (RadioButton)findViewById(R.id.optionCustomDate);
+        optionDuringDay = (RadioButton)findViewById(R.id.optionDuringDay);
+        optionCustomTime = (RadioButton)findViewById(R.id.optionCustomTime);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -47,15 +54,12 @@ public class NewTaskSecondScreen extends AppCompatActivity {
 
             switch (task.startDate) {
                 case TODAY:
-                    RadioButton optionToday = (RadioButton)findViewById(R.id.optionToday);
                     optionToday.setChecked(true);
                     break;
                 case TOMORROW:
-                    RadioButton optionTomorrow = (RadioButton)findViewById(R.id.optionTomorrow);
                     optionTomorrow.setChecked(true);
                     break;
                 case CUSTOM:
-                    RadioButton optionCustomDate = (RadioButton)findViewById(R.id.optionCustomDate);
                     optionCustomDate.setChecked(true);
                     customDate.setText(String.format("%02d", task.customStartDate.day) + "." +
                         String.format("%02d", task.customStartDate.month) + "." +
@@ -65,11 +69,9 @@ public class NewTaskSecondScreen extends AppCompatActivity {
 
             switch (task.startTime) {
                 case NONE:
-                    RadioButton optionDuringDay = (RadioButton)findViewById(R.id.optionDuringDay);
                     optionDuringDay.setChecked(true);
                     break;
                 case CUSTOM:
-                    RadioButton optionCustomTime = (RadioButton)findViewById(R.id.optionCustomTime);
                     optionCustomTime.setChecked(true);
                     customTime.setText(String.format("%02d", task.customStartTime.hours) + ":" +
                             String.format("%02d", task.customStartTime.minutes));
@@ -132,9 +134,11 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 switch (idx) {
                     case 0:
                         task.startDate = Task.START_DATE.TODAY;
+                        customDate.setText("Не выбрана");
                         break;
                     case 1:
                         task.startDate = Task.START_DATE.TOMORROW;
+                        customDate.setText("Не выбрана");
                         break;
                     case 2:
                         task.startDate = Task.START_DATE.CUSTOM;
@@ -154,6 +158,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 switch (idx) {
                     case 0:
                         task.startTime = Task.START_TIME.NONE;
+                        customTime.setText("Не выбрано");
                         break;
                     case 1:
                         task.startTime = Task.START_TIME.CUSTOM;
@@ -174,8 +179,20 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     dateAndTime.get(Calendar.YEAR),
                     dateAndTime.get(Calendar.MONTH),
                     dateAndTime.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setOnCancelListener(onDateCancelListener);
         datePickerDialog.show();
     }
+
+    DatePickerDialog.OnCancelListener onDateCancelListener = new DatePickerDialog.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            optionToday.setChecked(true);
+            customDate.setText("Не выбрана");
+            task.customStartDate.day = 0;
+            task.customStartDate.month = 0;
+            task.customStartDate.year = 0;
+        }
+    };
 
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -198,8 +215,19 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         dateAndTime.get(Calendar.MINUTE),
                         true
                 );
+        timePickerDialog.setOnCancelListener(onTimeCancelListener);
         timePickerDialog.show();
     }
+
+    TimePickerDialog.OnCancelListener onTimeCancelListener = new TimePickerDialog.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            optionDuringDay.setChecked(true);
+            customTime.setText("Не выбрано");
+            task.customStartTime.hours = 0;
+            task.customStartTime.minutes = 0;
+        }
+    };
 
     TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override

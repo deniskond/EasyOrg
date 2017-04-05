@@ -70,6 +70,15 @@ public class Task {
         this.customEndDate = new Date();
     }
 
+    public Task(String name, String type, String startDate, String startTime,
+                int count, int reminder, String endDate, String shoppingList) {
+        this.name = name;
+        this.type = TYPE.valueOf(type);
+        String[] startDateSplit = startDate.split(".");
+        //this.
+
+    }
+
     public Task(Bundle info) {
         // First screen
         this.name = info.getString("taskName");
