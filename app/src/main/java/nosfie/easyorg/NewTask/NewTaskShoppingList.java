@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.R;
@@ -79,6 +80,10 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     String item = editText.getText().toString();
                     if (item != null && !item.isEmpty())
                         task.shoppingList.add(item);
+                }
+                if (task.shoppingList.size() == 0) {
+                    Toast.makeText(getApplicationContext(), "Введите список покупок", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
