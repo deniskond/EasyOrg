@@ -198,10 +198,10 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
             customDate.setText(String.format("%02d", dayOfMonth) + "." +
-                    String.format("%02d", monthOfYear) + "." +
+                    String.format("%02d", monthOfYear + 1) + "." +
                     String.format("%04d", year));
             task.customStartDate.day = dayOfMonth;
-            task.customStartDate.month = monthOfYear;
+            task.customStartDate.month = monthOfYear + 1;
             task.customStartDate.year = year;
         }
     };

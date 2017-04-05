@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.Database.TasksConnector;
@@ -38,11 +41,11 @@ public class Task {
         }
     }
 
-    public class Date {
+    public class customDate {
         public int day;
         public int month;
         public int year;
-        Date() {
+        customDate() {
             this.day = 0;
             this.month = 0;
             this.year = 0;
@@ -52,7 +55,7 @@ public class Task {
     public String name;
     public int count;
     public boolean needReminder;
-    public Date customStartDate = new Date(), customEndDate = new Date();
+    public customDate customStartDate = new customDate(), customEndDate = new customDate();
     public TYPE type;
     public START_DATE startDate;
     public START_TIME startTime;
@@ -64,10 +67,10 @@ public class Task {
         this.startDate = START_DATE.TODAY;
         this.startTime = START_TIME.NONE;
         this.deadline = DEADLINE.TODAY;
-        this.customStartDate = new Date();
+        this.customStartDate = new customDate();
         this.customStartTime = new Daytime();
         this.needReminder = false;
-        this.customEndDate = new Date();
+        this.customEndDate = new customDate();
     }
 
     public Task(String name, String type, String startDate, String startTime,
@@ -130,25 +133,93 @@ public class Task {
         TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
         SQLiteDatabase DB = tasksConnector.getWritableDatabase();
         DB.execSQL(tasksConnector.CREATE_TABLE);
+
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+
         ContentValues CV = new ContentValues();
         CV.put("name", this.name);
         CV.put("type", this.type.toString());
-        CV.put("startDate",
-                String.format("%04d", this.customStartDate.year) + "." +
+
+        String startDayStr = "";
+        switch (this.startDate) {
+            case TODAY:
+                this.customStartDate.year = calendar.get(Calendar.YEAR);
+                this.customStartDate.month = calendar.get(Calendar.MONTH) + 1;
+                this.customStartDate.day = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case TOMORROW:
+                calendar.setTime(date);
+                calendar.add(Calendar.DATE, 1);
+                this.customStartDate.year = calendar.get(Calendar.YEAR);
+                this.customStartDate.month = calendar.get(Calendar.MONTH) + 1;
+                this.customStartDate.day = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case CUSTOM:
+                break;
+        }
+
+        CV.put("startDate", String.format("%04d", this.customStartDate.year) + "." +
                 String.format("%02d", this.customStartDate.month) + "." +
                 String.format("%02d", this.customStartDate.day));
-        CV.put("startTime",
-                String.format("%02d", this.customStartTime.hours) + "-" +
-                String.format("%02d", this.customStartTime.minutes));
+
+        switch (this.startTime) {
+            case NONE:
+                CV.put("startTime", "none");
+                break;
+            case CUSTOM:
+                CV.put("startTime",
+                    String.format("%02d", this.customStartTime.hours) + "-" +
+                    String.format("%02d", this.customStartTime.minutes));
+                break;
+        }
+
         CV.put("count", this.count);
         if (this.needReminder)
             CV.put("reminder", 1);
         else
             CV.put("reminder", 0);
+
+        calendar = Calendar.getInstance();
+        switch (this.deadline) {
+            case TODAY:
+                this.customEndDate.year = calendar.get(Calendar.YEAR);
+                this.customEndDate.month = calendar.get(Calendar.MONTH) + 1;
+                this.customEndDate.day = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case WEEK:
+                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                int addition = 8 - dayOfWeek;
+                calendar.setTime(date);
+                calendar.add(Calendar.DATE, addition);
+                this.customEndDate.year = calendar.get(Calendar.YEAR);
+                this.customEndDate.month = calendar.get(Calendar.MONTH) + 1;
+                this.customEndDate.day = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case MONTH:
+                this.customEndDate.year = calendar.get(Calendar.YEAR);
+                this.customEndDate.month = calendar.get(Calendar.MONTH) + 1;
+                this.customEndDate.day = calendar.getActualMaximum(Calendar.DATE);
+                break;
+            case YEAR:
+                this.customEndDate.year = calendar.get(Calendar.YEAR);
+                this.customEndDate.month = 12;
+                this.customEndDate.day = 31;
+                break;
+            case NONE:
+                this.customEndDate.year = 0;
+                this.customEndDate.month = 0;
+                this.customEndDate.day = 0;
+                break;
+            case CUSTOM:
+                break;
+        }
+
         CV.put("endDate",
                 String.format("%04d", this.customEndDate.year) + "." +
                 String.format("%02d", this.customEndDate.month) + "." +
                 String.format("%02d", this.customEndDate.day));
+
         String strShoppingList = "";
         for (int i = 0; i < this.shoppingList.size(); i++) {
             String item = this.shoppingList.get(i).replaceAll("|", "");
