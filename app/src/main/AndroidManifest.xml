@@ -15,15 +15,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity  	android:name=".NewTask.NewTaskFirstScreen" android:label="Новая задача" >
+        <activity android:name=".NewTask.NewTaskFirstScreen" android:noHistory="true" android:label="Новая задача" >
         </activity>
-        <activity  	android:name=".NewTask.NewTaskSecondScreen" android:label="Новая задача" >
+        <activity android:name=".NewTask.NewTaskSecondScreen" android:noHistory="true" android:label="Новая задача" >
         </activity>
-        <activity  	android:name=".NewTask.NewTaskThirdScreen" android:label="Новая задача" >
+        <activity android:name=".NewTask.NewTaskThirdScreen" android:noHistory="true" android:label="Новая задача" >
         </activity>
-        <activity  	android:name=".NewTask.NewTaskShoppingList" android:label="Новая задача" >
+        <activity android:name=".NewTask.NewTaskShoppingList" android:noHistory="true" android:label="Новая задача" >
         </activity>
-        <activity  	android:name=".TaskList.TaskList" android:label="Текущий список дел" >
+        <activity android:name=".TaskList.TaskList" android:label="Текущий список дел" >
         </activity>
     </application>
 
