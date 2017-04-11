@@ -16,6 +16,7 @@ public class TasksConnector extends SQLiteOpenHelper {
             + ", reminder INTEGER"
             + ", endDate TEXT"
             + ", shoppingList TEXT"
+            + ", status TEXT"
             + ")";
 
     public TasksConnector(Context ct, String nm, SQLiteDatabase.CursorFactory cf, int vs) {

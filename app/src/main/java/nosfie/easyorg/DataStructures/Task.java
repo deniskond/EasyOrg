@@ -16,6 +16,10 @@ import nosfie.easyorg.Database.TasksConnector;
 
 public class Task {
 
+    public enum STATUS {
+        ACTUAL, DONE, NOT_DONE, IN_PROCESS, POSTPONED
+    }
+
     public enum TYPE {
         SIMPLE, SHOPPING_LIST, COUNTABLE
     }
@@ -52,6 +56,7 @@ public class Task {
         }
     }
 
+    public int id;
     public String name;
     public int count;
     public boolean needReminder;
@@ -60,6 +65,7 @@ public class Task {
     public START_DATE startDate;
     public START_TIME startTime;
     public DEADLINE deadline;
+    public STATUS status;
     public Daytime customStartTime = new Daytime();
     public ArrayList<String> shoppingList = new ArrayList<>();
 
@@ -73,13 +79,52 @@ public class Task {
         this.customEndDate = new customDate();
     }
 
-    public Task(String name, String type, String startDate, String startTime,
-                int count, int reminder, String endDate, String shoppingList) {
+    public Task(int id, String name, String type, String startDate, String startTime,
+                int count, int reminder, String endDate, String shoppingList, String taskStatus) {
+        this.id = id;
         this.name = name;
         this.type = TYPE.valueOf(type);
-        String[] startDateSplit = startDate.split(".");
-        //this.
 
+        this.startDate = START_DATE.CUSTOM;
+        String[] startDateSplit = startDate.split("\\.");
+        this.customStartDate = new customDate();
+        this.customStartDate.year = Integer.parseInt(startDateSplit[0]);
+        this.customStartDate.month = Integer.parseInt(startDateSplit[1]);
+        this.customStartDate.day = Integer.parseInt(startDateSplit[2]);
+        if (startTime.equals("none")) {
+            this.startTime = START_TIME.NONE;
+            this.customStartTime = new Daytime();
+        } else {
+            this.startTime = START_TIME.CUSTOM;
+            this.customStartTime = new Daytime();
+            String[] startTimeSplit = startTime.split("\\-");
+            this.customStartTime.hours = Integer.parseInt(startTimeSplit[0]);
+            this.customStartTime.minutes = Integer.parseInt(startTimeSplit[1]);
+        }
+
+        this.count = count;
+        if (reminder == 0)
+            this.needReminder = false;
+        else
+            this.needReminder = true;
+
+        if (endDate.equals("0000.00.00")) {
+            this.deadline = DEADLINE.NONE;
+            this.customEndDate = new customDate();
+        } else {
+            this.deadline = DEADLINE.CUSTOM;
+            this.customEndDate = new customDate();
+            String[] endDateSplit = endDate.split("\\.");
+            this.customEndDate.year = Integer.parseInt(endDateSplit[0]);
+            this.customEndDate.month = Integer.parseInt(endDateSplit[1]);
+            this.customEndDate.day = Integer.parseInt(endDateSplit[2]);
+        }
+
+        String[] shoppingListSplit = shoppingList.split("\\|");
+        for (String item: shoppingListSplit)
+            this.shoppingList.add(item);
+
+        this.status = STATUS.valueOf(taskStatus);
     }
 
     public Task(Bundle info) {
@@ -103,6 +148,8 @@ public class Task {
         this.customEndDate.day = info.getInt("endDay");
         this.customEndDate.month = info.getInt("endMonth");
         this.customEndDate.year = info.getInt("endYear");
+        // Default value
+        this.status = STATUS.ACTUAL;
     }
 
     public Intent formIntent(Intent intent, Task task) {
@@ -133,15 +180,26 @@ public class Task {
         TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
         SQLiteDatabase DB = tasksConnector.getWritableDatabase();
         DB.execSQL(tasksConnector.CREATE_TABLE);
+        ContentValues CV = getContentValues();
+        DB.insert("tasks", null, CV);
+        DB.close();
+    }
 
+    public void synchronize(Context context) {
+        TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
+        SQLiteDatabase DB = tasksConnector.getWritableDatabase();
+        ContentValues CV = getContentValues();
+        DB.update("tasks", CV, "_id = ?", new String[] { Integer.toString(this.id) });
+        DB.close();
+    }
+
+    public ContentValues getContentValues() {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-
         ContentValues CV = new ContentValues();
         CV.put("name", this.name);
         CV.put("type", this.type.toString());
 
-        String startDayStr = "";
         switch (this.startDate) {
             case TODAY:
                 this.customStartDate.year = calendar.get(Calendar.YEAR);
@@ -169,8 +227,8 @@ public class Task {
                 break;
             case CUSTOM:
                 CV.put("startTime",
-                    String.format("%02d", this.customStartTime.hours) + "-" +
-                    String.format("%02d", this.customStartTime.minutes));
+                        String.format("%02d", this.customStartTime.hours) + "-" +
+                                String.format("%02d", this.customStartTime.minutes));
                 break;
         }
 
@@ -217,8 +275,8 @@ public class Task {
 
         CV.put("endDate",
                 String.format("%04d", this.customEndDate.year) + "." +
-                String.format("%02d", this.customEndDate.month) + "." +
-                String.format("%02d", this.customEndDate.day));
+                        String.format("%02d", this.customEndDate.month) + "." +
+                        String.format("%02d", this.customEndDate.day));
 
         String strShoppingList = "";
         for (int i = 0; i < this.shoppingList.size(); i++) {
@@ -229,8 +287,14 @@ public class Task {
                 strShoppingList += item;
         }
         CV.put("shoppingList", strShoppingList);
-        DB.insert("tasks", null, CV);
-        DB.close();
+        CV.put("status", this.status.toString());
+        return CV;
+    }
+
+    public void logValues() {
+        Log.d("qq", Integer.toString(this.id));
+        Log.d("qq", this.name);
+        Log.d("qq", this.status.toString());
     }
 
 }
