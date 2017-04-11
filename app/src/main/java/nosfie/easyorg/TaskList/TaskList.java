@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -244,9 +245,17 @@ public class TaskList extends AppCompatActivity {
         deleteImage.setAdjustViewBounds(true);
         deleteImage.setImageResource(R.drawable.delete_icon_small);
 
+        deleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                processDeleteImageClick(task);
+            }
+        });
+
         buttonsRow.addView(deleteImage);
 
         row.addView(buttonsRow);
+        row.setId(1000 + task.id);
 
         taskList.addView(row);
 
@@ -321,6 +330,27 @@ public class TaskList extends AppCompatActivity {
         });
         levelDialog = builder.create();
         levelDialog.show();
+    }
+
+    protected void processDeleteImageClick(final Task task) {
+        AlertDialog.Builder ad = new AlertDialog.Builder(this);
+        ad.setTitle("Подтвердите удаление");  // заголовок
+        ad.setMessage("Вы действительно хотите удалить задачу \"" + task.name + "\" ?"); // сообщение
+        ad.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                task.delete(getApplicationContext());
+                LinearLayout taskRow = (LinearLayout)findViewById(1000 + task.id);
+                ((ViewManager)taskRow.getParent()).removeView(taskRow);
+                Toast.makeText(getApplicationContext(), "Задача удалена", Toast.LENGTH_SHORT).show();
+            }
+        });
+        ad.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                ///
+            }
+        });
+        ad.setCancelable(true);
+        ad.show();
     }
 
 }

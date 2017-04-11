@@ -193,6 +193,13 @@ public class Task {
         DB.close();
     }
 
+    public void delete(Context context) {
+        TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
+        SQLiteDatabase DB = tasksConnector.getWritableDatabase();
+        DB.delete("tasks", "_id = " + this.id, null);
+        DB.close();
+    }
+
     public ContentValues getContentValues() {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -289,12 +296,6 @@ public class Task {
         CV.put("shoppingList", strShoppingList);
         CV.put("status", this.status.toString());
         return CV;
-    }
-
-    public void logValues() {
-        Log.d("qq", Integer.toString(this.id));
-        Log.d("qq", this.name);
-        Log.d("qq", this.status.toString());
     }
 
 }
