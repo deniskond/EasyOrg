@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Task;
@@ -26,6 +28,10 @@ import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.R;
 
 public class TaskList extends AppCompatActivity {
+
+    public enum TIMESPAN {
+        TODAY, WEEK, MONTH, YEAR, UNLIMITED
+    }
 
     TextView result;
     Button deleteDbButton;
@@ -35,6 +41,10 @@ public class TaskList extends AppCompatActivity {
     float scale;
     LinearLayout taskList;
     final int TASK_ROW_HEIGHT = 45;
+    LinearLayout timespanButton;
+    LinearLayout timespanSelector;
+    TextView timespanText;
+    TIMESPAN timespan = TIMESPAN.TODAY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +55,20 @@ public class TaskList extends AppCompatActivity {
         result = (TextView)findViewById(R.id.testTextView);
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
         scale = getApplicationContext().getResources().getDisplayMetrics().density;
+        timespanSelector = (LinearLayout)findViewById(R.id.timespan_selector);
+        timespanText = (TextView)findViewById(R.id.timespan_text);
 
         getTasks();
+        setTimespanClickListeners();
+
+        timespanButton = (LinearLayout)findViewById(R.id.timespan_button);
+        timespanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSelectedTimespanImage();
+                timespanSelector.setVisibility(View.VISIBLE);
+            }
+        });
 
         deleteDbButton = (Button)findViewById(R.id.buttonDeleteDB);
         deleteDbButton.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +86,69 @@ public class TaskList extends AppCompatActivity {
 
     protected void getTasks() {
 
+        taskList.removeAllViews();
+
         DB = tasksConnector.getReadableDatabase();
 
         String columns[] = {"_id", "name", "type", "startDate",
                 "startTime", "count", "reminder", "endDate", "shoppingList", "status"};
 
-        Cursor cursor = DB.query("tasks", columns, null, null, null, null, "_id");
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        String whereClause = "";
+
+        switch (timespan) {
+            case TODAY:
+                whereClause = "enddate = '"
+                        + calendar.get(Calendar.YEAR) + "."
+                        + String.format("%02d", calendar.get(Calendar.MONTH) + 1) + "."
+                        + String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)) + "'";
+                Log.d("qq", whereClause);
+                break;
+            case WEEK:
+                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                int addition = 8 - dayOfWeek;
+                calendar.setTime(date);
+                calendar.add(Calendar.DATE, addition);
+                int endYear = calendar.get(Calendar.YEAR);
+                int endMonth = calendar.get(Calendar.MONTH) + 1;
+                int endDay = calendar.get(Calendar.DAY_OF_MONTH);
+                calendar.add(Calendar.DATE, -7);
+                int startYear = calendar.get(Calendar.YEAR);
+                int startMonth = calendar.get(Calendar.MONTH) + 1;
+                int startDay = calendar.get(Calendar.DAY_OF_MONTH);
+                whereClause = "enddate > '"
+                    + startYear + "."
+                    + String.format("%02d", startMonth) + "."
+                    + String.format("%02d", startDay) + "' AND enddate <= '" +
+                    + endYear + "."
+                    + String.format("%02d", endMonth) + "."
+                    + String.format("%02d", endDay) + "'";
+                Log.d("qq", whereClause);
+                break;
+            case MONTH:
+                int monthEnd = calendar.getActualMaximum(Calendar.DATE);
+                int month = calendar.get(Calendar.MONTH) + 1;
+                int year = calendar.get(Calendar.YEAR);
+                whereClause = "enddate >= '" + year + "."
+                    + String.format("%02d", month) + ".01' AND enddate <= '"
+                    + year + "." + String.format("%02d", month) + "." + monthEnd + "'";
+                Log.d("qq", whereClause);
+                break;
+            case YEAR:
+                whereClause = "enddate >= '" + calendar.get(Calendar.YEAR) +
+                        ".01.01' AND enddate <= '" + calendar.get(Calendar.YEAR) + ".12.31'";
+                Log.d("qq", whereClause);
+                break;
+            case UNLIMITED:
+                whereClause = "enddate = '0000.00.00'";
+                Log.d("qq", whereClause);
+                break;
+        }
+
+        Cursor cursor = DB.query("tasks", columns,
+                whereClause,
+                null, null, null, "_id");
 
         int num = 1;
         if (cursor != null) {
@@ -351,6 +430,98 @@ public class TaskList extends AppCompatActivity {
         });
         ad.setCancelable(true);
         ad.show();
+    }
+
+    protected void setTimespanClickListeners() {
+        LinearLayout timespanOptionToday = (LinearLayout)findViewById(R.id.timespanOptionToday);
+        timespanOptionToday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timespanText.setText("Задачи на сегодня");
+                timespan = TIMESPAN.TODAY;
+                getTasks();
+                timespanSelector.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        LinearLayout timespanOptionWeek = (LinearLayout)findViewById(R.id.timespanOptionWeek);
+        timespanOptionWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timespanText.setText("Задачи на неделю");
+                timespan = TIMESPAN.WEEK;
+                getTasks();
+                timespanSelector.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        LinearLayout timespanOptionMonth = (LinearLayout)findViewById(R.id.timespanOptionMonth);
+        timespanOptionMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timespanText.setText("Задачи на месяц");
+                timespan = TIMESPAN.MONTH;
+                getTasks();
+                timespanSelector.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        LinearLayout timespanOptionYear = (LinearLayout)findViewById(R.id.timespanOptionYear);
+        timespanOptionYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timespanText.setText("Задачи на год");
+                timespan = TIMESPAN.YEAR;
+                getTasks();
+                timespanSelector.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        LinearLayout timespanOptionUnlimited = (LinearLayout)findViewById(R.id.timespanOptionUnlimited);
+        timespanOptionUnlimited.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timespanText.setText("Бессрочные задачи");
+                timespan = TIMESPAN.UNLIMITED;
+                getTasks();
+                timespanSelector.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
+    protected void setSelectedTimespanImage() {
+        ImageView optionTodayImage = (ImageView)findViewById(R.id.optionTodayImage);
+        ImageView optionWeekImage = (ImageView)findViewById(R.id.optionWeekImage);
+        ImageView optionMonthImage = (ImageView)findViewById(R.id.optionMonthImage);
+        ImageView optionYearImage = (ImageView)findViewById(R.id.optionYearImage);
+        ImageView optionUnlimitedImage = (ImageView)findViewById(R.id.optionUnlimitedImage);
+
+        if (timespan == TIMESPAN.TODAY)
+            optionTodayImage.setImageResource(R.drawable.tick_icon);
+        else
+            optionTodayImage.setImageResource(R.drawable.empty_tick_icon);
+
+        if (timespan == TIMESPAN.WEEK)
+            optionWeekImage.setImageResource(R.drawable.tick_icon);
+        else
+            optionWeekImage.setImageResource(R.drawable.empty_tick_icon);
+
+        if (timespan == TIMESPAN.MONTH)
+            optionMonthImage.setImageResource(R.drawable.tick_icon);
+        else
+            optionMonthImage.setImageResource(R.drawable.empty_tick_icon);
+
+        if (timespan == TIMESPAN.YEAR)
+            optionYearImage.setImageResource(R.drawable.tick_icon);
+        else
+            optionYearImage.setImageResource(R.drawable.empty_tick_icon);
+
+        if (timespan == TIMESPAN.UNLIMITED)
+            optionUnlimitedImage.setImageResource(R.drawable.tick_icon);
+        else
+            optionUnlimitedImage.setImageResource(R.drawable.empty_tick_icon);
+
     }
 
 }
