@@ -87,6 +87,7 @@ public class TaskList extends AppCompatActivity {
     protected void getTasks() {
 
         taskList.removeAllViews();
+        result.setText("");
 
         DB = tasksConnector.getReadableDatabase();
 
@@ -173,7 +174,7 @@ public class TaskList extends AppCompatActivity {
                     num++;
 
                     result.setText(
-                        result.getText().toString() + "\n" +
+                            result.getText().toString() + "\n" +
                             cursor.getString(0) + ") " +
                             cursor.getString(1) + ", " +
                             cursor.getString(2) + ", " +

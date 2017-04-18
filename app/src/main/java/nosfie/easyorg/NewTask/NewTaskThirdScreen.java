@@ -2,7 +2,6 @@ package nosfie.easyorg.NewTask;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,7 +45,7 @@ public class NewTaskThirdScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskThirdScreen.this, NewTaskSecondScreen.class);
-                task.deadline = Task.DEADLINE.TODAY;
+                task.deadline = Task.DEADLINE.DAY;
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
@@ -72,7 +71,7 @@ public class NewTaskThirdScreen extends AppCompatActivity {
                 int idx = radioGroup.indexOfChild(radioButton);
                 switch (idx) {
                     case 0:
-                        task.deadline = Task.DEADLINE.TODAY;
+                        task.deadline = Task.DEADLINE.DAY;
                         customDate.setText("Не выбрана");
                         break;
                     case 1:

@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class Task {
     }
 
     public enum DEADLINE {
-        TODAY, WEEK, MONTH, YEAR, NONE, CUSTOM
+        DAY, WEEK, MONTH, YEAR, NONE, CUSTOM
     }
 
     public class Daytime {
@@ -72,7 +73,7 @@ public class Task {
     public Task() {
         this.startDate = START_DATE.TODAY;
         this.startTime = START_TIME.NONE;
-        this.deadline = DEADLINE.TODAY;
+        this.deadline = DEADLINE.DAY;
         this.customStartDate = new customDate();
         this.customStartTime = new Daytime();
         this.needReminder = false;
@@ -245,9 +246,18 @@ public class Task {
         else
             CV.put("reminder", 0);
 
-        calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        String dateInString = this.customStartDate.day
+                + "-" + this.customStartDate.month
+                + "-" + this.customStartDate.year;
+        try {
+            calendar.setTime(sdf.parse(dateInString));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         switch (this.deadline) {
-            case TODAY:
+            case DAY:
                 this.customEndDate.year = calendar.get(Calendar.YEAR);
                 this.customEndDate.month = calendar.get(Calendar.MONTH) + 1;
                 this.customEndDate.day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -255,7 +265,6 @@ public class Task {
             case WEEK:
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                 int addition = 8 - dayOfWeek;
-                calendar.setTime(date);
                 calendar.add(Calendar.DATE, addition);
                 this.customEndDate.year = calendar.get(Calendar.YEAR);
                 this.customEndDate.month = calendar.get(Calendar.MONTH) + 1;
