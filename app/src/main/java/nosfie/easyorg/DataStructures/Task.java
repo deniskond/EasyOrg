@@ -37,31 +37,11 @@ public class Task {
         DAY, WEEK, MONTH, YEAR, NONE, CUSTOM
     }
 
-    public class Daytime {
-        public int hours;
-        public int minutes;
-        Daytime() {
-            this.hours = 0;
-            this.minutes = 0;
-        }
-    }
-
-    public class customDate {
-        public int day;
-        public int month;
-        public int year;
-        customDate() {
-            this.day = 0;
-            this.month = 0;
-            this.year = 0;
-        }
-    }
-
     public int id;
     public String name;
     public int count;
     public boolean needReminder;
-    public customDate customStartDate = new customDate(), customEndDate = new customDate();
+    public CustomDate customStartDate = new CustomDate(), customEndDate = new CustomDate();
     public TYPE type;
     public START_DATE startDate;
     public START_TIME startTime;
@@ -74,10 +54,10 @@ public class Task {
         this.startDate = START_DATE.TODAY;
         this.startTime = START_TIME.NONE;
         this.deadline = DEADLINE.DAY;
-        this.customStartDate = new customDate();
+        this.customStartDate = new CustomDate();
         this.customStartTime = new Daytime();
         this.needReminder = false;
-        this.customEndDate = new customDate();
+        this.customEndDate = new CustomDate();
     }
 
     public Task(int id, String name, String type, String startDate, String startTime,
@@ -88,7 +68,7 @@ public class Task {
 
         this.startDate = START_DATE.CUSTOM;
         String[] startDateSplit = startDate.split("\\.");
-        this.customStartDate = new customDate();
+        this.customStartDate = new CustomDate();
         this.customStartDate.year = Integer.parseInt(startDateSplit[0]);
         this.customStartDate.month = Integer.parseInt(startDateSplit[1]);
         this.customStartDate.day = Integer.parseInt(startDateSplit[2]);
@@ -111,10 +91,10 @@ public class Task {
 
         if (endDate.equals("0000.00.00")) {
             this.deadline = DEADLINE.NONE;
-            this.customEndDate = new customDate();
+            this.customEndDate = new CustomDate();
         } else {
             this.deadline = DEADLINE.CUSTOM;
-            this.customEndDate = new customDate();
+            this.customEndDate = new CustomDate();
             String[] endDateSplit = endDate.split("\\.");
             this.customEndDate.year = Integer.parseInt(endDateSplit[0]);
             this.customEndDate.month = Integer.parseInt(endDateSplit[1]);
@@ -202,41 +182,31 @@ public class Task {
     }
 
     public ContentValues getContentValues() {
-        Date date = new Date();
         Calendar calendar = Calendar.getInstance();
+        DayValues dayValues = new DayValues();
         ContentValues CV = new ContentValues();
         CV.put("name", this.name);
         CV.put("type", this.type.toString());
 
         switch (this.startDate) {
             case TODAY:
-                this.customStartDate.year = calendar.get(Calendar.YEAR);
-                this.customStartDate.month = calendar.get(Calendar.MONTH) + 1;
-                this.customStartDate.day = calendar.get(Calendar.DAY_OF_MONTH);
+                this.customStartDate = dayValues.today;
                 break;
             case TOMORROW:
-                calendar.setTime(date);
-                calendar.add(Calendar.DATE, 1);
-                this.customStartDate.year = calendar.get(Calendar.YEAR);
-                this.customStartDate.month = calendar.get(Calendar.MONTH) + 1;
-                this.customStartDate.day = calendar.get(Calendar.DAY_OF_MONTH);
+                this.customStartDate = dayValues.tomorrow;
                 break;
             case CUSTOM:
                 break;
         }
 
-        CV.put("startDate", String.format("%04d", this.customStartDate.year) + "." +
-                String.format("%02d", this.customStartDate.month) + "." +
-                String.format("%02d", this.customStartDate.day));
+        CV.put("startDate", this.customStartDate.toString());
 
         switch (this.startTime) {
             case NONE:
                 CV.put("startTime", "none");
                 break;
             case CUSTOM:
-                CV.put("startTime",
-                        String.format("%02d", this.customStartTime.hours) + "-" +
-                                String.format("%02d", this.customStartTime.minutes));
+                CV.put("startTime", this.customStartTime.toString());
                 break;
         }
 
@@ -265,6 +235,7 @@ public class Task {
             case WEEK:
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                 int addition = 8 - dayOfWeek;
+                if (addition == 7) addition = 0;
                 calendar.add(Calendar.DATE, addition);
                 this.customEndDate.year = calendar.get(Calendar.YEAR);
                 this.customEndDate.month = calendar.get(Calendar.MONTH) + 1;
@@ -289,10 +260,7 @@ public class Task {
                 break;
         }
 
-        CV.put("endDate",
-                String.format("%04d", this.customEndDate.year) + "." +
-                        String.format("%02d", this.customEndDate.month) + "." +
-                        String.format("%02d", this.customEndDate.day));
+        CV.put("endDate", this.customEndDate.toString());
 
         String strShoppingList = "";
         for (int i = 0; i < this.shoppingList.size(); i++) {

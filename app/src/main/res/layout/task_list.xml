@@ -103,17 +103,17 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:paddingStart="15dp"
-                    android:progress="50"
+                    android:progress="0"
                     android:progressDrawable="@drawable/progressbar" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/progressBarText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_weight="10"
-                    android:text="5/10"
+                    android:text="0/0"
                     android:textAlignment="center" />
             </LinearLayout>
 

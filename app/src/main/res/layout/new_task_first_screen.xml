@@ -101,8 +101,9 @@
                     android:layout_marginRight="20dp"
                     android:layout_weight="1"
                     android:background="@drawable/border"
+                    android:capitalize="sentences"
                     android:ems="8"
-                    android:inputType="textPersonName" />
+                    android:inputType="textCapSentences" />
 
             </TableRow>
 

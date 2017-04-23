@@ -15,14 +15,14 @@ import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import nosfie.easyorg.Constants;
+import nosfie.easyorg.DataStructures.DayValues;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.R;
@@ -45,6 +45,8 @@ public class TaskList extends AppCompatActivity {
     LinearLayout timespanSelector;
     TextView timespanText;
     TIMESPAN timespan = TIMESPAN.TODAY;
+    TextView progressBarText;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class TaskList extends AppCompatActivity {
         scale = getApplicationContext().getResources().getDisplayMetrics().density;
         timespanSelector = (LinearLayout)findViewById(R.id.timespan_selector);
         timespanText = (TextView)findViewById(R.id.timespan_text);
+        progressBarText = (TextView)findViewById(R.id.progressBarText);
+        progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
 
         getTasks();
         setTimespanClickListeners();
@@ -85,67 +89,51 @@ public class TaskList extends AppCompatActivity {
     }
 
     protected void getTasks() {
-
+        tasks.clear();
         taskList.removeAllViews();
         result.setText("");
-
         DB = tasksConnector.getReadableDatabase();
+        DayValues dayValues = new DayValues();
 
         String columns[] = {"_id", "name", "type", "startDate",
                 "startTime", "count", "reminder", "endDate", "shoppingList", "status"};
 
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
         String whereClause = "";
 
         switch (timespan) {
             case TODAY:
-                whereClause = "enddate = '"
-                        + calendar.get(Calendar.YEAR) + "."
-                        + String.format("%02d", calendar.get(Calendar.MONTH) + 1) + "."
-                        + String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)) + "'";
-                Log.d("qq", whereClause);
+                whereClause = "(startdate = '" + dayValues.today
+                        + "' AND enddate = '" + dayValues.today +"') OR "
+                        + "(enddate = '" + dayValues.today
+                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
                 break;
             case WEEK:
-                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                int addition = 8 - dayOfWeek;
-                calendar.setTime(date);
-                calendar.add(Calendar.DATE, addition);
-                int endYear = calendar.get(Calendar.YEAR);
-                int endMonth = calendar.get(Calendar.MONTH) + 1;
-                int endDay = calendar.get(Calendar.DAY_OF_MONTH);
-                calendar.add(Calendar.DATE, -7);
-                int startYear = calendar.get(Calendar.YEAR);
-                int startMonth = calendar.get(Calendar.MONTH) + 1;
-                int startDay = calendar.get(Calendar.DAY_OF_MONTH);
-                whereClause = "enddate > '"
-                    + startYear + "."
-                    + String.format("%02d", startMonth) + "."
-                    + String.format("%02d", startDay) + "' AND enddate <= '" +
-                    + endYear + "."
-                    + String.format("%02d", endMonth) + "."
-                    + String.format("%02d", endDay) + "'";
-                Log.d("qq", whereClause);
+                whereClause = "(startdate != '" + dayValues.endOfWeek
+                        + "' AND enddate = '" + dayValues.endOfWeek + "') OR "
+                        + "(enddate > '" + dayValues.startOfWeek
+                        + "' AND enddate <= '" + dayValues.endOfWeek
+                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
                 break;
             case MONTH:
-                int monthEnd = calendar.getActualMaximum(Calendar.DATE);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int year = calendar.get(Calendar.YEAR);
-                whereClause = "enddate >= '" + year + "."
-                    + String.format("%02d", month) + ".01' AND enddate <= '"
-                    + year + "." + String.format("%02d", month) + "." + monthEnd + "'";
-                Log.d("qq", whereClause);
+                whereClause = "(enddate = '" + dayValues.endOfMonth
+                        + "' AND startdate < '" + dayValues.startOfWeek + "') OR "
+                        + "(enddate >= '" + dayValues.startOfMonth
+                        + "' AND enddate <= '" + dayValues.endOfMonth
+                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
                 break;
             case YEAR:
-                whereClause = "enddate >= '" + calendar.get(Calendar.YEAR) +
-                        ".01.01' AND enddate <= '" + calendar.get(Calendar.YEAR) + ".12.31'";
-                Log.d("qq", whereClause);
+                whereClause = "(enddate = '" + dayValues.endOfYear
+                        + "' AND startdate < '" + dayValues.startOfMonth + "') OR "
+                        + "(enddate >= '" + dayValues.startOfYear
+                        + "' AND enddate <= '" + dayValues.endOfYear
+                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
                 break;
             case UNLIMITED:
                 whereClause = "enddate = '0000.00.00'";
-                Log.d("qq", whereClause);
                 break;
         }
+
+        result.setText(whereClause);
 
         Cursor cursor = DB.query("tasks", columns,
                 whereClause,
@@ -173,6 +161,7 @@ public class TaskList extends AppCompatActivity {
                     addTaskRow(num, task);
                     num++;
 
+                    /*
                     result.setText(
                             result.getText().toString() + "\n" +
                             cursor.getString(0) + ") " +
@@ -186,12 +175,13 @@ public class TaskList extends AppCompatActivity {
                             "shoppingList: " +
                             cursor.getString(8) + ", " +
                             cursor.getString(9)
-                    );
+                    );*/
                 } while (cursor.moveToNext());
             }
         }
 
         DB.close();
+        redrawProgressBar();
     }
 
     protected void addTaskRow(int num, final Task task) {
@@ -405,6 +395,7 @@ public class TaskList extends AppCompatActivity {
                 LinearLayout taskRow = (LinearLayout)findViewById(task.id);
                 taskRow.setBackgroundColor(getResources().getColor(color));
                 task.synchronize(getApplicationContext());
+                redrawProgressBar();
                 dialog.dismiss();
             }
         });
@@ -523,6 +514,16 @@ public class TaskList extends AppCompatActivity {
         else
             optionUnlimitedImage.setImageResource(R.drawable.empty_tick_icon);
 
+    }
+
+    protected void redrawProgressBar() {
+        int taskCount = tasks.size();
+        int tasksDone = 0;
+        for (Task task: tasks)
+            if (task.status == Task.STATUS.DONE)
+                tasksDone++;
+        progressBarText.setText(Integer.toString(tasksDone) + "/" + Integer.toString(taskCount));
+        progressBar.setProgress((int)((double)tasksDone / (double)taskCount * 100));
     }
 
 }
