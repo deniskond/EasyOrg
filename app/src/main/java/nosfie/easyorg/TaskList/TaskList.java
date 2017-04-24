@@ -94,15 +94,9 @@ public class TaskList extends AppCompatActivity {
         result.setText("");
         DB = tasksConnector.getReadableDatabase();
 
-        String columns[] = {"_id", "name", "type", "startDate",
-                "startTime", "count", "reminder", "endDate", "shoppingList", "status"};
+        String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
+                "reminder", "endDate", "shoppingList", "status", "currentcount"};
 
-        /*String whereClause = "";
-
-
-        result.setText(whereClause);*/
-
-        // Cursor cursor = DB.query("tasks", columns, whereClause, null, null, null, "_id");
         Cursor cursor = DB.query("tasks", columns, null, null, null, null, "_id");
 
         if (cursor != null) {
@@ -119,7 +113,8 @@ public class TaskList extends AppCompatActivity {
                         cursor.getInt(6),
                         cursor.getString(7),
                         cursor.getString(8),
-                        cursor.getString(9)
+                        cursor.getString(9),
+                        cursor.getInt(10)
                     );
                     tasks.add(task);
                 } while (cursor.moveToNext());

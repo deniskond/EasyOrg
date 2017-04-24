@@ -39,7 +39,7 @@ public class Task {
 
     public int id;
     public String name;
-    public int count;
+    public int count, currentCount;
     public boolean needReminder;
     public CustomDate customStartDate = new CustomDate(), customEndDate = new CustomDate();
     public TYPE type;
@@ -61,7 +61,8 @@ public class Task {
     }
 
     public Task(int id, String name, String type, String startDate, String startTime,
-                int count, int reminder, String endDate, String shoppingList, String taskStatus) {
+                int count, int reminder, String endDate, String shoppingList, String taskStatus,
+                int currentCount) {
         this.id = id;
         this.name = name;
         this.type = TYPE.valueOf(type);
@@ -84,6 +85,7 @@ public class Task {
         }
 
         this.count = count;
+        this.currentCount = currentCount;
         if (reminder == 0)
             this.needReminder = false;
         else
@@ -113,6 +115,7 @@ public class Task {
         this.name = info.getString("taskName");
         this.type = TYPE.valueOf(info.getString("taskType"));
         this.count = info.getInt("taskCount");
+        this.currentCount = 0;
         // Shopping list screen
         this.shoppingList = info.getStringArrayList("shoppingList");
         // Second screen
@@ -272,6 +275,7 @@ public class Task {
         }
         CV.put("shoppingList", strShoppingList);
         CV.put("status", this.status.toString());
+        CV.put("currentcount", this.currentCount);
         return CV;
     }
 
