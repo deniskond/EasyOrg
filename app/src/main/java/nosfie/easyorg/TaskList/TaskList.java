@@ -93,53 +93,18 @@ public class TaskList extends AppCompatActivity {
         taskList.removeAllViews();
         result.setText("");
         DB = tasksConnector.getReadableDatabase();
-        DayValues dayValues = new DayValues();
 
         String columns[] = {"_id", "name", "type", "startDate",
                 "startTime", "count", "reminder", "endDate", "shoppingList", "status"};
 
-        String whereClause = "";
+        /*String whereClause = "";
 
-        switch (timespan) {
-            case TODAY:
-                whereClause = "(startdate = '" + dayValues.today
-                        + "' AND enddate = '" + dayValues.today +"') OR "
-                        + "(enddate = '" + dayValues.today
-                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
-                break;
-            case WEEK:
-                whereClause = "(startdate != '" + dayValues.endOfWeek
-                        + "' AND enddate = '" + dayValues.endOfWeek + "') OR "
-                        + "(enddate > '" + dayValues.startOfWeek
-                        + "' AND enddate <= '" + dayValues.endOfWeek
-                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
-                break;
-            case MONTH:
-                whereClause = "(enddate = '" + dayValues.endOfMonth
-                        + "' AND startdate < '" + dayValues.startOfWeek + "') OR "
-                        + "(enddate >= '" + dayValues.startOfMonth
-                        + "' AND enddate <= '" + dayValues.endOfMonth
-                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
-                break;
-            case YEAR:
-                whereClause = "(enddate = '" + dayValues.endOfYear
-                        + "' AND startdate < '" + dayValues.startOfMonth + "') OR "
-                        + "(enddate >= '" + dayValues.startOfYear
-                        + "' AND enddate <= '" + dayValues.endOfYear
-                        + "' AND status != 'DONE' AND status != 'NOT DONE')";
-                break;
-            case UNLIMITED:
-                whereClause = "enddate = '0000.00.00'";
-                break;
-        }
 
-        result.setText(whereClause);
+        result.setText(whereClause);*/
 
-        Cursor cursor = DB.query("tasks", columns,
-                whereClause,
-                null, null, null, "_id");
+        // Cursor cursor = DB.query("tasks", columns, whereClause, null, null, null, "_id");
+        Cursor cursor = DB.query("tasks", columns, null, null, null, null, "_id");
 
-        int num = 1;
         if (cursor != null) {
             cursor.moveToFirst();
             if (cursor.moveToFirst()) {
@@ -156,31 +121,18 @@ public class TaskList extends AppCompatActivity {
                         cursor.getString(8),
                         cursor.getString(9)
                     );
-
                     tasks.add(task);
-                    addTaskRow(num, task);
-                    num++;
-
-                    /*
-                    result.setText(
-                            result.getText().toString() + "\n" +
-                            cursor.getString(0) + ") " +
-                            cursor.getString(1) + ", " +
-                            cursor.getString(2) + ", " +
-                            cursor.getString(3) + ", " +
-                            cursor.getString(4) + ", " +
-                            cursor.getInt(5) + ", " +
-                            cursor.getInt(6) + ", " +
-                            cursor.getString(7) + ", " +
-                            "shoppingList: " +
-                            cursor.getString(8) + ", " +
-                            cursor.getString(9)
-                    );*/
                 } while (cursor.moveToNext());
             }
         }
-
         DB.close();
+
+        tasks = filterTasksByTimespan(tasks, timespan);
+        int num = 1;
+        for (Task task: tasks) {
+            addTaskRow(num, task);
+            num++;
+        }
         redrawProgressBar();
     }
 
@@ -513,7 +465,6 @@ public class TaskList extends AppCompatActivity {
             optionUnlimitedImage.setImageResource(R.drawable.tick_icon);
         else
             optionUnlimitedImage.setImageResource(R.drawable.empty_tick_icon);
-
     }
 
     protected void redrawProgressBar() {
@@ -524,6 +475,77 @@ public class TaskList extends AppCompatActivity {
                 tasksDone++;
         progressBarText.setText(Integer.toString(tasksDone) + "/" + Integer.toString(taskCount));
         progressBar.setProgress((int)((double)tasksDone / (double)taskCount * 100));
+    }
+
+    protected ArrayList<Task> filterTasksByTimespan(ArrayList<Task> tasks, TIMESPAN timespan) {
+        if (timespan == TIMESPAN.UNLIMITED) {
+            ArrayList<Task> unlimitedTasks = new ArrayList<>();
+            for (Task task: tasks)
+                if (task.customEndDate.year == 0)
+                    unlimitedTasks.add(task);
+            return unlimitedTasks;
+        }
+
+        ArrayList<Task> todayTasks = new ArrayList<>();
+        DayValues dayValues = new DayValues();
+        for (Task task: tasks) {
+            String startDate = task.customStartDate.toString();
+            String endDate = task.customEndDate.toString();
+            String today = dayValues.today.toString();
+            if ((startDate.equals(today) && endDate.equals(today)) ||
+                (endDate.equals(today) && task.status != Task.STATUS.DONE
+                    && task.status != Task.STATUS.NOT_DONE))
+                todayTasks.add(task);
+        }
+        if (timespan == TIMESPAN.TODAY)
+            return todayTasks;
+
+        ArrayList<Task> weekTasks = new ArrayList<>();
+        for (Task task: tasks) {
+            String endDate = task.customEndDate.toString();
+            String startOfWeek = dayValues.startOfWeek.toString();
+            String endOfWeek = dayValues.endOfWeek.toString();
+            if ((endDate.equals(endOfWeek)) ||
+                (endDate.compareTo(startOfWeek) > 0 &&
+                 endDate.compareTo(endOfWeek) <= 0 &&
+                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE)) {
+                if (!todayTasks.contains(task))
+                    weekTasks.add(task);
+            }
+        }
+        if (timespan == TIMESPAN.WEEK)
+            return weekTasks;
+
+        ArrayList<Task> monthTasks = new ArrayList<>();
+        for (Task task: tasks) {
+            String endDate = task.customEndDate.toString();
+            String startOfMonth = dayValues.startOfMonth.toString();
+            String endOfMonth = dayValues.endOfMonth.toString();
+            if (endDate.equals(endOfMonth) ||
+                (endDate.compareTo(startOfMonth) >= 0 &&
+                 endDate.compareTo(endOfMonth) <= 0 &&
+                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE)) {
+                if (!todayTasks.contains(task) && !weekTasks.contains(task))
+                    monthTasks.add(task);
+            }
+        }
+        if (timespan == TIMESPAN.MONTH)
+            return monthTasks;
+
+        ArrayList<Task> yearTasks = new ArrayList<>();
+        for (Task task: tasks) {
+            String endDate = task.customEndDate.toString();
+            String endOfYear = dayValues.endOfYear.toString();
+            String startOfYear = dayValues.startOfYear.toString();
+            if (endDate.equals(endOfYear) ||
+                (endDate.compareTo(startOfYear) >= 0 &&
+                 endDate.compareTo(endOfYear) <= 0 &&
+                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE)) {
+                if (!todayTasks.contains(task) && !weekTasks.contains(task) && !monthTasks.contains(task))
+                    yearTasks.add(task);
+            }
+        }
+        return yearTasks;
     }
 
 }
