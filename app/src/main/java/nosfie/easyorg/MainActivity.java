@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -33,21 +34,39 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
         }
 
-        LinearLayout newTask = (LinearLayout)findViewById(R.id.new_task_button);
-        newTask.setOnClickListener(new View.OnClickListener() {
+        final LinearLayout newTask = (LinearLayout)findViewById(R.id.new_task_button);
+        newTask.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NewTaskFirstScreen.class);
-                startActivity(intent);
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        newTask.setBackgroundColor(0xFFEEEEEE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        newTask.setBackgroundColor(0xFFFFFFFF);
+                        Intent intent = new Intent(MainActivity.this, NewTaskFirstScreen.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
             }
         });
 
-        LinearLayout currentTaskList = (LinearLayout)findViewById(R.id.current_task_list);
-        currentTaskList.setOnClickListener(new View.OnClickListener() {
+        final LinearLayout currentTaskList = (LinearLayout)findViewById(R.id.current_task_list);
+        currentTaskList.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TaskList.class);
-                startActivity(intent);
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        currentTaskList.setBackgroundColor(0xFFEEEEEE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        currentTaskList.setBackgroundColor(0xFFFFFFFF);
+                        Intent intent = new Intent(MainActivity.this, TaskList.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
             }
         });
 
