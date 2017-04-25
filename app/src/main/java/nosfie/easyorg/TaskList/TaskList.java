@@ -1,21 +1,30 @@
 package nosfie.easyorg.TaskList;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -162,6 +171,7 @@ public class TaskList extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT);
         number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         number.setText(Integer.toString(num));
+        number.setTypeface(null, Typeface.BOLD);
         number.setGravity(Gravity.CENTER);
         number.setLayoutParams(numberParams);
 
@@ -211,15 +221,27 @@ public class TaskList extends AppCompatActivity {
         TextView name = new TextView(this);
         LinearLayout.LayoutParams nameParams =
                 new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
         name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         name.setText(task.name);
         name.setGravity(Gravity.CENTER_VERTICAL);
         name.setLayoutParams(nameParams);
-
-
         taskNameRow.addView(name);
+
+        if (task.type == Task.TYPE.COUNTABLE) {
+            TextView count = new TextView(this);
+            LinearLayout.LayoutParams countParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+            count.setTextColor(0xFFFF0000);
+            count.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            count.setText(" (" + task.currentCount + "/" + task.count + ")");
+            count.setGravity(Gravity.CENTER_VERTICAL);
+            count.setLayoutParams(countParams);
+            taskNameRow.addView(count);
+        }
 
         row.addView(taskNameRow);
 
@@ -285,6 +307,112 @@ public class TaskList extends AppCompatActivity {
 
     protected void processTaskNameClick(final Task task) {
 
+        switch (task.type) {
+            case SIMPLE:
+                showSimpleTaskDialog(task);
+                break;
+            case COUNTABLE:
+                showCountableTaskDialog(task);
+                break;
+        }
+
+    }
+
+    protected void showCountableTaskDialog(final Task task) {
+        // retrieve display dimensions
+        Display display = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+
+        final Dialog countableDialog = new Dialog(this);
+        LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.countable_dialog, (ViewGroup)findViewById(R.id.countable_dialog_root));
+        countableDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        countableDialog.setContentView(layout);
+
+        final RadioButton radioActual = (RadioButton)layout.findViewById(R.id.radioActual);
+        final RadioButton radioDone = (RadioButton)layout.findViewById(R.id.radioDone);
+        final RadioButton radioNotDone = (RadioButton)layout.findViewById(R.id.radioNotDone);
+        final RadioButton radioPostponed = (RadioButton)layout.findViewById(R.id.radioPostponed);
+        LinearLayout countableDialogRoot = (LinearLayout)layout.findViewById(R.id.countable_dialog_root);
+        countableDialogRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        final SeekBar seekBar = (SeekBar)layout.findViewById(R.id.countableSeekbar);
+        seekBar.setProgress(task.currentCount);
+        seekBar.setMax(task.count);
+        final TextView countText = (TextView)layout.findViewById(R.id.count_text);
+        countText.setText(task.currentCount + "/" + task.count);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                countText.setText(i + "/" + task.count);
+                if (i == task.count) {
+                    radioDone.setChecked(true);
+                    radioActual.setEnabled(false);
+                    radioNotDone.setEnabled(false);
+                    radioPostponed.setEnabled(false);
+                }
+                else {
+                    radioActual.setChecked(true);
+                    radioActual.setEnabled(true);
+                    radioNotDone.setEnabled(true);
+                    radioPostponed.setEnabled(true);
+                }
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        radioDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                seekBar.setProgress(task.count);
+            }
+        });
+
+        switch (task.status) {
+            case ACTUAL:
+                radioActual.setChecked(true);
+                break;
+            case DONE:
+                radioDone.setChecked(true);
+            case NOT_DONE:
+                radioNotDone.setChecked(true);
+                break;
+            case POSTPONED:
+                radioPostponed.setChecked(true);
+                break;
+        }
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                countableDialog.dismiss();
+            }
+        });
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioActual.isChecked())
+                    task.status = Task.STATUS.ACTUAL;
+                if (radioNotDone.isChecked())
+                    task.status = Task.STATUS.NOT_DONE;
+                if (radioPostponed.isChecked())
+                    task.status = Task.STATUS.POSTPONED;
+                task.currentCount = seekBar.getProgress();
+                if (task.currentCount == task.count)
+                    task.status = Task.STATUS.DONE;
+                task.synchronize(getApplicationContext());getTasks();
+                getTasks();
+                countableDialog.dismiss();
+            }
+        });
+        countableDialog.show();
+    }
+
+    protected void showSimpleTaskDialog(final Task task) {
         int status = 0;
         for (Task t: tasks) {
             if (t.id == task.id) {
@@ -310,7 +438,7 @@ public class TaskList extends AppCompatActivity {
         }
 
         final CharSequence[] items = {"Актуальна", "Выполнена", "Не будет выполнена", "Частично выполнена", "Отложена"};
-        final AlertDialog levelDialog;
+        final AlertDialog simpleTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Отметить статус задачи");
 
@@ -347,8 +475,8 @@ public class TaskList extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        levelDialog = builder.create();
-        levelDialog.show();
+        simpleTaskDialog = builder.create();
+        simpleTaskDialog.show();
     }
 
     protected void processDeleteImageClick(final Task task) {
