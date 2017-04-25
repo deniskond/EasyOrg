@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.DayValues;
@@ -482,7 +483,10 @@ public class TaskList extends AppCompatActivity {
         }
 
         ArrayList<Task> todayTasks = new ArrayList<>();
-        DayValues dayValues = new DayValues();
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 3)
+            calendar.add(Calendar.HOUR_OF_DAY, -3);
+        DayValues dayValues = new DayValues(calendar);
         for (Task task: tasks) {
             String startDate = task.customStartDate.toString();
             String endDate = task.customEndDate.toString();

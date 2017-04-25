@@ -87,8 +87,7 @@
                 android:background="@drawable/border_bottom"
                 android:orientation="horizontal"
                 android:paddingBottom="7dp"
-                android:paddingTop="5dp"
-                android:weightSum="100">
+                android:paddingTop="5dp">
 
                 <ProgressBar
                     android:id="@+id/mprogressBar"
@@ -97,7 +96,7 @@
                     android:layout_height="10dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="90"
+                    android:layout_weight="1"
                     android:indeterminate="false"
                     android:paddingEnd="15dp"
                     android:paddingLeft="15dp"
@@ -108,11 +107,9 @@
 
                 <TextView
                     android:id="@+id/progressBarText"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_weight="10"
                     android:text="0/0"
                     android:textAlignment="center" />
             </LinearLayout>

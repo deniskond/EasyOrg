@@ -13,8 +13,8 @@ public class DayValues {
     public CustomDate startOfYear = new CustomDate();
     public CustomDate endOfYear = new CustomDate();
 
-    public DayValues() {
-        Calendar calendar = Calendar.getInstance();
+    public DayValues(Calendar calendar) {
+        //Calendar calendar = Calendar.getInstance();
 
         // TODAY
         this.today.year = calendar.get(Calendar.YEAR);

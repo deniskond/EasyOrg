@@ -186,7 +186,7 @@ public class Task {
 
     public ContentValues getContentValues() {
         Calendar calendar = Calendar.getInstance();
-        DayValues dayValues = new DayValues();
+        DayValues dayValues = new DayValues(calendar);
         ContentValues CV = new ContentValues();
         CV.put("name", this.name);
         CV.put("type", this.type.toString());
