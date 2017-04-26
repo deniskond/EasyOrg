@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,6 +21,9 @@ public class NewTaskFirstScreen extends AppCompatActivity {
     EditText taskEdit, countEdit;
     TextView countText;
     Task task = new Task();
+    RadioGroup radio_group;
+    CheckBox forTodayCheckbox;
+    Button button_cancel, button_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
             }
         }
 
-        RadioGroup radio_group = (RadioGroup)findViewById(R.id.radioGroup);
+        radio_group = (RadioGroup)findViewById(R.id.radioGroup);
         radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()  {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checked) {
@@ -83,7 +87,19 @@ public class NewTaskFirstScreen extends AppCompatActivity {
             }
         });
 
-        Button button_cancel = (Button)findViewById(R.id.buttonCancel);
+        forTodayCheckbox = (CheckBox)findViewById(R.id.forTodayCheckBox);
+        forTodayCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (forTodayCheckbox.isChecked()) {
+                    button_next.setText("Готово");
+                } else {
+                    button_next.setText("Дальше");
+                }
+            }
+        });
+
+        button_cancel = (Button)findViewById(R.id.buttonCancel);
         button_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +108,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
             }
         });
 
-        Button button_next = (Button)findViewById(R.id.buttonNext);
+        button_next = (Button)findViewById(R.id.buttonNext);
         button_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +128,17 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     return;
                 }
                 Intent intent;
-                if (task.type == Task.TYPE.SHOPPING_LIST)
+
+                if (forTodayCheckbox.isChecked()) {
+                    intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
+                    task.startTime = Task.START_TIME.NONE;
+                    task.startDate = Task.START_DATE.TODAY;
+                    task.deadline = Task.DEADLINE.DAY;
+                    //task.status =
+                    task.insertIntoDatabase(getApplicationContext());
+                    intent.putExtra("toast", "Задача успешно добавлена!");
+                }
+                else if (task.type == Task.TYPE.SHOPPING_LIST)
                     intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
                 else
                     intent = new Intent(NewTaskFirstScreen.this, NewTaskSecondScreen.class);

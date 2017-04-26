@@ -5,12 +5,10 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -29,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.DayValues;
@@ -611,10 +608,7 @@ public class TaskList extends AppCompatActivity {
         }
 
         ArrayList<Task> todayTasks = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.HOUR_OF_DAY) < 3)
-            calendar.add(Calendar.HOUR_OF_DAY, -3);
-        DayValues dayValues = new DayValues(calendar);
+        DayValues dayValues = new DayValues();
         for (Task task: tasks) {
             String startDate = task.customStartDate.toString();
             String endDate = task.customEndDate.toString();

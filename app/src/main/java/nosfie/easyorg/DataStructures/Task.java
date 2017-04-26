@@ -58,6 +58,7 @@ public class Task {
         this.customStartTime = new Daytime();
         this.needReminder = false;
         this.customEndDate = new CustomDate();
+        this.status = STATUS.ACTUAL;
     }
 
     public Task(int id, String name, String type, String startDate, String startTime,
@@ -186,7 +187,7 @@ public class Task {
 
     public ContentValues getContentValues() {
         Calendar calendar = Calendar.getInstance();
-        DayValues dayValues = new DayValues(calendar);
+        DayValues dayValues = new DayValues();
         ContentValues CV = new ContentValues();
         CV.put("name", this.name);
         CV.put("type", this.type.toString());

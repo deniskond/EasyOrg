@@ -119,7 +119,7 @@
                     android:padding="20dp"
                     android:text="@string/count_goal"
                     android:textSize="18sp"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
             </TableRow>
 
@@ -137,8 +137,23 @@
                     android:background="@drawable/border"
                     android:ems="8"
                     android:inputType="number"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/forTodayCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="На сегодня в течение дня"
+                    android:textSize="18sp" />
             </TableRow>
 
             <TableRow
