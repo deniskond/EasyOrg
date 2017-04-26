@@ -32,6 +32,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         taskEdit = (EditText)findViewById(R.id.taskName);
         countEdit = (EditText)findViewById(R.id.count);
         countText = (TextView)findViewById(R.id.countText);
+        forTodayCheckbox = (CheckBox)findViewById(R.id.forTodayCheckBox);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -63,23 +64,31 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 String taskText = taskEdit.getText().toString();
                 switch (getTaskType()) {
                     case SIMPLE:
+                        task.type = Task.TYPE.SIMPLE;
                         if (taskText.equals("Список покупок"))
                             taskEdit.setText("");
-                        countText.setVisibility(View.INVISIBLE);
-                        countEdit.setVisibility(View.INVISIBLE);
+                        countText.setVisibility(View.GONE);
+                        countEdit.setVisibility(View.GONE);
+                        if (forTodayCheckbox.isChecked())
+                            button_next.setText("Готово");
                         break;
                     case SHOPPING_LIST:
+                        task.type = Task.TYPE.SHOPPING_LIST;
                         if (taskText.equals(""))
                             taskEdit.setText("Список покупок");
-                        countText.setVisibility(View.INVISIBLE);
-                        countEdit.setVisibility(View.INVISIBLE);
+                        countText.setVisibility(View.GONE);
+                        countEdit.setVisibility(View.GONE);
+                        button_next.setText("Дальше");
                         break;
                     case COUNTABLE:
+                        task.type = Task.TYPE.COUNTABLE;
                         if (taskText.equals("Список покупок"))
                             taskEdit.setText("");
                         countText.setVisibility(View.VISIBLE);
                         countEdit.setVisibility(View.VISIBLE);
                         countEdit.setText("");
+                        if (forTodayCheckbox.isChecked())
+                            button_next.setText("Готово");
                         break;
                     default:
                         break;
@@ -87,14 +96,16 @@ public class NewTaskFirstScreen extends AppCompatActivity {
             }
         });
 
-        forTodayCheckbox = (CheckBox)findViewById(R.id.forTodayCheckBox);
+
         forTodayCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (forTodayCheckbox.isChecked()) {
-                    button_next.setText("Готово");
-                } else {
-                    button_next.setText("Дальше");
+                if (task.type != Task.TYPE.SHOPPING_LIST) {
+                    if (forTodayCheckbox.isChecked()) {
+                        button_next.setText("Готово");
+                    } else {
+                        button_next.setText("Дальше");
+                    }
                 }
             }
         });
@@ -118,7 +129,6 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     task.count = Integer.parseInt(countEdit.getText().toString());
                 else
                     task.count = 0;
-                task.type = getTaskType();
                 if (task.name.equals("")) {
                     Toast.makeText(getApplicationContext(), "Введите название задачи",Toast.LENGTH_SHORT).show();
                     return;
@@ -130,16 +140,22 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 Intent intent;
 
                 if (forTodayCheckbox.isChecked()) {
-                    intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
                     task.startTime = Task.START_TIME.NONE;
                     task.startDate = Task.START_DATE.TODAY;
                     task.deadline = Task.DEADLINE.DAY;
-                    //task.status =
-                    task.insertIntoDatabase(getApplicationContext());
-                    intent.putExtra("toast", "Задача успешно добавлена!");
+                    if (task.type != Task.TYPE.SHOPPING_LIST) {
+                        intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
+                        task.insertIntoDatabase(getApplicationContext());
+                        intent.putExtra("toast", "Задача успешно добавлена!");
+                    } else {
+                        intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
+                        intent.putExtra("forToday", true);
+                    }
                 }
-                else if (task.type == Task.TYPE.SHOPPING_LIST)
+                else if (task.type == Task.TYPE.SHOPPING_LIST) {
                     intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
+                    intent.putExtra("forToday", false);
+                }
                 else
                     intent = new Intent(NewTaskFirstScreen.this, NewTaskSecondScreen.class);
 

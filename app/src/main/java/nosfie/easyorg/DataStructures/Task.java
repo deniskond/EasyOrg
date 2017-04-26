@@ -59,6 +59,7 @@ public class Task {
         this.needReminder = false;
         this.customEndDate = new CustomDate();
         this.status = STATUS.ACTUAL;
+        this.type = TYPE.SIMPLE;
     }
 
     public Task(int id, String name, String type, String startDate, String startTime,

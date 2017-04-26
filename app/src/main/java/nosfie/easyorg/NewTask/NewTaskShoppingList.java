@@ -12,6 +12,7 @@ import android.widget.TableRow;
 import android.widget.Toast;
 
 import nosfie.easyorg.DataStructures.Task;
+import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
 public class NewTaskShoppingList extends AppCompatActivity {
@@ -19,6 +20,8 @@ public class NewTaskShoppingList extends AppCompatActivity {
     TableLayout tableLayout;
     Task task = new Task();
     int insertRowIndex = 9;
+    Boolean forToday = false;
+    Button button_back, button_next, button_add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,9 @@ public class NewTaskShoppingList extends AppCompatActivity {
         setContentView(R.layout.new_task_shopping_list);
 
         tableLayout = (TableLayout)findViewById(R.id.table_1);
+        button_add = (Button)findViewById(R.id.buttonAdd);
+        button_next = (Button)findViewById(R.id.buttonNext);
+        button_back = (Button)findViewById(R.id.buttonBack);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -44,9 +50,11 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     num++;
                 }
             }
+            forToday = extras.getBoolean("forToday");
+            if (forToday)
+                button_next.setText("Готово");
         }
 
-        Button button_add = (Button)findViewById(R.id.buttonAdd);
         button_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +64,6 @@ public class NewTaskShoppingList extends AppCompatActivity {
             }
         });
 
-        Button button_back = (Button)findViewById(R.id.buttonBack);
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,11 +74,9 @@ public class NewTaskShoppingList extends AppCompatActivity {
             }
         });
 
-        Button button_next = (Button)findViewById(R.id.buttonNext);
         button_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewTaskShoppingList.this, NewTaskSecondScreen.class);
                 task.shoppingList.clear();
                 for (int i = 1; i <= 20; i++) {
                     TableRow tableRow = (TableRow) tableLayout.findViewWithTag("row" + Integer.toString(i));
@@ -85,7 +90,15 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Введите список покупок", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                intent = task.formIntent(intent, task);
+                Intent intent;
+                if (forToday) {
+                    intent = new Intent(NewTaskShoppingList.this, MainActivity.class);
+                    task.insertIntoDatabase(getApplicationContext());
+                    intent.putExtra("toast", "Задача успешно добавлена!");
+                } else {
+                    intent = new Intent(NewTaskShoppingList.this, NewTaskSecondScreen.class);
+                    intent = task.formIntent(intent, task);
+                }
                 startActivity(intent);
             }
         });
