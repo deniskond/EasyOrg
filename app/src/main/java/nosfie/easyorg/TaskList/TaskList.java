@@ -32,11 +32,12 @@ import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.DayValues;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
+import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 import nosfie.easyorg.R;
 
 public class TaskList extends AppCompatActivity {
 
-    public enum TIMESPAN {
+    private enum TIMESPAN {
         TODAY, WEEK, MONTH, YEAR, UNLIMITED
     }
 
@@ -143,7 +144,7 @@ public class TaskList extends AppCompatActivity {
         // Main row
         LinearLayout row = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0);
-        params.height = convertDpToPixels(TASK_ROW_HEIGHT);
+        params.height = convertDpToPixels(this, TASK_ROW_HEIGHT);
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         row.setLayoutParams(params);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -205,7 +206,7 @@ public class TaskList extends AppCompatActivity {
         taskNameRow.setBackgroundColor(getResources().getColor(color));
 
         taskNameRow.setOrientation(LinearLayout.HORIZONTAL);
-        taskNameRow.setPadding(convertDpToPixels(10), 0, 0, 0);
+        taskNameRow.setPadding(convertDpToPixels(this, 10), 0, 0, 0);
         taskNameRow.setId(task.id);
 
         taskNameRow.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +260,7 @@ public class TaskList extends AppCompatActivity {
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        editImageParams.height = convertDpToPixels(25);
+        editImageParams.height = convertDpToPixels(this, 25);
         editImageParams.weight = 50;
         editImage.setLayoutParams(editImageParams);
         editImage.setPadding(5, 0, 0, 0);
@@ -274,7 +275,7 @@ public class TaskList extends AppCompatActivity {
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        deleteImageParams.height = convertDpToPixels(25);
+        deleteImageParams.height = convertDpToPixels(this, 25);
         deleteImageParams.weight = 50;
         deleteImage.setLayoutParams(deleteImageParams);
         deleteImage.setPadding(0, 0, 5, 0);
@@ -296,10 +297,6 @@ public class TaskList extends AppCompatActivity {
 
         taskList.addView(row);
 
-    }
-
-    protected int convertDpToPixels(int dp) {
-        return (int) (dp * scale + 0.5f);
     }
 
     protected void processTaskNameClick(final Task task) {

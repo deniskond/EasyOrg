@@ -21,7 +21,10 @@
         </activity>
         <activity android:name=".NewTask.NewTaskThirdScreen" android:noHistory="true" android:label="Новая задача" >
         </activity>
-        <activity android:name=".NewTask.NewTaskShoppingList" android:noHistory="true" android:label="Новая задача" >
+        <activity android:name=".NewTask.NewTaskShoppingList"
+            android:noHistory="true"
+            android:label="Новая задача"
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity android:name=".TaskList.TaskList" android:label="Текущий список дел" >
         </activity>
