@@ -335,6 +335,7 @@ public class TaskList extends AppCompatActivity {
             case SHOPPING_LIST:
                 Intent intent = new Intent(this, ShoppingList.class);
                 intent.putExtra("id", task.id);
+                intent.putExtra("taskName", task.name + " " + task.customEndDate.toString());
                 intent.putExtra("shoppingList", task.shoppingList);
                 intent.putExtra("shoppingListState", task.shoppingListState);
                 intent.putExtra("timespan", timespan.toString());

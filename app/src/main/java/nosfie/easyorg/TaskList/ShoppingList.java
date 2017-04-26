@@ -27,10 +27,11 @@ public class ShoppingList extends AppCompatActivity {
     ArrayList<String> shoppingList = new ArrayList<>();
     ArrayList<Integer> shoppingListState = new ArrayList<>();
     int taskId;
-    String timespan;
+    String timespan, taskName;
     Button buttonBack, buttonOK;
     SQLiteDatabase DB;
     TasksConnector tasksConnector;
+    TextView shoppingListName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,13 @@ public class ShoppingList extends AppCompatActivity {
         setContentView(R.layout.shopping_list);
         shoppingListLayout = (LinearLayout)findViewById(R.id.shoppingList);
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
+        shoppingListName = (TextView)findViewById(R.id.shoppingListName);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             taskId = extras.getInt("id");
+            taskName = extras.getString("taskName");
+            shoppingListName.setText(taskName);
             shoppingList = extras.getStringArrayList("shoppingList");
             shoppingListState = extras.getIntegerArrayList("shoppingListState");
             timespan = extras.getString("timespan");
@@ -68,6 +72,8 @@ public class ShoppingList extends AppCompatActivity {
                         "currentCount = '" + currentCount + "'";
                 if (currentCount == shoppingList.size())
                     query += ", status = 'DONE'";
+                else
+                    query += ", status = 'ACTUAL'";
                 query += " WHERE _id = '" + taskId + "'";
                 DB.execSQL(query);
                 DB.close();
