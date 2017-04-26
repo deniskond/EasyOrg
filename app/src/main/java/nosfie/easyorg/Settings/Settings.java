@@ -38,7 +38,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DB = tasksConnector.getWritableDatabase();
-                DB.execSQL("ALTER TABLE tasks ADD COLUMN currentcount INT");
+                DB.execSQL("ALTER TABLE tasks ADD COLUMN shoppingListState TEXT");
                 DB.close();
             }
         });

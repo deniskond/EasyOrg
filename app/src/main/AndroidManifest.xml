@@ -28,6 +28,8 @@
         </activity>
         <activity android:name=".TaskList.TaskList" android:label="Текущий список дел" >
         </activity>
+        <activity android:name=".TaskList.ShoppingList" android:noHistory="true" android:label="Список покупок" >
+        </activity>
         <activity android:name=".Settings.Settings" android:label="Настройки" >
         </activity>
     </application>

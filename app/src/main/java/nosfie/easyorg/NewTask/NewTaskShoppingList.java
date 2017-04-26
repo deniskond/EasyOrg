@@ -93,13 +93,16 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
                     EditText editText = (EditText) linearLayout.getChildAt(1);
                     String item = editText.getText().toString();
-                    if (item != null && !item.isEmpty())
+                    if (item != null && !item.isEmpty()) {
                         task.shoppingList.add(item);
+                        task.shoppingListState.add(0);
+                    }
                 }
                 if (task.shoppingList.size() == 0) {
                     Toast.makeText(getApplicationContext(), "Введите список покупок", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                task.count = task.shoppingList.size();
                 Intent intent;
                 if (forToday) {
                     intent = new Intent(NewTaskShoppingList.this, MainActivity.class);
@@ -120,7 +123,6 @@ public class NewTaskShoppingList extends AppCompatActivity {
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        //params.height = convertDpToPixels(this, 35);
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.setMargins(0, convertDpToPixels(this, 10), 0, 0);
         row.setBackgroundColor(0x00000000);

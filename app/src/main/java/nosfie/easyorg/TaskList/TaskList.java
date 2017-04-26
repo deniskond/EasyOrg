@@ -2,6 +2,7 @@ package nosfie.easyorg.TaskList;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
@@ -70,6 +71,28 @@ public class TaskList extends AppCompatActivity {
         progressBarText = (TextView)findViewById(R.id.progressBarText);
         progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            timespan = TIMESPAN.valueOf(extras.getString("timespan"));
+            switch (timespan) {
+                case TODAY:
+                    timespanText.setText("Задачи на сегодня");
+                    break;
+                case WEEK:
+                    timespanText.setText("Задачи на неделю");
+                    break;
+                case MONTH:
+                    timespanText.setText("Задачи на месяц");
+                    break;
+                case YEAR:
+                    timespanText.setText("Задачи на год");
+                    break;
+                case UNLIMITED:
+                    timespanText.setText("Бессрочные задачи");
+                    break;
+            }
+        }
+
         getTasks();
         setTimespanClickListeners();
 
@@ -103,7 +126,7 @@ public class TaskList extends AppCompatActivity {
         DB = tasksConnector.getReadableDatabase();
 
         String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
-                "reminder", "endDate", "shoppingList", "status", "currentcount"};
+                "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
 
         Cursor cursor = DB.query("tasks", columns, null, null, null, null, "_id");
 
@@ -122,7 +145,8 @@ public class TaskList extends AppCompatActivity {
                         cursor.getString(7),
                         cursor.getString(8),
                         cursor.getString(9),
-                        cursor.getInt(10)
+                        cursor.getInt(10),
+                        cursor.getString(11)
                     );
                     tasks.add(task);
                 } while (cursor.moveToNext());
@@ -227,7 +251,7 @@ public class TaskList extends AppCompatActivity {
         name.setLayoutParams(nameParams);
         taskNameRow.addView(name);
 
-        if (task.type == Task.TYPE.COUNTABLE) {
+        if (task.type == Task.TYPE.COUNTABLE || task.type == Task.TYPE.SHOPPING_LIST) {
             TextView count = new TextView(this);
             LinearLayout.LayoutParams countParams =
                     new LinearLayout.LayoutParams(
@@ -308,8 +332,14 @@ public class TaskList extends AppCompatActivity {
             case COUNTABLE:
                 showCountableTaskDialog(task);
                 break;
+            case SHOPPING_LIST:
+                Intent intent = new Intent(this, ShoppingList.class);
+                intent.putExtra("id", task.id);
+                intent.putExtra("shoppingList", task.shoppingList);
+                intent.putExtra("shoppingListState", task.shoppingListState);
+                intent.putExtra("timespan", timespan.toString());
+                startActivity(intent);
         }
-
     }
 
     protected void showCountableTaskDialog(final Task task) {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,7 @@ public class Task {
     public STATUS status;
     public Daytime customStartTime = new Daytime();
     public ArrayList<String> shoppingList = new ArrayList<>();
+    public ArrayList<Integer> shoppingListState = new ArrayList<>();
 
     public Task() {
         this.startDate = START_DATE.TODAY;
@@ -64,7 +66,7 @@ public class Task {
 
     public Task(int id, String name, String type, String startDate, String startTime,
                 int count, int reminder, String endDate, String shoppingList, String taskStatus,
-                int currentCount) {
+                int currentCount, String shoppingListState) {
         this.id = id;
         this.name = name;
         this.type = TYPE.valueOf(type);
@@ -110,6 +112,10 @@ public class Task {
             this.shoppingList.add(item);
 
         this.status = STATUS.valueOf(taskStatus);
+
+        if (shoppingListState != null)
+            for (int pos = 0; pos < shoppingListState.length(); pos++)
+                this.shoppingListState.add(Integer.parseInt(shoppingListState.substring(pos, pos + 1)));
     }
 
     public Task(Bundle info) {
@@ -120,6 +126,7 @@ public class Task {
         this.currentCount = 0;
         // Shopping list screen
         this.shoppingList = info.getStringArrayList("shoppingList");
+        this.shoppingListState = info.getIntegerArrayList("shoppingListState");
         // Second screen
         this.startDate = START_DATE.valueOf(info.getString("startDate"));
         this.customStartDate.day = info.getInt("startDay");
@@ -145,6 +152,7 @@ public class Task {
         intent.putExtra("taskCount", task.count);
         // Shopping list screen
         intent.putExtra("shoppingList", task.shoppingList);
+        intent.putExtra("shoppingListState", task.shoppingListState);
         // Second screen
         intent.putExtra("startDate", task.startDate.toString());
         intent.putExtra("startDay", task.customStartDate.day);
@@ -278,6 +286,12 @@ public class Task {
         CV.put("shoppingList", strShoppingList);
         CV.put("status", this.status.toString());
         CV.put("currentcount", this.currentCount);
+
+        String shoppingListStateStr = "";
+        for (int digit: shoppingListState)
+            shoppingListStateStr += Integer.toString(digit);
+        CV.put("shoppingListState", shoppingListStateStr);
+
         return CV;
     }
 
