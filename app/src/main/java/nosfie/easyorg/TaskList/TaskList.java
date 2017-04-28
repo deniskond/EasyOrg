@@ -155,6 +155,8 @@ public class TaskList extends AppCompatActivity {
         DB.close();
 
         tasks = filterTasksByTimespan(tasks, timespan);
+        //for (Task task: tasks)
+        //  result.setText(result.getText() + task.name + " " + task.status + "\n");
         int num = 1;
         for (Task task: tasks) {
             addTaskRow(num, task);
@@ -218,7 +220,7 @@ public class TaskList extends AppCompatActivity {
                 color = R.color.colorTaskDone;
                 break;
             case NOT_DONE:
-                color = R.color.colorTaskDone;
+                color = R.color.colorTaskFailed;
                 break;
             case IN_PROCESS:
                 color = R.color.colorTaskInProcess;
@@ -402,6 +404,7 @@ public class TaskList extends AppCompatActivity {
                 break;
             case DONE:
                 radioDone.setChecked(true);
+                break;
             case NOT_DONE:
                 radioNotDone.setChecked(true);
                 break;
@@ -426,10 +429,11 @@ public class TaskList extends AppCompatActivity {
                     task.status = Task.STATUS.NOT_DONE;
                 if (radioPostponed.isChecked())
                     task.status = Task.STATUS.POSTPONED;
+
                 task.currentCount = seekBar.getProgress();
                 if (task.currentCount == task.count)
                     task.status = Task.STATUS.DONE;
-                task.synchronize(getApplicationContext());getTasks();
+                task.synchronize(getApplicationContext());
                 getTasks();
                 countableDialog.dismiss();
             }
