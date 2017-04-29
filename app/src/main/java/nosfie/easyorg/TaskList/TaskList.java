@@ -1,6 +1,8 @@
 package nosfie.easyorg.TaskList;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,15 +21,20 @@ import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.DayValues;
@@ -56,6 +63,7 @@ public class TaskList extends AppCompatActivity {
     TIMESPAN timespan = TIMESPAN.TODAY;
     TextView progressBarText;
     ProgressBar progressBar;
+    boolean ignoreTimeSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,10 +163,9 @@ public class TaskList extends AppCompatActivity {
         DB.close();
 
         tasks = filterTasksByTimespan(tasks, timespan);
-        //for (Task task: tasks)
-        //  result.setText(result.getText() + task.name + " " + task.status + "\n");
         int num = 1;
         for (Task task: tasks) {
+            result.setText(result.getText() + task.name + " " + task.startTime);
             addTaskRow(num, task);
             num++;
         }
@@ -166,7 +173,6 @@ public class TaskList extends AppCompatActivity {
     }
 
     protected void addTaskRow(int num, final Task task) {
-
         // Main row
         LinearLayout row = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0);
@@ -293,6 +299,12 @@ public class TaskList extends AppCompatActivity {
         editImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         editImage.setAdjustViewBounds(true);
         editImage.setImageResource(R.drawable.edit_icon_small);
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                processEditTaskClick(task);
+            }
+        });
 
         buttonsRow.addView(editImage);
 
@@ -699,6 +711,327 @@ public class TaskList extends AppCompatActivity {
             }
         }
         return yearTasks;
+    }
+
+    protected void processEditTaskClick(Task task) {
+        switch (task.type) {
+            case SIMPLE:
+                showSimpleTaskEditDialog(task);
+                break;
+            case SHOPPING_LIST:
+                showShoppingListTaskEditDialog(task);
+                break;
+            case COUNTABLE:
+                showCountableTaskEditDialog(task);
+                break;
+        }
+    }
+
+    protected void showSimpleTaskEditDialog(final Task task) {
+        final CharSequence[] items = {
+                "Название",
+                "Дату начала",
+                "Время начала",
+                "Дату окончания",
+                "Напоминание"};
+        final AlertDialog simpleTaskDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Изменить:");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        showEditTaskNameDialog(task);
+                        break;
+                    case 1:
+                        showEditTaskStartDateDialog(task);
+                        break;
+                    case 2:
+                        showEditTaskStartTimeDialog(task);
+                        break;
+                    case 3:
+                        showEditTaskEndDateDialog(task);
+                        break;
+                    case 4:
+                        toggleTaskReminder(task);
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        simpleTaskDialog = builder.create();
+        simpleTaskDialog.show();
+    }
+
+    protected void showEditTaskNameDialog(final Task task) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editTextDialog = new Dialog(TaskList.this);
+        LayoutInflater inflater = (LayoutInflater)TaskList.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.edit_task_name_dialog, (ViewGroup)findViewById(R.id.edit_name_root));
+        editTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editTextDialog.setContentView(layout);
+        final EditText editTask = (EditText)layout.findViewById(R.id.task_name);
+        editTask.setText(task.name);
+        LinearLayout editTextRoot = (LinearLayout)layout.findViewById(R.id.edit_name_root);
+        editTextRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                task.name = editTask.getText().toString();
+                task.synchronize(TaskList.this);
+                editTextDialog.dismiss();
+                getTasks();
+                Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editTextDialog.dismiss();
+            }
+        });
+        editTextDialog.show();
+    }
+
+
+    protected void showEditTaskStartDateDialog(final Task task) {
+        Calendar calendar = new GregorianCalendar(
+            task.customStartDate.year,
+            task.customStartDate.month - 1,
+            task.customStartDate.day
+        );
+
+        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                task.startDate = Task.START_DATE.CUSTOM;
+                task.customStartDate.year = year;
+                task.customStartDate.month = month + 1;
+                task.customStartDate.day = day;
+                if (task.customStartDate.toString().compareTo(task.customEndDate.toString()) >= 0)
+                    task.customEndDate = task.customStartDate;
+                task.synchronize(TaskList.this);
+                getTasks();
+            }
+        };
+        DatePickerDialog datePickerDialog =
+            new DatePickerDialog(this,
+                onDateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            );
+        datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() - 1000);
+        datePickerDialog.setTitle("Изменить дату начала задачи");
+        datePickerDialog.show();
+    }
+
+    protected void showEditTaskStartTimeDialog(final Task task) {
+
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
+                if (!ignoreTimeSet) {
+                    task.startTime = Task.START_TIME.CUSTOM;
+                    task.customStartTime.hours = hours;
+                    task.customStartTime.minutes = minutes;
+                    task.synchronize(TaskList.this);
+                    getTasks();
+                    Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        TimePickerDialog timePickerDialog =
+            new TimePickerDialog(
+                TaskList.this,
+                onTimeSetListener,
+                task.customStartTime.hours,
+                task.customStartTime.minutes,
+                true
+            );
+        timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Отмена", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ignoreTimeSet = true;
+                dialog.cancel();
+            }
+        });
+        timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "ОК", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ignoreTimeSet = false;
+                dialog.dismiss();
+            }
+        });
+        timePickerDialog.show();
+    }
+
+    protected void showEditTaskEndDateDialog(final Task task) {
+        Calendar calendar = new GregorianCalendar(
+                task.customEndDate.year,
+                task.customEndDate.month - 1,
+                task.customEndDate.day
+        );
+        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                task.deadline = Task.DEADLINE.CUSTOM;
+                task.customEndDate.year = year;
+                task.customEndDate.month = month + 1;
+                task.customEndDate.day = day;
+                if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
+                    task.customStartDate = task.customEndDate;
+                task.synchronize(TaskList.this);
+                getTasks();
+            }
+        };
+        DatePickerDialog datePickerDialog =
+                new DatePickerDialog(this,
+                        onDateSetListener,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+        datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() - 1000);
+        datePickerDialog.setTitle("Изменить дату окончания задачи");
+        datePickerDialog.show();
+    }
+
+    protected void toggleTaskReminder(Task task) {
+        if (task.startTime.toString().equals("NONE"))
+            Toast.makeText(getApplicationContext(), "Установите сначала время начала задачи",
+                    Toast.LENGTH_SHORT).show();
+        else {
+            task.needReminder = !task.needReminder;
+            task.synchronize(TaskList.this);
+            getTasks();
+            if (task.needReminder)
+                Toast.makeText(getApplicationContext(), "Напоминание установлено", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(), "Напоминание убрано", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void showCountableTaskEditDialog(final Task task) {
+        final CharSequence[] items = {
+                "Название",
+                "Количественную цель",
+                "Дату начала",
+                "Время начала",
+                "Дату окончания",
+                "Напоминание"
+        };
+        final AlertDialog countableTaskDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Изменить:");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        showEditTaskNameDialog(task);
+                        break;
+                    case 1:
+                        showEditTaskCountDialog(task);
+                        break;
+                    case 2:
+                        showEditTaskStartDateDialog(task);
+                        break;
+                    case 3:
+                        showEditTaskStartTimeDialog(task);
+                        break;
+                    case 4:
+                        showEditTaskEndDateDialog(task);
+                        break;
+                    case 5:
+                        toggleTaskReminder(task);
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        countableTaskDialog = builder.create();
+        countableTaskDialog.show();
+    }
+
+    protected void showEditTaskCountDialog(final Task task) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editCountDialog = new Dialog(TaskList.this);
+        LayoutInflater inflater = (LayoutInflater)TaskList.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.edit_count_dialog, (ViewGroup)findViewById(R.id.edit_count_root));
+        editCountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editCountDialog.setContentView(layout);
+        final EditText editTask = (EditText)layout.findViewById(R.id.task_count);
+        editTask.setText(Integer.toString(task.count));
+        LinearLayout editTextRoot = (LinearLayout)layout.findViewById(R.id.edit_count_root);
+        editTextRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                task.count = Integer.parseInt(editTask.getText().toString());
+                if (task.currentCount >= task.count) {
+                    task.currentCount = task.count;
+                    task.status = Task.STATUS.DONE;
+                }
+                task.synchronize(TaskList.this);
+                editCountDialog.dismiss();
+                getTasks();
+                Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editCountDialog.dismiss();
+            }
+        });
+        editCountDialog.show();
+    }
+
+    protected void showShoppingListTaskEditDialog(final Task task) {
+        final CharSequence[] items = {
+                "Название",
+                "Список покупок",
+                "Дату начала",
+                "Время начала",
+                "Дату окончания",
+                "Напоминание"
+        };
+        final AlertDialog countableTaskDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Изменить:");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        showEditTaskNameDialog(task);
+                        break;
+                    case 1:
+                        // shopping list edit activity here
+                        break;
+                    case 2:
+                        showEditTaskStartDateDialog(task);
+                        break;
+                    case 3:
+                        showEditTaskStartTimeDialog(task);
+                        break;
+                    case 4:
+                        showEditTaskEndDateDialog(task);
+                        break;
+                    case 5:
+                        toggleTaskReminder(task);
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        countableTaskDialog = builder.create();
+        countableTaskDialog.show();
     }
 
 }

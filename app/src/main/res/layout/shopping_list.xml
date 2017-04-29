@@ -61,7 +61,7 @@
                     android:layout_marginRight="1dp"
                     android:layout_weight="1"
                     android:background="#d6d7d7"
-                    android:text="@string/back" />
+                    android:text="@string/cancel" />
 
                 <Button
                     android:id="@+id/button_OK"
