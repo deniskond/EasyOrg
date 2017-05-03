@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".Settings.Settings" android:label="Настройки" >
         </activity>
+        <activity android:name=".TaskList.EditShoppingList" android:noHistory="true" android:label="Редактировать список покупок">
+        </activity>
     </application>
 
 </manifest>

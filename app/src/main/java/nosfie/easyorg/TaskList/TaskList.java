@@ -165,7 +165,7 @@ public class TaskList extends AppCompatActivity {
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (Task task: tasks) {
-            result.setText(result.getText() + task.name + " " + task.startTime);
+            result.setText(result.getText() + task.name + " " + task.shoppingList);
             addTaskRow(num, task);
             num++;
         }
@@ -1012,7 +1012,13 @@ public class TaskList extends AppCompatActivity {
                         showEditTaskNameDialog(task);
                         break;
                     case 1:
-                        // shopping list edit activity here
+                        Intent intent = new Intent(TaskList.this, EditShoppingList.class);
+                        intent.putExtra("id", task.id);
+                        intent.putExtra("taskName", task.name + " " + task.customEndDate.toString());
+                        intent.putExtra("shoppingList", task.shoppingList);
+                        intent.putExtra("timespan", timespan.toString());
+                        intent.putExtra("returnActivity", "TaskList");
+                        startActivity(intent);
                         break;
                     case 2:
                         showEditTaskStartDateDialog(task);
