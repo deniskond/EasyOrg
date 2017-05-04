@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -64,6 +66,7 @@ public class TaskList extends AppCompatActivity {
     TextView progressBarText;
     ProgressBar progressBar;
     boolean ignoreTimeSet = false;
+    int DP = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class TaskList extends AppCompatActivity {
         timespanText = (TextView)findViewById(R.id.timespan_text);
         progressBarText = (TextView)findViewById(R.id.progressBarText);
         progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
+        DP = convertDpToPixels(this, 1);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -165,7 +169,7 @@ public class TaskList extends AppCompatActivity {
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (Task task: tasks) {
-            result.setText(result.getText() + task.name + " " + task.shoppingList);
+            result.setText(result.getText() + task.name + " " + task.startTime);
             addTaskRow(num, task);
             num++;
         }
@@ -175,9 +179,9 @@ public class TaskList extends AppCompatActivity {
     protected void addTaskRow(int num, final Task task) {
         // Main row
         LinearLayout row = new LinearLayout(this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0);
-        params.height = convertDpToPixels(this, TASK_ROW_HEIGHT);
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
         row.setLayoutParams(params);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setBackgroundColor(0xFFAAAAAA);
@@ -190,37 +194,87 @@ public class TaskList extends AppCompatActivity {
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         numberRowParams.setMargins(0, 0, 1, 0);
         numberRowParams.weight = 10;
+        numberRow.setGravity(Gravity.CENTER);
         numberRow.setLayoutParams(numberRowParams);
         numberRow.setBackgroundColor(0xFFFFFFFF);
         numberRow.setOrientation(LinearLayout.HORIZONTAL);
 
-        TextView number = new TextView(this);
-        LinearLayout.LayoutParams numberParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-        number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        number.setText(Integer.toString(num));
-        number.setTypeface(null, Typeface.BOLD);
-        number.setGravity(Gravity.CENTER);
-        number.setLayoutParams(numberParams);
-
-        numberRow.addView(number);
-
+        if (task.needReminder) {
+            ImageView reminder = new ImageView(this);
+            LinearLayout.LayoutParams reminderParams =
+                    new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            reminderParams.width = 24 * DP;
+            reminder.setLayoutParams(reminderParams);
+            reminder.setAdjustViewBounds(true);
+            reminder.setImageResource(R.drawable.bell_icon_small);
+            numberRow.addView(reminder);
+        }
+        else {
+            TextView number = new TextView(this);
+            LinearLayout.LayoutParams numberParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+            number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            number.setText(Integer.toString(num));
+            number.setTypeface(null, Typeface.BOLD);
+            number.setGravity(Gravity.CENTER);
+            number.setLayoutParams(numberParams);
+            numberRow.addView(number);
+        }
         row.addView(numberRow);
 
         // Task name row
         LinearLayout taskNameRow = new LinearLayout(this);
-        LinearLayout.LayoutParams taskNameParams =
+        LinearLayout.LayoutParams taskNameRowParams =
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-        taskNameParams.setMargins(0, 0, 1, 0);
-        taskNameParams.weight = 65;
-        taskNameRow.setLayoutParams(taskNameParams);
+        taskNameRowParams.setMargins(0, 0, 1, 0);
+        taskNameRowParams.weight = 65;
+        taskNameRow.setLayoutParams(taskNameRowParams);
+        taskNameRow.setOrientation(LinearLayout.HORIZONTAL);
+        taskNameRow.setMinimumHeight(DP * TASK_ROW_HEIGHT);
+        taskNameRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                processTaskNameClick(task);
+            }
+        });
 
+        RelativeLayout taskNameRelative  = new RelativeLayout(this);
+        LinearLayout.LayoutParams taskRowParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        taskNameRelative.setLayoutParams(taskRowParams);
+        taskNameRow.addView(taskNameRelative);
+
+        LinearLayout taskBgContainer = new LinearLayout(this);
+        RelativeLayout.LayoutParams taskBgContainerParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        taskBgContainer.setLayoutParams(taskBgContainerParams);
+        taskBgContainer.setOrientation(LinearLayout.HORIZONTAL);
+        taskBgContainer.setBackgroundColor(getResources().getColor(R.color.colorTaskActual));
+        taskBgContainer.setWeightSum(100);
+
+        LinearLayout taskBg = new LinearLayout(this);
+        LinearLayout.LayoutParams taskBgParams = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        if (task.type == Task.TYPE.SIMPLE || task.status != Task.STATUS.ACTUAL)
+            taskBgParams.weight = 100;
+        else
+            taskBgParams.weight = (int)(((double)task.currentCount / (double)task.count) * 100);
+        taskBg.setLayoutParams(taskBgParams);
         int color = 0;
         switch (task.status) {
             case ACTUAL:
-                color = R.color.colorTaskActual;
+                if (task.type == Task.TYPE.SIMPLE)
+                    color = R.color.colorTaskActual;
+                else
+                    color = R.color.colorTaskDone;
                 break;
             case DONE:
                 color = R.color.colorTaskDone;
@@ -235,43 +289,61 @@ public class TaskList extends AppCompatActivity {
                 color = R.color.colorTaskPostponed;
                 break;
         }
-        taskNameRow.setBackgroundColor(getResources().getColor(color));
+        taskBg.setBackgroundColor(getResources().getColor(color));
+        taskBg.setId(task.id);
+        taskBgContainer.addView(taskBg);
 
-        taskNameRow.setOrientation(LinearLayout.HORIZONTAL);
-        taskNameRow.setPadding(convertDpToPixels(this, 10), 0, 0, 0);
-        taskNameRow.setId(task.id);
+        taskNameRelative.addView(taskBgContainer);
 
-        taskNameRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processTaskNameClick(task);
-            }
-        });
+        TextView timeText = new TextView(this);
+        RelativeLayout.LayoutParams timeTextParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        timeTextParams.setMargins(8 * DP, 0, 0, 0);
+        timeText.setGravity(Gravity.CENTER_VERTICAL);
+        timeText.setLayoutParams(timeTextParams);
+        timeText.setTextColor(0xFFE50000);
+        timeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        timeText.setText(task.customStartTime.toString().replaceAll("-", ":"));
+        timeText.setId(2000 + task.id);
+        if (task.startTime.toString().equals("NONE"))
+            timeText.setVisibility(View.GONE);
+        taskNameRelative.addView(timeText);
 
-        TextView name = new TextView(this);
-        LinearLayout.LayoutParams nameParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-        name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        name.setText(task.name);
-        name.setGravity(Gravity.CENTER_VERTICAL);
-        name.setLayoutParams(nameParams);
-        taskNameRow.addView(name);
+        ImageView cartIcon = new ImageView(this);
+        RelativeLayout.LayoutParams cartIconParams = new RelativeLayout.LayoutParams(
+                24 * DP,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        cartIconParams.setMargins(8 * DP, 8 * DP, 2 * DP, 8 * DP);
+        cartIconParams.addRule(RelativeLayout.RIGHT_OF, 2000 + task.id);
+        cartIcon.setLayoutParams(cartIconParams);
+        cartIcon.setImageResource(R.drawable.cart_icon_small);
+        cartIcon.setAdjustViewBounds(true);
+        cartIcon.setId(3000 + task.id);
+        if (task.type != Task.TYPE.SHOPPING_LIST)
+            cartIcon.setVisibility(View.GONE);
+        taskNameRelative.addView(cartIcon);
 
-        if (task.type == Task.TYPE.COUNTABLE || task.type == Task.TYPE.SHOPPING_LIST) {
-            TextView count = new TextView(this);
-            LinearLayout.LayoutParams countParams =
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
-            count.setTextColor(0xFFFF0000);
-            count.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            count.setText(" (" + task.currentCount + "/" + task.count + ")");
-            count.setGravity(Gravity.CENTER_VERTICAL);
-            count.setLayoutParams(countParams);
-            taskNameRow.addView(count);
+        TextView taskName = new TextView(this);
+        RelativeLayout.LayoutParams taskNameParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        taskNameParams.addRule(RelativeLayout.RIGHT_OF, 3000 + task.id);
+        taskName.setLayoutParams(taskNameParams);
+        taskName.setPadding(8 * DP, 4 * DP, 4 * DP, 4 * DP);
+        taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        taskName.setGravity(Gravity.CENTER_VERTICAL);
+        if (task.type == Task.TYPE.SIMPLE) {
+            taskName.setText(task.name);
         }
+        else {
+            taskName.setText(Html.fromHtml("<font>" + task.name + "</font>" +
+                    " <font color=\"#e50000\">(" + task.currentCount + "/" + task.count + ")</font>"));
+        }
+        taskNameRelative.addView(taskName);
 
         row.addView(taskNameRow);
 
@@ -292,7 +364,7 @@ public class TaskList extends AppCompatActivity {
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        editImageParams.height = convertDpToPixels(this, 25);
+        editImageParams.height = 25 * DP;
         editImageParams.weight = 50;
         editImage.setLayoutParams(editImageParams);
         editImage.setPadding(5, 0, 0, 0);
@@ -313,7 +385,7 @@ public class TaskList extends AppCompatActivity {
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        deleteImageParams.height = convertDpToPixels(this, 25);
+        deleteImageParams.height = 25 * DP;
         deleteImageParams.weight = 50;
         deleteImage.setLayoutParams(deleteImageParams);
         deleteImage.setPadding(0, 0, 5, 0);
@@ -334,7 +406,6 @@ public class TaskList extends AppCompatActivity {
         row.setId(1000 + task.id);
 
         taskList.addView(row);
-
     }
 
     protected void processTaskNameClick(final Task task) {
