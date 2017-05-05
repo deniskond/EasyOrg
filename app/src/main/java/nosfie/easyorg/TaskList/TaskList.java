@@ -1,15 +1,15 @@
 package nosfie.easyorg.TaskList;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +40,7 @@ import java.util.GregorianCalendar;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.DayValues;
+import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
@@ -65,8 +66,8 @@ public class TaskList extends AppCompatActivity {
     TIMESPAN timespan = TIMESPAN.TODAY;
     TextView progressBarText;
     ProgressBar progressBar;
-    boolean ignoreTimeSet = false;
     int DP = 0;
+    Calendar alertDialogCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +135,7 @@ public class TaskList extends AppCompatActivity {
     protected void getTasks() {
         tasks.clear();
         taskList.removeAllViews();
-        result.setText("");
+        //result.setText("");
         DB = tasksConnector.getReadableDatabase();
 
         String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
@@ -169,7 +170,7 @@ public class TaskList extends AppCompatActivity {
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (Task task: tasks) {
-            result.setText(result.getText() + task.name + " " + task.startTime);
+            result.setText(result.getText() + task.name + " " + task.customStartDate);
             addTaskRow(num, task);
             num++;
         }
@@ -871,72 +872,135 @@ public class TaskList extends AppCompatActivity {
 
     protected void showEditTaskStartDateDialog(final Task task) {
         Calendar calendar = new GregorianCalendar(
-            task.customStartDate.year,
-            task.customStartDate.month - 1,
-            task.customStartDate.day
+                task.customStartDate.year,
+                task.customStartDate.month - 1,
+                task.customStartDate.day
         );
+        Display display = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editStartDateDialog = new Dialog(TaskList.this);
+        LayoutInflater inflater = (LayoutInflater)TaskList.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.edit_start_date_dialog, (ViewGroup)findViewById(R.id.edit_start_date_root));
+        editStartDateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editStartDateDialog.setContentView(layout);
 
-        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        final CalendarView calendarView = (CalendarView)layout.findViewById(R.id.calendarView);
+        long today = Calendar.getInstance().getTimeInMillis() - 3 * 60 * 60 * 1000;
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTimeInMillis(today);
+        todayCalendar.add(Calendar.HOUR_OF_DAY, -todayCalendar.get(Calendar.HOUR_OF_DAY));
+        todayCalendar.add(Calendar.MINUTE, -todayCalendar.get(Calendar.MINUTE));
+        todayCalendar.add(Calendar.SECOND, -todayCalendar.get(Calendar.SECOND));
+
+        calendarView.setMinDate(todayCalendar.getTimeInMillis());
+        calendarView.setDate(calendar.getTimeInMillis(), false, true);
+
+        // MinDate bug workaround
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            calendar.add(Calendar.MONTH, 24);
+            calendarView.setDate(calendar.getTimeInMillis(), false, true);
+            calendar.add(Calendar.MONTH, -24);
+            calendar.add(Calendar.SECOND, 1);
+            calendarView.setDate(calendar.getTimeInMillis(), false, true);
+        }
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                task.startDate = Task.START_DATE.CUSTOM;
-                task.customStartDate.year = year;
-                task.customStartDate.month = month + 1;
-                task.customStartDate.day = day;
-                if (task.customStartDate.toString().compareTo(task.customEndDate.toString()) >= 0)
-                    task.customEndDate = task.customStartDate;
-                task.synchronize(TaskList.this);
-                getTasks();
+            public void onSelectedDayChange(@NonNull CalendarView calendarView,
+                                            int year, int month, int date) {
+                alertDialogCalendar = new GregorianCalendar(year, month, date);
             }
-        };
-        DatePickerDialog datePickerDialog =
-            new DatePickerDialog(this,
-                onDateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            );
-        datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() - 1000);
-        datePickerDialog.setTitle("Изменить дату начала задачи");
-        datePickerDialog.show();
+        });
+
+        LinearLayout editStartDateRoot = (LinearLayout)layout.findViewById(R.id.edit_start_date_root);
+        editStartDateRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                task.startDate = Task.START_DATE.CUSTOM;
+                task.customStartDate.year = alertDialogCalendar.get(Calendar.YEAR);
+                task.customStartDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
+                task.customStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
+                if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
+                    task.customEndDate = task.customStartDate;
+                //result.setText(task.customStartDate.toString());
+                task.synchronize(TaskList.this);
+                editStartDateDialog.dismiss();
+                getTasks();
+                Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editStartDateDialog.dismiss();
+            }
+        });
+        editStartDateDialog.show();
     }
 
     protected void showEditTaskStartTimeDialog(final Task task) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editTimeDialog = new Dialog(TaskList.this);
+        LayoutInflater inflater = (LayoutInflater)TaskList.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.edit_time_dialog, (ViewGroup)findViewById(R.id.edit_time_root));
+        editTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editTimeDialog.setContentView(layout);
 
-        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        final RadioButton radioNoTime = (RadioButton)layout.findViewById(R.id.radioNoTime);
+        final RadioButton radioCustomTime = (RadioButton)layout.findViewById(R.id.radioCustomTime);
+        if (task.startTime == Task.START_TIME.NONE)
+            radioNoTime.setChecked(true);
+        if (task.startTime == Task.START_TIME.CUSTOM)
+            radioCustomTime.setChecked(true);
+
+        final TimePicker timePicker = (TimePicker)layout.findViewById(R.id.timePicker);
+        if (task.customStartTime == null)
+            task.customStartTime = new Daytime();
+        timePicker.setCurrentHour(task.customStartTime.hours);
+        timePicker.setCurrentMinute(task.customStartTime.minutes);
+        timePicker.setIs24HourView(true);
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
-            public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
-                if (!ignoreTimeSet) {
-                    task.startTime = Task.START_TIME.CUSTOM;
-                    task.customStartTime.hours = hours;
-                    task.customStartTime.minutes = minutes;
-                    task.synchronize(TaskList.this);
-                    getTasks();
-                    Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
+            public void onTimeChanged(TimePicker timePicker, int i, int i1) {
+                radioCustomTime.setChecked(true);
+            }
+        });
+
+        LinearLayout editTimeRoot = (LinearLayout)layout.findViewById(R.id.edit_time_root);
+        editTimeRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioNoTime.isChecked()) {
+                    task.startTime = Task.START_TIME.NONE;
+                    task.needReminder = false;
                 }
-            }
-        };
-        TimePickerDialog timePickerDialog =
-            new TimePickerDialog(
-                TaskList.this,
-                onTimeSetListener,
-                task.customStartTime.hours,
-                task.customStartTime.minutes,
-                true
-            );
-        timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Отмена", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ignoreTimeSet = true;
-                dialog.cancel();
+                else {
+                    task.startTime = Task.START_TIME.CUSTOM;
+                    task.customStartTime.hours = timePicker.getCurrentHour();
+                    task.customStartTime.minutes = timePicker.getCurrentMinute();
+                }
+                task.synchronize(TaskList.this);
+                editTimeDialog.dismiss();
+                getTasks();
+                Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
             }
         });
-        timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "ОК", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ignoreTimeSet = false;
-                dialog.dismiss();
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editTimeDialog.dismiss();
             }
         });
-        timePickerDialog.show();
+        editTimeDialog.show();
     }
 
     protected void showEditTaskEndDateDialog(final Task task) {
@@ -945,29 +1009,88 @@ public class TaskList extends AppCompatActivity {
                 task.customEndDate.month - 1,
                 task.customEndDate.day
         );
-        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editEndDateDialog = new Dialog(TaskList.this);
+        LayoutInflater inflater = (LayoutInflater)TaskList.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.edit_end_date_dialog, (ViewGroup)findViewById(R.id.edit_end_date_root));
+        editEndDateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editEndDateDialog.setContentView(layout);
+
+        final RadioButton radioNoTime = (RadioButton)layout.findViewById(R.id.radioNoTime);
+        final RadioButton radioCustomTime = (RadioButton)layout.findViewById(R.id.radioCustomTime);
+        if (task.deadline == Task.DEADLINE.NONE)
+            radioNoTime.setChecked(true);
+        if (task.deadline == Task.DEADLINE.CUSTOM)
+            radioCustomTime.setChecked(true);
+
+        final CalendarView calendarView = (CalendarView)layout.findViewById(R.id.calendarView);
+        if (task.deadline == Task.DEADLINE.NONE)
+            calendar = Calendar.getInstance();
+
+        long today = Calendar.getInstance().getTimeInMillis() - 3 * 60 * 60 * 1000;
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTimeInMillis(today);
+        todayCalendar.add(Calendar.HOUR_OF_DAY, -todayCalendar.get(Calendar.HOUR_OF_DAY));
+        todayCalendar.add(Calendar.MINUTE, -todayCalendar.get(Calendar.MINUTE));
+        todayCalendar.add(Calendar.SECOND, -todayCalendar.get(Calendar.SECOND));
+
+        calendarView.setMinDate(todayCalendar.getTimeInMillis());
+        calendarView.setDate(calendar.getTimeInMillis(), false, true);
+
+        // MinDate bug workaround
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            calendar.add(Calendar.MONTH, 24);
+            calendarView.setDate(calendar.getTimeInMillis(), false, true);
+            calendar.add(Calendar.MONTH, -24);
+            calendar.add(Calendar.SECOND, 1);
+            calendarView.setDate(calendar.getTimeInMillis(), false, true);
+        }
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                task.deadline = Task.DEADLINE.CUSTOM;
-                task.customEndDate.year = year;
-                task.customEndDate.month = month + 1;
-                task.customEndDate.day = day;
-                if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
-                    task.customStartDate = task.customEndDate;
-                task.synchronize(TaskList.this);
-                getTasks();
+            public void onSelectedDayChange(@NonNull CalendarView calendarView,
+                                            int year, int month, int date) {
+                alertDialogCalendar = new GregorianCalendar(year, month, date);
+                radioCustomTime.setChecked(true);
             }
-        };
-        DatePickerDialog datePickerDialog =
-                new DatePickerDialog(this,
-                        onDateSetListener,
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                );
-        datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() - 1000);
-        datePickerDialog.setTitle("Изменить дату окончания задачи");
-        datePickerDialog.show();
+        });
+
+        LinearLayout editEndDateRoot = (LinearLayout)layout.findViewById(R.id.edit_end_date_root);
+        editEndDateRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioNoTime.isChecked()) {
+                    task.deadline = Task.DEADLINE.NONE;
+                    task.needReminder = false;
+                    task.startTime = Task.START_TIME.NONE;
+                }
+                else {
+                    task.deadline = Task.DEADLINE.CUSTOM;
+                    result.setText(alertDialogCalendar.toString());
+                    task.customEndDate.year = alertDialogCalendar.get(Calendar.YEAR);
+                    task.customEndDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
+                    task.customEndDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
+                    if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
+                        task.customStartDate = task.customEndDate;
+                }
+                task.synchronize(TaskList.this);
+                editEndDateDialog.dismiss();
+                getTasks();
+                Toast.makeText(getApplicationContext(), "Задача обновлена", Toast.LENGTH_SHORT).show();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editEndDateDialog.dismiss();
+            }
+        });
+        editEndDateDialog.show();
     }
 
     protected void toggleTaskReminder(Task task) {

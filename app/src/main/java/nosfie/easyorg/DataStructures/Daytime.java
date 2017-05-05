@@ -3,7 +3,7 @@ package nosfie.easyorg.DataStructures;
 public class Daytime {
     public int hours;
     public int minutes;
-    Daytime() {
+    public Daytime() {
         this.hours = 0;
         this.minutes = 0;
     }

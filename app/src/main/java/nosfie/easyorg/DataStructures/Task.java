@@ -95,6 +95,7 @@ public class Task {
         else
             this.needReminder = true;
 
+        Log.d("qq", endDate);
         if (endDate.equals("0000.00.00")) {
             this.deadline = DEADLINE.NONE;
             this.customEndDate = new CustomDate();

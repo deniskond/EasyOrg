@@ -12,7 +12,7 @@ public class CustomDate {
 
     @Override
     public String toString() {
-        return this.year + "."
+        return String.format("%04d", this.year) + "."
             + String.format("%02d", this.month) + "."
             + String.format("%02d", this.day);
     }
