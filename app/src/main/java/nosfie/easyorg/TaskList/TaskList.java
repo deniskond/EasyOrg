@@ -140,7 +140,7 @@ public class TaskList extends AppCompatActivity {
         String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
                 "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
 
-        Cursor cursor = DB.query("tasks", columns, null, null, null, null, "_id");
+        Cursor cursor = DB.query("tasks", columns, null, null, null, null, "startTime");
 
         if (cursor != null) {
             cursor.moveToFirst();
