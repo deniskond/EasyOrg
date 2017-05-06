@@ -135,7 +135,6 @@ public class TaskList extends AppCompatActivity {
     protected void getTasks() {
         tasks.clear();
         taskList.removeAllViews();
-        //result.setText("");
         DB = tasksConnector.getReadableDatabase();
 
         String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
@@ -425,6 +424,7 @@ public class TaskList extends AppCompatActivity {
                 intent.putExtra("shoppingList", task.shoppingList);
                 intent.putExtra("shoppingListState", task.shoppingListState);
                 intent.putExtra("timespan", timespan.toString());
+                intent.putExtra("returnActivity", "TaskList");
                 startActivity(intent);
         }
     }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.Database.TasksConnector;
+import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
@@ -27,7 +28,7 @@ public class ShoppingList extends AppCompatActivity {
     ArrayList<String> shoppingList = new ArrayList<>();
     ArrayList<Integer> shoppingListState = new ArrayList<>();
     int taskId;
-    String timespan, taskName;
+    String timespan, taskName, returnActivity;
     Button buttonBack, buttonOK;
     SQLiteDatabase DB;
     TasksConnector tasksConnector;
@@ -49,6 +50,8 @@ public class ShoppingList extends AppCompatActivity {
             shoppingList = extras.getStringArrayList("shoppingList");
             shoppingListState = extras.getIntegerArrayList("shoppingListState");
             timespan = extras.getString("timespan");
+            returnActivity = extras.getString("returnActivity");
+
             int num = 1;
             for (String item: shoppingList) {
                 addShoppingItemRow(num, item, shoppingListState.get(num - 1));
@@ -77,9 +80,19 @@ public class ShoppingList extends AppCompatActivity {
                 query += " WHERE _id = '" + taskId + "'";
                 DB.execSQL(query);
                 DB.close();
-                Intent intent = new Intent(ShoppingList.this, TaskList.class);
-                intent.putExtra("timespan", timespan.toString());
-                startActivity(intent);
+
+                Intent intent;
+                switch (returnActivity) {
+                    case "MainActivity":
+                        intent = new Intent(ShoppingList.this, MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "TaskList":
+                        intent = new Intent(ShoppingList.this, TaskList.class);
+                        intent.putExtra("timespan", timespan.toString());
+                        startActivity(intent);
+                        break;
+                }
             }
         });
 
@@ -87,9 +100,18 @@ public class ShoppingList extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ShoppingList.this, TaskList.class);
-                intent.putExtra("timespan", timespan.toString());
-                startActivity(intent);
+                Intent intent;
+                switch (returnActivity) {
+                    case "MainActivity":
+                        intent = new Intent(ShoppingList.this, MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "TaskList":
+                        intent = new Intent(ShoppingList.this, TaskList.class);
+                        intent.putExtra("timespan", timespan.toString());
+                        startActivity(intent);
+                        break;
+                }
             }
         });
     }
