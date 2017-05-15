@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,6 +18,7 @@ import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.Settings.Settings;
+import nosfie.easyorg.TaskCalendar.TaskCalendar;
 import nosfie.easyorg.TaskList.ShoppingList;
 import nosfie.easyorg.TaskList.TaskList;
 
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     TasksConnector tasksConnector;
     SQLiteDatabase DB;
-    LinearLayout newTask, currentTaskList, settings, currentShoppingList;
+    LinearLayout newTask, currentTaskList, settings, currentShoppingList, taskCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,24 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         settings.setBackgroundColor(0xFFFFFFFF);
                         Intent intent = new Intent(MainActivity.this, Settings.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        taskCalendar = (LinearLayout)findViewById(R.id.calendar);
+        taskCalendar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        taskCalendar.setBackgroundColor(0xFFEEEEEE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        taskCalendar.setBackgroundColor(0xFFFFFFFF);
+                        Intent intent = new Intent(MainActivity.this, TaskCalendar.class);
                         startActivity(intent);
                         break;
                 }
