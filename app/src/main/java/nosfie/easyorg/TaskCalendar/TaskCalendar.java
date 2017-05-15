@@ -1,5 +1,6 @@
 package nosfie.easyorg.TaskCalendar;
 
+import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -7,16 +8,22 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
+import nosfie.easyorg.Dialogs.MonthYearPickerDialog;
 import nosfie.easyorg.R;
 
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
@@ -30,6 +37,8 @@ public class TaskCalendar extends AppCompatActivity {
     TextView monthText;
     String monthGenitive = "";
     ArrayList<Task> allMonthTasks = new ArrayList<>();
+    Button selectMonthButton;
+    int startMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +47,31 @@ public class TaskCalendar extends AppCompatActivity {
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
         tasksCalendar = (LinearLayout)findViewById(R.id.tasks_calendar);
         monthText = (TextView)findViewById(R.id.month_text);
+        Calendar calendar = Calendar.getInstance();
+        startMonth = calendar.get(Calendar.MONTH) + 1;
+        selectMonthButton = (Button)findViewById(R.id.selectMonthButton);
+        selectMonthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MonthYearPickerDialog monthYearPickerDialog = new MonthYearPickerDialog();
+                monthYearPickerDialog.setStartMonth(startMonth);
+                monthYearPickerDialog.setListener(new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        drawTasksCalendar(year, month - 1);
+                        startMonth = month;
+                    }
+                });
+                monthYearPickerDialog.show(getFragmentManager(), "MonthYearPickerDialog");
+            }
+        });
         DP = convertDpToPixels(this, 1);
-        drawTasksCalendar();
+        drawTasksCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
     }
 
-    protected void drawTasksCalendar() {
+    private void drawTasksCalendar(int year, int month) {
         tasksCalendar.removeAllViews();
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = new GregorianCalendar(year, month, 1);
         String monthStr = getMonthString(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
         monthText.setText(monthStr);
         int monthMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -105,12 +132,12 @@ public class TaskCalendar extends AppCompatActivity {
                     calendar.get(Calendar.YEAR));
     }
 
-    protected void addCalendarRow(int firstDay, int secondDay, int thirdDay, int month, int year) {
+    private void addCalendarRow(int firstDay, int secondDay, int thirdDay, int month, int year) {
         LinearLayout calendarRow = new LinearLayout(this);
         LinearLayout.LayoutParams calendarRowParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        calendarRowParams.height = 150 * DP;
+        calendarRowParams.height = 200 * DP;
         calendarRow.setLayoutParams(calendarRowParams);
         calendarRow.setOrientation(LinearLayout.HORIZONTAL);
         calendarRow.setWeightSum(100);
@@ -158,7 +185,7 @@ public class TaskCalendar extends AppCompatActivity {
         tasksCalendar.addView(calendarRow);
     }
 
-    protected void addCalendarDay(LinearLayout dayColumn, int day, int month, int year) {
+    private void addCalendarDay(LinearLayout dayColumn, int day, int month, int year) {
 
         String todayStr = String.format("%04d", year) + "."
                 + String.format("%02d", month) + "."
@@ -205,7 +232,7 @@ public class TaskCalendar extends AppCompatActivity {
                     dayTaskRow.setLayoutParams(dayTaskParams);
                     dayTaskRow.setOrientation(LinearLayout.HORIZONTAL);
                     dayTaskRow.setGravity(Gravity.CENTER_VERTICAL);
-                    dayTaskRow.setMinimumHeight(10 * DP);
+                    dayTaskRow.setMinimumHeight(15 * DP);
                     int color = 0;
                     switch (task.status) {
                         case ACTUAL:
@@ -242,7 +269,7 @@ public class TaskCalendar extends AppCompatActivity {
                             ViewGroup.LayoutParams.WRAP_CONTENT);
                     taskName.setLayoutParams(taskNameParams);
                     taskName.setText(task.name);
-                    taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 6);
+                    taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9);
                     taskName.setPadding(8 * DP, 0, 0, 0);
                     dayTaskRow.addView(taskName);
         }
@@ -260,7 +287,7 @@ public class TaskCalendar extends AppCompatActivity {
         dayColumn.addView(dayTasks);
     }
 
-    protected String getMonthString(int month, int year) {
+    private String getMonthString(int month, int year) {
         String result = "";
         switch (month) {
             case 0:

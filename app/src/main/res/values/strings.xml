@@ -34,4 +34,5 @@
     <string name="deadline_year">До конца года</string>
     <string name="deadline_none">Бессрочно</string>
     <string name="deadline_custom">Другая дата:</string>
+    <string name="ok">OK</string>
 </resources>
