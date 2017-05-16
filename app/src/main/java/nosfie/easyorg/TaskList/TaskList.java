@@ -327,4 +327,10 @@ public class TaskList extends AppCompatActivity {
         return yearTasks;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getTasks();
+        redrawProgressBar();
+    }
 }

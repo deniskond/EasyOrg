@@ -36,6 +36,8 @@
         </activity>
         <activity android:name=".TaskCalendar.TaskCalendar" android:label="Календарь задач">
         </activity>
+        <activity android:name=".TaskCalendar.DayTasks" android:label="Задачи на день">
+        </activity>
     </application>
 
 </manifest>

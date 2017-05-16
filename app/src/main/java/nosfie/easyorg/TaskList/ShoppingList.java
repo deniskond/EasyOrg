@@ -28,7 +28,7 @@ public class ShoppingList extends AppCompatActivity {
     ArrayList<String> shoppingList = new ArrayList<>();
     ArrayList<Integer> shoppingListState = new ArrayList<>();
     int taskId;
-    String timespan, taskName, returnActivity;
+    String taskName;
     Button buttonBack, buttonOK;
     SQLiteDatabase DB;
     TasksConnector tasksConnector;
@@ -49,8 +49,6 @@ public class ShoppingList extends AppCompatActivity {
             shoppingListName.setText(taskName);
             shoppingList = extras.getStringArrayList("shoppingList");
             shoppingListState = extras.getIntegerArrayList("shoppingListState");
-            timespan = extras.getString("timespan");
-            returnActivity = extras.getString("returnActivity");
 
             int num = 1;
             for (String item: shoppingList) {
@@ -80,19 +78,7 @@ public class ShoppingList extends AppCompatActivity {
                 query += " WHERE _id = '" + taskId + "'";
                 DB.execSQL(query);
                 DB.close();
-
-                Intent intent;
-                switch (returnActivity) {
-                    case "MainActivity":
-                        intent = new Intent(ShoppingList.this, MainActivity.class);
-                        startActivity(intent);
-                        break;
-                    case "TaskList":
-                        intent = new Intent(ShoppingList.this, TaskList.class);
-                        intent.putExtra("timespan", timespan.toString());
-                        startActivity(intent);
-                        break;
-                }
+                finish();
             }
         });
 
@@ -100,18 +86,7 @@ public class ShoppingList extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent;
-                switch (returnActivity) {
-                    case "MainActivity":
-                        intent = new Intent(ShoppingList.this, MainActivity.class);
-                        startActivity(intent);
-                        break;
-                    case "TaskList":
-                        intent = new Intent(ShoppingList.this, TaskList.class);
-                        intent.putExtra("timespan", timespan.toString());
-                        startActivity(intent);
-                        break;
-                }
+                finish();
             }
         });
     }

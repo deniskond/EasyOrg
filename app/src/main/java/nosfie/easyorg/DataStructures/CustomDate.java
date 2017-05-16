@@ -4,10 +4,15 @@ public class CustomDate {
     public int day;
     public int month;
     public int year;
-    CustomDate() {
+    public CustomDate() {
         this.day = 0;
         this.month = 0;
         this.year = 0;
+    }
+    public CustomDate(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
     }
 
     @Override

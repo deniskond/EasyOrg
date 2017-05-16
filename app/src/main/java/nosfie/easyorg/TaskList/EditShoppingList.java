@@ -56,13 +56,7 @@ public class EditShoppingList extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (returnActivityName) {
-                    case "TaskList":
-                        Intent intent = new Intent(EditShoppingList.this, TaskList.class);
-                        intent.putExtra("timespan", timespan);
-                        startActivity(intent);
-                        break;
-                }
+                finish();
             }
         });
 
@@ -99,13 +93,7 @@ public class EditShoppingList extends AppCompatActivity {
                         "WHERE _id = '" + taskId + "'";
                 DB.execSQL(query);
                 DB.close();
-                switch (returnActivityName) {
-                    case "TaskList":
-                        Intent intent = new Intent(EditShoppingList.this, TaskList.class);
-                        intent.putExtra("timespan", timespan.toString());
-                        startActivity(intent);
-                        break;
-                }
+                finish();
             }
         });
 

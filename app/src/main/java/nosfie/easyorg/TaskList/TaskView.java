@@ -300,8 +300,6 @@ public class TaskView {
                 intent.putExtra("taskName", task.name + " " + task.customEndDate.toString());
                 intent.putExtra("shoppingList", task.shoppingList);
                 intent.putExtra("shoppingListState", task.shoppingListState);
-                intent.putExtra("timespan", timespan.toString());
-                intent.putExtra("returnActivity", "TaskList");
                 context.startActivity(intent);
         }
     }
@@ -967,8 +965,6 @@ public class TaskView {
                         intent.putExtra("id", task.id);
                         intent.putExtra("taskName", task.name + " " + task.customEndDate.toString());
                         intent.putExtra("shoppingList", task.shoppingList);
-                        intent.putExtra("timespan", timespan.toString());
-                        intent.putExtra("returnActivity", "TaskList");
                         context.startActivity(intent);
                         break;
                     case 2:

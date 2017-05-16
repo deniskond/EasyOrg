@@ -1,6 +1,7 @@
 package nosfie.easyorg.TaskCalendar;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -8,13 +9,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,7 +27,8 @@ import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.Dialogs.MonthYearPickerDialog;
 import nosfie.easyorg.R;
 
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import static nosfie.easyorg.Helpers.ViewHelper.*;
+import static nosfie.easyorg.Helpers.DateStringsHelper.*;
 
 public class TaskCalendar extends AppCompatActivity {
 
@@ -185,13 +187,13 @@ public class TaskCalendar extends AppCompatActivity {
         tasksCalendar.addView(calendarRow);
     }
 
-    private void addCalendarDay(LinearLayout dayColumn, int day, int month, int year) {
+    private void addCalendarDay(LinearLayout dayColumn, final int day, final int month, final int year) {
 
         String todayStr = String.format("%04d", year) + "."
                 + String.format("%02d", month) + "."
                 + String.format("%02d", day);
 
-        LinearLayout dayNameRow = new LinearLayout(this);
+        final LinearLayout dayNameRow = new LinearLayout(this);
         LinearLayout.LayoutParams dayNameRowParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -208,7 +210,7 @@ public class TaskCalendar extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         dayName.setTextColor(0xFF000000);
         if (day != 0)
-            dayName.setText(day + " " + monthGenitive);
+            dayName.setText(day + " " + getHumanMonthNameGenitive(month));
         dayName.setTypeface(null, Typeface.BOLD);
         dayName.setLayoutParams(dayNameParams);
         dayNameRow.addView(dayName);
@@ -285,61 +287,32 @@ public class TaskCalendar extends AppCompatActivity {
 
         dayColumn.addView(dayNameRow);
         dayColumn.addView(dayTasks);
+        dayColumn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dayNameRow.setBackgroundColor(0xFFC8E4FC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        dayNameRow.setBackgroundColor(0xFFEFEFEF);
+                        Intent intent = new Intent(TaskCalendar.this, DayTasks.class);
+                        intent.putExtra("day", day);
+                        intent.putExtra("month", month);
+                        intent.putExtra("year", year);
+                        startActivity(intent);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        dayNameRow.setBackgroundColor(0xFFEFEFEF);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private String getMonthString(int month, int year) {
-        String result = "";
-        switch (month) {
-            case 0:
-                result += "Январь";
-                monthGenitive = "января";
-                break;
-            case 1:
-                result += "Февраль";
-                monthGenitive = "февраля";
-                break;
-            case 2:
-                result += "Март";
-                monthGenitive = "марта";
-                break;
-            case 3:
-                result += "Апрель";
-                monthGenitive = "апреля";
-                break;
-            case 4:
-                result += "Май";
-                monthGenitive = "мая";
-                break;
-            case 5:
-                result += "Июнь";
-                monthGenitive = "июня";
-                break;
-            case 6:
-                result += "Июль";
-                monthGenitive = "июля";
-                break;
-            case 7:
-                result += "Август";
-                monthGenitive = "августа";
-                break;
-            case 8:
-                result += "Сентябрь";
-                monthGenitive = "сентября";
-                break;
-            case 9:
-                result += "Октябрь";
-                monthGenitive = "октября";
-                break;
-            case 10:
-                result += "Ноябрь";
-                monthGenitive = "ноября";
-                break;
-            case 11:
-                result += "Декабрь";
-                monthGenitive = "декабря";
-                break;
-        }
-        result += ", " + year;
+        String result = getHumanMonthName(month + 1) + ", " + year;
         return result;
     }
 
