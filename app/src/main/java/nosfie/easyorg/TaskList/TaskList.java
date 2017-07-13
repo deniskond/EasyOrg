@@ -141,7 +141,7 @@ public class TaskList extends AppCompatActivity {
         for (Task task: tasks) {
             result.setText(result.getText() + task.name + " " + task.customStartDate);
             LinearLayout taskRow = TaskView.getTaskRow(
-                    TaskList.this, num, task, timespan, new Callable() {
+                    TaskList.this, num, task, new Callable() {
                         @Override
                         public Object call() throws Exception {
                             redrawProgressBar();

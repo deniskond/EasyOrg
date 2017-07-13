@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,10 +39,12 @@ public class TaskCalendar extends AppCompatActivity {
     LinearLayout tasksCalendar;
     int DP;
     TextView monthText;
-    String monthGenitive = "";
     ArrayList<Task> allMonthTasks = new ArrayList<>();
     Button selectMonthButton;
     int startMonth;
+    LinearLayout currentDayLayout = null;
+    ScrollView scrollView;
+    int dayTasksYear = 0, dayTasksMonth = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class TaskCalendar extends AppCompatActivity {
         monthText = (TextView)findViewById(R.id.month_text);
         Calendar calendar = Calendar.getInstance();
         startMonth = calendar.get(Calendar.MONTH) + 1;
+        scrollView = (ScrollView)findViewById(R.id.tasks_calendar_scroll);
         selectMonthButton = (Button)findViewById(R.id.selectMonthButton);
         selectMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,10 +74,19 @@ public class TaskCalendar extends AppCompatActivity {
         });
         DP = convertDpToPixels(this, 1);
         drawTasksCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+        if (currentDayLayout != null) {
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.scrollTo(0, currentDayLayout.getTop());
+                }
+            });
+        }
     }
 
     private void drawTasksCalendar(int year, int month) {
         tasksCalendar.removeAllViews();
+        allMonthTasks.clear();
         Calendar calendar = new GregorianCalendar(year, month, 1);
         String monthStr = getMonthString(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
         monthText.setText(monthStr);
@@ -185,11 +199,19 @@ public class TaskCalendar extends AppCompatActivity {
         calendarRow.addView(thirdDayColumn);
 
         tasksCalendar.addView(calendarRow);
+
+        Calendar calendar = Calendar.getInstance();
+        if ((firstDay == calendar.get(Calendar.DAY_OF_MONTH)
+            || secondDay == calendar.get(Calendar.DAY_OF_MONTH)
+            || thirdDay == calendar.get(Calendar.DAY_OF_MONTH))
+                && month == calendar.get(Calendar.MONTH) + 1
+                && year == calendar.get(Calendar.YEAR))
+            currentDayLayout = calendarRow;
     }
 
-    private void addCalendarDay(LinearLayout dayColumn, final int day, final int month, final int year) {
+    private void addCalendarDay(final LinearLayout dayColumn, final int day, final int month, final int year) {
 
-        String todayStr = String.format("%04d", year) + "."
+        String dayStr = String.format("%04d", year) + "."
                 + String.format("%02d", month) + "."
                 + String.format("%02d", day);
 
@@ -225,7 +247,7 @@ public class TaskCalendar extends AppCompatActivity {
 
         if (day != 0)
             for (Task task: allMonthTasks)
-                if (task.customEndDate.toString().equals(todayStr)) {
+                if (task.customEndDate.toString().equals(dayStr)) {
                     LinearLayout dayTaskRow = new LinearLayout(this);
                     LinearLayout.LayoutParams dayTaskParams = new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -296,6 +318,9 @@ public class TaskCalendar extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         dayNameRow.setBackgroundColor(0xFFEFEFEF);
+                        dayTasksYear = year;
+                        dayTasksMonth = month - 1;
+                        currentDayLayout = (LinearLayout)view;
                         Intent intent = new Intent(TaskCalendar.this, DayTasks.class);
                         intent.putExtra("day", day);
                         intent.putExtra("month", month);
@@ -316,4 +341,12 @@ public class TaskCalendar extends AppCompatActivity {
         return result;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (dayTasksYear != 0 && dayTasksMonth != 0) {
+            drawTasksCalendar(dayTasksYear, dayTasksMonth);
+            //tasksCalendar.removeAllViews();
+        }
+    }
 }

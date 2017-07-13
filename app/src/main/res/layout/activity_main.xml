@@ -153,7 +153,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="15"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Список покупок"
+                        android:text="Списки покупок"
                         android:textColor="#000000" />
                 </LinearLayout>
 
@@ -191,7 +191,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="15"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="@string/finances"
+                        android:text="Заметки"
                         android:textColor="#000000" />
                 </LinearLayout>
 

@@ -49,14 +49,12 @@ public class TaskView {
     private static Calendar alertDialogCalendar = Calendar.getInstance();
     private static int DP = 0;
     private static int taskRowHeight = Constants.TASK_ROW_HEIGHT;
-    private static Timespan timespan;
     private static Callable updateCallback;
 
     public static LinearLayout getTaskRow(
-            final Context context, int num, final Task task, Timespan ts, Callable uc) {
+            final Context context, int num, final Task task, Callable uc) {
 
         DP = convertDpToPixels(context, 1);
-        timespan = ts;
         updateCallback = uc;
 
         // Main row
@@ -400,7 +398,6 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //getTasks();
                 countableDialog.dismiss();
             }
         });
@@ -467,7 +464,6 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //redrawProgressBar();
                 dialog.dismiss();
             }
         });
