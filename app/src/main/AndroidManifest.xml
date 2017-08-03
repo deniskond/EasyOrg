@@ -26,7 +26,7 @@
             android:label="Новая задача"
             android:windowSoftInputMode="adjustPan">
         </activity>
-        <activity android:name=".TaskList.TaskList" android:label="Текущий список дел" >
+        <activity android:name=".TaskList.TaskList">
         </activity>
         <activity android:name=".TaskList.ShoppingList" android:noHistory="true" android:label="Список покупок" >
         </activity>

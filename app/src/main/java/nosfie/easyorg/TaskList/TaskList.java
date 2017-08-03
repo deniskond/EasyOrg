@@ -1,10 +1,14 @@
 package nosfie.easyorg.TaskList;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +37,7 @@ public class TaskList extends AppCompatActivity {
     LinearLayout taskList;
     final int TASK_ROW_HEIGHT = 45;
     LinearLayout timespanButton;
-    LinearLayout timespanSelector;
+    LinearLayout timespanSelector, cancelTimespanSelector;
     TextView timespanText;
     Timespan timespan = Timespan.TODAY;
     TextView progressBarText;
@@ -43,6 +47,8 @@ public class TaskList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         setContentView(R.layout.task_list);
 
         taskList = (LinearLayout)findViewById(R.id.task_list);
@@ -53,6 +59,7 @@ public class TaskList extends AppCompatActivity {
         timespanText = (TextView)findViewById(R.id.timespan_text);
         progressBarText = (TextView)findViewById(R.id.progressBarText);
         progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
+        cancelTimespanSelector = (LinearLayout)findViewById(R.id.cancel_timespan_selector);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -85,6 +92,14 @@ public class TaskList extends AppCompatActivity {
             public void onClick(View v) {
                 setSelectedTimespanImage();
                 timespanSelector.setVisibility(View.VISIBLE);
+            }
+        });
+
+        timespanSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (timespanSelector.getVisibility() == View.VISIBLE)
+                    timespanSelector.setVisibility(View.GONE);
             }
         });
 

@@ -244,7 +244,7 @@ public class TaskView {
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        editImageParams.height = 25 * DP;
+        editImageParams.height = 28 * DP;
         editImageParams.weight = 50;
         editImage.setLayoutParams(editImageParams);
         editImage.setPadding(5, 0, 0, 0);
@@ -265,7 +265,7 @@ public class TaskView {
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        deleteImageParams.height = 25 * DP;
+        deleteImageParams.height = 28 * DP;
         deleteImageParams.weight = 50;
         deleteImage.setLayoutParams(deleteImageParams);
         deleteImage.setPadding(0, 0, 5, 0);
