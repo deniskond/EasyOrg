@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +38,10 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_second_screen);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        /*
         button_next = (Button)findViewById(R.id.buttonNext);
         button_back = (Button)findViewById(R.id.buttonBack);
         customDate = (TextView)findViewById(R.id.customDate);
@@ -166,10 +171,11 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         break;
                 }
             }
-        });
+        });*/
 
     }
 
+    /*
     public void setDate() {
         DatePickerDialog datePickerDialog =
             new DatePickerDialog(
@@ -237,6 +243,6 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             task.customStartTime.hours = hours;
             task.customStartTime.minutes = minutes;
         }
-    };
+    };*/
 
 }

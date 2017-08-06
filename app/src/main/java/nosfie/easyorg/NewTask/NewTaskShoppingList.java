@@ -2,14 +2,17 @@ package nosfie.easyorg.NewTask;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,17 +32,22 @@ public class NewTaskShoppingList extends AppCompatActivity {
     Task task = new Task();
     int insertRowIndex = 9;
     Boolean forToday = false;
-    Button button_back, button_next, button_add;
+    ImageView button_add, button_template_fill;
+    LinearLayout button_back, button_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_shopping_list);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         tableInner = (TableLayout)findViewById(R.id.table_inner);
-        button_add = (Button)findViewById(R.id.buttonAdd);
-        button_next = (Button)findViewById(R.id.buttonNext);
-        button_back = (Button)findViewById(R.id.buttonBack);
+        button_add = (ImageView)findViewById(R.id.buttonAdd);
+        button_template_fill = (ImageView)findViewById(R.id.buttonTemplateFill);
+        button_next = (LinearLayout) findViewById(R.id.buttonNext);
+        button_back = (LinearLayout)findViewById(R.id.buttonBack);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -59,18 +67,43 @@ public class NewTaskShoppingList extends AppCompatActivity {
             else
                 insertRowIndex = num;
             forToday = extras.getBoolean("forToday");
-            if (forToday)
-                button_next.setText("Готово");
+            //if (forToday)
+            //    button_next.setText("Готово");
         }
         else
             for (int num = 1; num < insertRowIndex; num++)
                 addShoppingItemRow(num, "");
 
-        button_add.setOnClickListener(new View.OnClickListener() {
+        button_add.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                addShoppingItemRow(insertRowIndex, "");
-                insertRowIndex++;
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        button_add.setImageResource(R.drawable.add_item_button_dark);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        button_add.setImageResource(R.drawable.add_item_button);
+                        addShoppingItemRow(insertRowIndex, "");
+                        insertRowIndex++;
+                        break;
+                }
+                return true;
+            }
+        });
+
+        button_template_fill.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        button_template_fill.setImageResource(R.drawable.template_fill_button_dark);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        button_template_fill.setImageResource(R.drawable.template_fill_button);
+                        // TODO
+                        break;
+                }
+                return true;
             }
         });
 
@@ -84,35 +117,44 @@ public class NewTaskShoppingList extends AppCompatActivity {
             }
         });
 
-        button_next.setOnClickListener(new View.OnClickListener() {
+        button_next.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                task.shoppingList.clear();
-                for (int i = 1; i < insertRowIndex; i++) {
-                    TableRow tableRow = (TableRow) tableInner.findViewWithTag("row" + Integer.toString(i));
-                    LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
-                    EditText editText = (EditText) linearLayout.getChildAt(1);
-                    String item = editText.getText().toString();
-                    if (item != null && !item.isEmpty()) {
-                        task.shoppingList.add(item);
-                        task.shoppingListState.add(0);
-                    }
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        button_next.setBackgroundColor(0xFF20C049);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        button_next.setBackgroundColor(0xFF25DB53);
+                        task.shoppingList.clear();
+                        for (int i = 1; i < insertRowIndex; i++) {
+                            TableRow tableRow = (TableRow) tableInner.findViewWithTag("row" + Integer.toString(i));
+                            LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
+                            EditText editText = (EditText) linearLayout.getChildAt(1);
+                            String item = editText.getText().toString();
+                            if (item != null && !item.isEmpty()) {
+                                task.shoppingList.add(item);
+                                task.shoppingListState.add(0);
+                            }
+                        }
+                        if (task.shoppingList.size() == 0) {
+                            Toast.makeText(getApplicationContext(), "Введите список покупок", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        task.count = task.shoppingList.size();
+                        Intent intent;
+                        if (forToday) {
+                            intent = new Intent(NewTaskShoppingList.this, MainActivity.class);
+                            task.insertIntoDatabase(getApplicationContext());
+                            intent.putExtra("toast", "Задача успешно добавлена!");
+                        } else {
+                            intent = new Intent(NewTaskShoppingList.this, NewTaskSecondScreen.class);
+                            intent = task.formIntent(intent, task);
+                        }
+                        startActivity(intent);
+                        break;
                 }
-                if (task.shoppingList.size() == 0) {
-                    Toast.makeText(getApplicationContext(), "Введите список покупок", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                task.count = task.shoppingList.size();
-                Intent intent;
-                if (forToday) {
-                    intent = new Intent(NewTaskShoppingList.this, MainActivity.class);
-                    task.insertIntoDatabase(getApplicationContext());
-                    intent.putExtra("toast", "Задача успешно добавлена!");
-                } else {
-                    intent = new Intent(NewTaskShoppingList.this, NewTaskSecondScreen.class);
-                    intent = task.formIntent(intent, task);
-                }
-                startActivity(intent);
+                return true;
             }
         });
 

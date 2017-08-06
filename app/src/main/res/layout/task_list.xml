@@ -8,37 +8,6 @@
     android:orientation="vertical">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/buttonDeleteDB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Удалить базу данных" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/testTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -89,7 +58,8 @@
                             android:layout_weight="98"
                             android:text="Задачи на сегодня"
                             android:textColor="#ffffff"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -259,6 +229,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/task_list_shadow"
                         android:layout_width="match_parent"
                         android:layout_height="3px"
                         android:background="@drawable/shadow_light"

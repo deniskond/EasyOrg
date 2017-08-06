@@ -1,6 +1,7 @@
 package nosfie.easyorg.NewTask;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,11 @@ public class NewTaskFirstScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_first_screen);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        /*
         taskEdit = (EditText)findViewById(R.id.taskName);
         countEdit = (EditText)findViewById(R.id.count);
         countText = (TextView)findViewById(R.id.countText);
@@ -162,10 +168,11 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 intent = task.formIntent(intent, task);
                 startActivity(intent);
             }
-        });
+        });*/
 
     }
 
+    /*
     protected Task.TYPE getTaskType() {
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
@@ -181,6 +188,6 @@ public class NewTaskFirstScreen extends AppCompatActivity {
             default:
                 return Task.TYPE.SIMPLE;
         }
-    }
+    }*/
 
 }

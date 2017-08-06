@@ -28,13 +28,11 @@ import nosfie.easyorg.R;
 
 public class TaskList extends AppCompatActivity {
 
-    TextView result;
-    Button deleteDbButton;
     SQLiteDatabase DB;
     TasksConnector tasksConnector;
     ArrayList<Task> tasks = new ArrayList<>();
     float scale;
-    LinearLayout taskList;
+    LinearLayout taskList, taskListShadow;
     final int TASK_ROW_HEIGHT = 45;
     LinearLayout timespanButton;
     LinearLayout timespanSelector, cancelTimespanSelector;
@@ -52,7 +50,7 @@ public class TaskList extends AppCompatActivity {
         setContentView(R.layout.task_list);
 
         taskList = (LinearLayout)findViewById(R.id.task_list);
-        result = (TextView)findViewById(R.id.testTextView);
+        taskListShadow = (LinearLayout)findViewById(R.id.task_list_shadow);
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
         scale = getApplicationContext().getResources().getDisplayMetrics().density;
         timespanSelector = (LinearLayout)findViewById(R.id.timespan_selector);
@@ -103,18 +101,6 @@ public class TaskList extends AppCompatActivity {
             }
         });
 
-        deleteDbButton = (Button)findViewById(R.id.buttonDeleteDB);
-        deleteDbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DB = tasksConnector.getWritableDatabase();
-                DB.execSQL("DROP TABLE IF EXISTS tasks");
-                DB.close();
-                result.setText("");
-                Toast.makeText(getApplicationContext(), "Таблица удалена", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     protected void getTasks() {
@@ -154,7 +140,6 @@ public class TaskList extends AppCompatActivity {
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (Task task: tasks) {
-            result.setText(result.getText() + task.name + " " + task.customStartDate);
             LinearLayout taskRow = TaskView.getTaskRow(
                     TaskList.this, num, task, new Callable() {
                         @Override
@@ -168,6 +153,10 @@ public class TaskList extends AppCompatActivity {
             num++;
         }
         redrawProgressBar();
+        if (tasks.size() == 0)
+            taskListShadow.setVisibility(View.GONE);
+        else
+            taskListShadow.setVisibility(View.VISIBLE);
     }
 
     protected void setTimespanClickListeners() {

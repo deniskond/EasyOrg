@@ -18,6 +18,7 @@ import java.util.GregorianCalendar;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
+import nosfie.easyorg.NewTask.NewTaskShoppingList;
 import nosfie.easyorg.Settings.Settings;
 import nosfie.easyorg.TaskCalendar.TaskCalendar;
 import nosfie.easyorg.TaskList.ShoppingList;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         newTask.setBackgroundColor(0xFFFFFFFF);
-                        Intent intent = new Intent(MainActivity.this, NewTaskFirstScreen.class);
+                        Intent intent = new Intent(MainActivity.this, NewTaskShoppingList.class);
                         startActivity(intent);
                         break;
                 }
