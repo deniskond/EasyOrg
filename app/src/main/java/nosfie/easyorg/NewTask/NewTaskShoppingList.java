@@ -2,6 +2,7 @@ package nosfie.easyorg.NewTask;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -10,10 +11,10 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -31,24 +32,31 @@ public class NewTaskShoppingList extends AppCompatActivity {
     TableLayout tableInner;
     Task task = new Task();
     int insertRowIndex = 9;
-    Boolean forToday = false;
-    ImageView button_add, button_template_fill;
-    LinearLayout button_back, button_next;
+    Boolean lastScreen = false;
+    ImageView buttonAdd, buttonTemplateFill;
+    LinearLayout buttonBack, buttonNext, buttonClose;
+    TextView buttonNextText;
+    ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_shopping_list);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        // Setting up view elements
         tableInner = (TableLayout)findViewById(R.id.table_inner);
-        button_add = (ImageView)findViewById(R.id.buttonAdd);
-        button_template_fill = (ImageView)findViewById(R.id.buttonTemplateFill);
-        button_next = (LinearLayout) findViewById(R.id.buttonNext);
-        button_back = (LinearLayout)findViewById(R.id.buttonBack);
+        buttonAdd = (ImageView)findViewById(R.id.buttonAdd);
+        buttonTemplateFill = (ImageView)findViewById(R.id.buttonTemplateFill);
+        buttonNext = (LinearLayout) findViewById(R.id.buttonNext);
+        buttonBack = (LinearLayout)findViewById(R.id.buttonBack);
+        buttonClose = (LinearLayout)findViewById(R.id.buttonClose);
+        buttonNextText = (TextView)findViewById(R.id.buttonNextText);
+        scrollView = (ScrollView)findViewById(R.id.scrollView);
 
+        // Setting up the info which is received from other "Add task" steps
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             task = new Task(extras);
@@ -66,24 +74,26 @@ public class NewTaskShoppingList extends AppCompatActivity {
                 }
             else
                 insertRowIndex = num;
-            forToday = extras.getBoolean("forToday");
-            //if (forToday)
-            //    button_next.setText("Готово");
+            lastScreen = extras.getBoolean("lastScreen");
+            if (lastScreen)
+                buttonNextText.setText("ГОТОВО");
         }
         else
             for (int num = 1; num < insertRowIndex; num++)
                 addShoppingItemRow(num, "");
 
-        button_add.setOnTouchListener(new View.OnTouchListener() {
+        // Add shopping list button event listener (onTouch)
+        buttonAdd.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        button_add.setImageResource(R.drawable.add_item_button_dark);
+                        buttonAdd.setImageResource(R.drawable.add_item_button_medium_dark);
                         break;
                     case MotionEvent.ACTION_UP:
-                        button_add.setImageResource(R.drawable.add_item_button);
+                        buttonAdd.setImageResource(R.drawable.add_item_button_medium);
                         addShoppingItemRow(insertRowIndex, "");
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                         insertRowIndex++;
                         break;
                 }
@@ -91,15 +101,16 @@ public class NewTaskShoppingList extends AppCompatActivity {
             }
         });
 
-        button_template_fill.setOnTouchListener(new View.OnTouchListener() {
+        // Fill from template button event listener (onTouch)
+        buttonTemplateFill.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        button_template_fill.setImageResource(R.drawable.template_fill_button_dark);
+                        buttonTemplateFill.setImageResource(R.drawable.template_fill_button_medium_dark);
                         break;
                     case MotionEvent.ACTION_UP:
-                        button_template_fill.setImageResource(R.drawable.template_fill_button);
+                        buttonTemplateFill.setImageResource(R.drawable.template_fill_button_medium);
                         // TODO
                         break;
                 }
@@ -107,7 +118,8 @@ public class NewTaskShoppingList extends AppCompatActivity {
             }
         });
 
-        button_back.setOnClickListener(new View.OnClickListener() {
+        // Setting navigation buttons onClick listeners
+        buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewTaskShoppingList.this, NewTaskFirstScreen.class);
@@ -116,16 +128,23 @@ public class NewTaskShoppingList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
-        button_next.setOnTouchListener(new View.OnTouchListener() {
+        // Processing "Finish" button click; adding task to database and closing "Add task" section
+        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        button_next.setBackgroundColor(0xFF20C049);
+                        buttonNext.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNextClicked, null));
                         break;
                     case MotionEvent.ACTION_UP:
-                        button_next.setBackgroundColor(0xFF25DB53);
+                        buttonNext.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
                         task.shoppingList.clear();
                         for (int i = 1; i < insertRowIndex; i++) {
                             TableRow tableRow = (TableRow) tableInner.findViewWithTag("row" + Integer.toString(i));
@@ -143,7 +162,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
                         }
                         task.count = task.shoppingList.size();
                         Intent intent;
-                        if (forToday) {
+                        if (lastScreen) {
                             intent = new Intent(NewTaskShoppingList.this, MainActivity.class);
                             task.insertIntoDatabase(getApplicationContext());
                             intent.putExtra("toast", "Задача успешно добавлена!");
@@ -156,8 +175,9 @@ public class NewTaskShoppingList extends AppCompatActivity {
                 }
                 return true;
             }
-        });
-
+        };
+        buttonNext.setOnTouchListener(onTouchListener);
+        buttonNextText.setOnTouchListener(onTouchListener);
     }
 
     protected void addShoppingItemRow(int num, String value) {
@@ -184,9 +204,9 @@ public class NewTaskShoppingList extends AppCompatActivity {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
         numberParams.width = convertDpToPixels(this, 30);
-        numberParams.setMargins(ViewHelper.convertDpToPixels(this, 20), 0, 0, 0);
+        numberParams.setMargins(ViewHelper.convertDpToPixels(this, 15), 0, 0, 0);
         number.setPadding(0, 0, ViewHelper.convertDpToPixels(this, 10), 0);
-        number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         number.setLayoutParams(numberParams);
         number.setText(Integer.toString(num));
 
@@ -194,8 +214,8 @@ public class NewTaskShoppingList extends AppCompatActivity {
         LinearLayout.LayoutParams itemParams =
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-        itemParams.setMargins(ViewHelper.convertDpToPixels(this, 5), 0,
-                ViewHelper.convertDpToPixels(this, 20), 0);
+        itemParams.setMargins(0, 0,
+                ViewHelper.convertDpToPixels(this, 15), 0);
         item.setPadding(
             ViewHelper.convertDpToPixels(this, 8),
             ViewHelper.convertDpToPixels(this, 5),

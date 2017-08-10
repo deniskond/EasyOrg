@@ -4,10 +4,15 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- Default task states colors -->
     <color name="colorTaskActual">#FFFFFF</color>
     <color name="colorTaskDone">#FFD966</color>
     <color name="colorTaskPostponed">#CCCCCC</color>
     <color name="colorTaskFailed">#FF8E8E</color>
     <color name="colorTaskInProcess">#C8E4FC</color>
+
+    <!-- UI Colors -->
+    <color name="colorButtonNext">#25DB53</color>
+    <color name="colorButtonNextClicked">#20C049</color>
 
 </resources>

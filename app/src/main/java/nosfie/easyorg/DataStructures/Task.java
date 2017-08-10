@@ -55,7 +55,7 @@ public class Task {
     public Task() {
         this.startDate = START_DATE.TODAY;
         this.startTime = START_TIME.NONE;
-        this.deadline = DEADLINE.DAY;
+        this.deadline = DEADLINE.CUSTOM;
         this.customStartDate = new CustomDate();
         this.customStartTime = new Daytime();
         this.needReminder = false;
@@ -94,8 +94,6 @@ public class Task {
             this.needReminder = false;
         else
             this.needReminder = true;
-
-        Log.d("qq", endDate);
         if (endDate.equals("0000.00.00")) {
             this.deadline = DEADLINE.NONE;
             this.customEndDate = new CustomDate();
@@ -293,7 +291,24 @@ public class Task {
             shoppingListStateStr += Integer.toString(digit);
         CV.put("shoppingListState", shoppingListStateStr);
 
+        Log.d("qq", this.toString());
         return CV;
+    }
+
+    @Override
+    public String toString() {
+        return "Start date: " + this.customStartDate +
+                "\n End date: " + this.customEndDate +
+                "\n Deadline: " + this.deadline +
+                "\n Start time: " + this.startTime +
+                "\n Need reminder: " + this.needReminder +
+                "\n Name: " + this.name +
+                "\n Count: " + this.count +
+                "\n Current count: " + this.currentCount +
+                "\n Custom start time: " + this.customStartTime +
+                "\n Start date: " + this.startDate +
+                "\n Status: " + this.status +
+                "\n Type: " + this.type;
     }
 
 }

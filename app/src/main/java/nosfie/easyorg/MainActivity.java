@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         newTask.setBackgroundColor(0xFFFFFFFF);
-                        Intent intent = new Intent(MainActivity.this, NewTaskShoppingList.class);
+                        Intent intent = new Intent(MainActivity.this, NewTaskFirstScreen.class);
                         startActivity(intent);
                         break;
                 }

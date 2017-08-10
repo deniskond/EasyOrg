@@ -1,13 +1,16 @@
 package nosfie.easyorg.NewTask;
 
 import android.content.Intent;
+import android.support.annotation.IdRes;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,175 +22,265 @@ import nosfie.easyorg.R;
 
 public class NewTaskFirstScreen extends AppCompatActivity {
 
-    EditText taskEdit, countEdit;
-    TextView countText;
+    EditText taskName, countEdit;
+    TextView countText, buttonNextText;
     Task task = new Task();
-    RadioGroup radio_group;
-    CheckBox forTodayCheckbox;
-    Button button_cancel, button_next;
+    LinearLayout simpleTaskSelector, countableTaskSelector, shoppingListSelector;
+    LinearLayout buttonNext, buttonCancel, buttonBack;
+    LinearLayout selectInterval, selectToday, selectTimeless;
+    ImageView intervalRadio, todayRadio, timelessRadio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_first_screen);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        /*
-        taskEdit = (EditText)findViewById(R.id.taskName);
+        // Setting up view elements
+        taskName = (EditText)findViewById(R.id.taskName);
         countEdit = (EditText)findViewById(R.id.count);
         countText = (TextView)findViewById(R.id.countText);
-        forTodayCheckbox = (CheckBox)findViewById(R.id.forTodayCheckBox);
+        simpleTaskSelector = (LinearLayout)findViewById(R.id.simpleTaskSelector);
+        countableTaskSelector = (LinearLayout)findViewById(R.id.countableTaskSelector);
+        shoppingListSelector = (LinearLayout)findViewById(R.id.shoppingListSelector);
+        buttonNext = (LinearLayout)findViewById(R.id.buttonNext);
+        buttonNextText = (TextView)findViewById(R.id.buttonNextText);
+        buttonCancel = (LinearLayout)findViewById(R.id.buttonCancel);
+        buttonBack = (LinearLayout)findViewById(R.id.buttonBack);
+        selectInterval = (LinearLayout)findViewById(R.id.selectInterval);
+        selectToday = (LinearLayout)findViewById(R.id.selectToday);
+        selectTimeless = (LinearLayout)findViewById(R.id.selectTimeless);
+        intervalRadio = (ImageView)findViewById(R.id.intervalRadio);
+        todayRadio = (ImageView)findViewById(R.id.todayRadio);
+        timelessRadio = (ImageView)findViewById(R.id.timelessRadio);
 
+        // Setting up the info which is received from other "Add task" steps
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             task = new Task(extras);
-            taskEdit.setText(task.name);
+            taskName.setText(task.name);
             countEdit.setText(Integer.toString(task.count));
             switch (task.type) {
                 case SIMPLE:
-                    RadioButton optionSimple = (RadioButton)findViewById(R.id.optionSimple);
-                    optionSimple.setChecked(true);
+                    simpleTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
+                    countableTaskSelector.setBackgroundResource(R.drawable.border_small);
+                    shoppingListSelector.setBackgroundResource(R.drawable.border_small);
                     break;
                 case SHOPPING_LIST:
-                    RadioButton optionShoppingList = (RadioButton)findViewById(R.id.optionShoppingList);
-                    optionShoppingList.setChecked(true);
+                    simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
+                    countableTaskSelector.setBackgroundResource(R.drawable.border_small);
+                    shoppingListSelector.setBackgroundResource(R.drawable.border_big_selected);
                     break;
                 case COUNTABLE:
-                    RadioButton optionCountable = (RadioButton)findViewById(R.id.optionCountable);
-                    optionCountable.setChecked(true);
+                    simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
+                    countableTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
+                    shoppingListSelector.setBackgroundResource(R.drawable.border_small);
                     countText.setVisibility(View.VISIBLE);
                     countEdit.setVisibility(View.VISIBLE);
                     break;
             }
+            if (task.deadline == Task.DEADLINE.NONE) {
+                intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                timelessRadio.setImageResource(R.drawable.radio_checked_medium);
+            }
+            else if (task.deadline == Task.DEADLINE.DAY && task.startTime == Task.START_TIME.NONE) {
+                intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                todayRadio.setImageResource(R.drawable.radio_checked_medium);
+                timelessRadio.setImageResource(R.drawable.radio_unchecked_medium);
+            }
         }
 
-        radio_group = (RadioGroup)findViewById(R.id.radioGroup);
-        radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()  {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
-                String taskText = taskEdit.getText().toString();
-                switch (getTaskType()) {
-                    case SIMPLE:
-                        task.type = Task.TYPE.SIMPLE;
-                        if (taskText.equals("Список покупок"))
-                            taskEdit.setText("");
-                        countText.setVisibility(View.GONE);
-                        countEdit.setVisibility(View.GONE);
-                        if (forTodayCheckbox.isChecked())
-                            button_next.setText("Готово");
-                        break;
-                    case SHOPPING_LIST:
-                        task.type = Task.TYPE.SHOPPING_LIST;
-                        if (taskText.equals(""))
-                            taskEdit.setText("Список покупок");
-                        countText.setVisibility(View.GONE);
-                        countEdit.setVisibility(View.GONE);
-                        button_next.setText("Дальше");
-                        break;
-                    case COUNTABLE:
-                        task.type = Task.TYPE.COUNTABLE;
-                        if (taskText.equals("Список покупок"))
-                            taskEdit.setText("");
-                        countText.setVisibility(View.VISIBLE);
-                        countEdit.setVisibility(View.VISIBLE);
-                        countEdit.setText("");
-                        if (forTodayCheckbox.isChecked())
-                            button_next.setText("Готово");
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
-
-        forTodayCheckbox.setOnClickListener(new View.OnClickListener() {
+        // Setting up onClickListeners for task type buttons
+        simpleTaskSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (task.type != Task.TYPE.SHOPPING_LIST) {
-                    if (forTodayCheckbox.isChecked()) {
-                        button_next.setText("Готово");
-                    } else {
-                        button_next.setText("Дальше");
-                    }
-                }
+                if (task.type == Task.TYPE.SIMPLE)
+                    return;
+                simpleTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
+                countableTaskSelector.setBackgroundResource(R.drawable.border_small);
+                shoppingListSelector.setBackgroundResource(R.drawable.border_small);
+                task.type = Task.TYPE.SIMPLE;
+                if (taskName.getText().toString().equals("Список покупок"))
+                    taskName.setText("");
+                countText.setVisibility(View.GONE);
+                countEdit.setVisibility(View.GONE);
+                if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE)
+                    buttonNextText.setText("ГОТОВО");
+            }
+        });
+        countableTaskSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (task.type == Task.TYPE.COUNTABLE)
+                    return;
+                simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
+                countableTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
+                shoppingListSelector.setBackgroundResource(R.drawable.border_small);
+                task.type = Task.TYPE.COUNTABLE;
+                if (taskName.getText().toString().equals("Список покупок"))
+                    taskName.setText("");
+                countText.setVisibility(View.VISIBLE);
+                countEdit.setVisibility(View.VISIBLE);
+                countEdit.setText("");
+                if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE)
+                    buttonNextText.setText("ГОТОВО");
+            }
+        });
+        shoppingListSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (task.type == Task.TYPE.SHOPPING_LIST)
+                    return;
+                simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
+                countableTaskSelector.setBackgroundResource(R.drawable.border_small);
+                shoppingListSelector.setBackgroundResource(R.drawable.border_big_selected);
+                task.type = Task.TYPE.SHOPPING_LIST;
+                if (taskName.getText().toString().equals(""))
+                    taskName.setText("Список покупок");
+                countText.setVisibility(View.GONE);
+                countEdit.setVisibility(View.GONE);
+                buttonNextText.setText("ДАЛЕЕ");
             }
         });
 
-        button_cancel = (Button)findViewById(R.id.buttonCancel);
-        button_cancel.setOnClickListener(new View.OnClickListener() {
+        // Processing improvised radio group item clicks
+        // 1) Interval
+        selectInterval.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
-                startActivity(intent);
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        selectInterval.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        selectInterval.setBackgroundColor(0x00000000);
+                        buttonNextText.setText("ДАЛЕЕ");
+                        task.deadline = Task.DEADLINE.CUSTOM;
+                        intervalRadio.setImageResource(R.drawable.radio_checked_medium);
+                        todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        timelessRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        break;
+                }
+                return true;
+            }
+        });
+        // 2) Today
+        selectToday.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        selectToday.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        selectToday.setBackgroundColor(0x00000000);
+                        if (task.type != Task.TYPE.SHOPPING_LIST)
+                            buttonNextText.setText("ГОТОВО");
+                        task.deadline = Task.DEADLINE.DAY;
+                        intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        todayRadio.setImageResource(R.drawable.radio_checked_medium);
+                        timelessRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        break;
+                }
+                return true;
+            }
+        });
+        // 3) Timeless
+        selectTimeless.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        selectTimeless.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        selectTimeless.setBackgroundColor(0x00000000);
+                        if (task.type != Task.TYPE.SHOPPING_LIST)
+                            buttonNextText.setText("ГОТОВО");
+                        task.deadline = Task.DEADLINE.NONE;
+                        intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        timelessRadio.setImageResource(R.drawable.radio_checked_medium);
+                        break;
+                }
+                return true;
             }
         });
 
-        button_next = (Button)findViewById(R.id.buttonNext);
-        button_next.setOnClickListener(new View.OnClickListener() {
+        // Setting up navigation buttons
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                task.name = taskEdit.getText().toString();
-                String countEditString = countEdit.getText().toString();
-                if (!countEditString.equals(""))
-                    task.count = Integer.parseInt(countEdit.getText().toString());
-                else
-                    task.count = 0;
-                if (task.name.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Введите название задачи",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (task.type == Task.TYPE.COUNTABLE && task.count == 0) {
-                    Toast.makeText(getApplicationContext(), "Введите количественную цель",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Intent intent;
-
-                if (forTodayCheckbox.isChecked()) {
-                    task.startTime = Task.START_TIME.NONE;
-                    task.startDate = Task.START_DATE.TODAY;
-                    task.deadline = Task.DEADLINE.DAY;
-                    if (task.type != Task.TYPE.SHOPPING_LIST) {
-                        intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
-                        task.insertIntoDatabase(getApplicationContext());
-                        intent.putExtra("toast", "Задача успешно добавлена!");
-                    } else {
-                        intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
-                        intent.putExtra("forToday", true);
-                    }
-                }
-                else if (task.type == Task.TYPE.SHOPPING_LIST) {
-                    intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
-                    intent.putExtra("forToday", false);
-                }
-                else
-                    intent = new Intent(NewTaskFirstScreen.this, NewTaskSecondScreen.class);
-
-                intent = task.formIntent(intent, task);
-                startActivity(intent);
+            finish();
             }
-        });*/
+        });
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        // Setting data for next "Add task" step; it can be:
+        // 1) Shopping list page
+        // 2) Time interval page
+        // 3) Finish of "Add task"; adding task to database
+        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        buttonNext.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNextClicked, null));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        buttonNext.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
+                        task.name = taskName.getText().toString();
+                        if (!countEdit.getText().toString().equals(""))
+                            task.count = Integer.parseInt(countEdit.getText().toString());
+                        else
+                            task.count = 0;
+                        if (task.name.equals("")) {
+                            Toast.makeText(getApplicationContext(), "Введите название задачи",Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        if (task.type == Task.TYPE.COUNTABLE && task.count == 0) {
+                            Toast.makeText(getApplicationContext(), "Введите количественную цель",Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+
+                        Intent intent;
+                        if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE) {
+                            task.startTime = Task.START_TIME.NONE;
+                            task.startDate = Task.START_DATE.TODAY;
+                            if (task.type != Task.TYPE.SHOPPING_LIST) {
+                                intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
+                                task.insertIntoDatabase(getApplicationContext());
+                                intent.putExtra("toast", "Задача успешно добавлена!");
+                            } else {
+                                intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
+                                intent.putExtra("lastScreen", true);
+                            }
+                        }
+                        else if (task.type == Task.TYPE.SHOPPING_LIST) {
+                            intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
+                            intent.putExtra("lastScreen", false);
+                        }
+                        else
+                            intent = new Intent(NewTaskFirstScreen.this, NewTaskSecondScreen.class);
+
+                        intent = task.formIntent(intent, task);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        };
+        buttonNext.setOnTouchListener(onTouchListener);
+        buttonNextText.setOnTouchListener(onTouchListener);
 
     }
-
-    /*
-    protected Task.TYPE getTaskType() {
-        RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
-        int radioButtonID = radioGroup.getCheckedRadioButtonId();
-        View radioButton = radioGroup.findViewById(radioButtonID);
-        int idx = radioGroup.indexOfChild(radioButton);
-        switch (idx) {
-            case 0:
-                return Task.TYPE.SIMPLE;
-            case 1:
-                return Task.TYPE.SHOPPING_LIST;
-            case 2:
-                return Task.TYPE.COUNTABLE;
-            default:
-                return Task.TYPE.SIMPLE;
-        }
-    }*/
 
 }
