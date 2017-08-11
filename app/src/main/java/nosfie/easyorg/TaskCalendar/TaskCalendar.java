@@ -11,10 +11,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +50,8 @@ public class TaskCalendar extends AppCompatActivity {
     LinearLayout currentDayLayout = null;
     ScrollView scrollView;
     int dayTasksYear = 0, dayTasksMonth = 0;
+    ImageView currentPressed;
+    Boolean needChangeOnCurrentPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,16 @@ public class TaskCalendar extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (needChangeOnCurrentPressed) {
+                    currentPressed.setImageResource(R.drawable.calendar_day_header_bg);
+                    needChangeOnCurrentPressed = false;
+                }
             }
         });
 
@@ -299,7 +313,7 @@ public class TaskCalendar extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         dayNameRelative.setLayoutParams(dayNameRelativeParams);
 
-        ImageView dayNameBg = new ImageView(this);
+        final ImageView dayNameBg = new ImageView(this);
         RelativeLayout.LayoutParams dayNameBgParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -401,10 +415,13 @@ public class TaskCalendar extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        dayNameRow.setBackgroundColor(0xFFC8E4FC);
+                        dayNameBg.setImageResource(R.drawable.calendar_day_header_bg_dark);
+                        currentPressed = dayNameBg;
+                        needChangeOnCurrentPressed = true;
                         break;
                     case MotionEvent.ACTION_UP:
-                        dayNameRow.setBackgroundColor(0xFFEFEFEF);
+                        dayNameBg.setImageResource(R.drawable.calendar_day_header_bg);
+                        needChangeOnCurrentPressed = false;
                         dayTasksYear = year;
                         dayTasksMonth = month - 1;
                         currentDayLayout = (LinearLayout)view;
@@ -433,7 +450,6 @@ public class TaskCalendar extends AppCompatActivity {
         super.onResume();
         if (dayTasksYear != 0 && dayTasksMonth != 0) {
             drawTasksCalendar(dayTasksYear, dayTasksMonth);
-            //tasksCalendar.removeAllViews();
         }
     }
 
