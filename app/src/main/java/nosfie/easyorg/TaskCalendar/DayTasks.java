@@ -3,7 +3,9 @@ package nosfie.easyorg.TaskCalendar;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,17 +31,28 @@ public class DayTasks extends AppCompatActivity {
     TextView progressBarText, timespanText;
     ProgressBar progressBar;
     int day = 0, month = 0, year = 0;
+    LinearLayout buttonAdd, buttonClose;
+    LinearLayout taskListShadow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_tasks);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        // Setting up view elements
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
-        taskList = (LinearLayout)findViewById(R.id.task_list);
+        taskList = (LinearLayout)findViewById(R.id.taskList);
         progressBarText = (TextView)findViewById(R.id.progressBarText);
         progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
-        timespanText = (TextView)findViewById(R.id.timespan_text);
+        timespanText = (TextView)findViewById(R.id.timespanText);
+        buttonAdd = (LinearLayout)findViewById(R.id.buttonAdd);
+        buttonClose = (LinearLayout)findViewById(R.id.buttonClose);
+        taskListShadow = (LinearLayout)findViewById(R.id.taskListShadow);
 
+        // Getting date info from previous view
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             day = extras.getInt("day");
@@ -47,8 +60,17 @@ public class DayTasks extends AppCompatActivity {
             year = extras.getInt("year");
         }
 
-        timespanText.setText(day + " " + getHumanMonthNameGenitive(month) + " " + year);
+        // Processing "Close" button click
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
+        // Drawing task, etc.
+        timespanText.setText(day + " " + getHumanMonthNameGenitive(month) + " " + year +
+                " (" + getDayOfWeekStr(year, month, day) + ")");
         getTasks();
         redrawProgressBar();
     }
@@ -105,6 +127,10 @@ public class DayTasks extends AppCompatActivity {
             num++;
         }
         redrawProgressBar();
+        if (tasks.size() == 0)
+            taskListShadow.setVisibility(View.GONE);
+        else
+            taskListShadow.setVisibility(View.VISIBLE);
     }
 
     protected void redrawProgressBar() {

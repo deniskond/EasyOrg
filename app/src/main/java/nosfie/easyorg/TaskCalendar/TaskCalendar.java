@@ -6,18 +6,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,7 +43,7 @@ public class TaskCalendar extends AppCompatActivity {
     int DP;
     TextView monthText;
     ArrayList<Task> allMonthTasks = new ArrayList<>();
-    Button selectMonthButton;
+    LinearLayout buttonSelectMonth, buttonBack;
     int startMonth;
     LinearLayout currentDayLayout = null;
     ScrollView scrollView;
@@ -48,16 +51,27 @@ public class TaskCalendar extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar);
-        tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
-        tasksCalendar = (LinearLayout)findViewById(R.id.tasks_calendar);
-        monthText = (TextView)findViewById(R.id.month_text);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        // Setting variables primary values
         Calendar calendar = Calendar.getInstance();
         startMonth = calendar.get(Calendar.MONTH) + 1;
+        DP = convertDpToPixels(this, 1);
+        tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
+
+        // Setting up view elements
+        tasksCalendar = (LinearLayout)findViewById(R.id.tasks_calendar);
+        monthText = (TextView)findViewById(R.id.monthText);
         scrollView = (ScrollView)findViewById(R.id.tasks_calendar_scroll);
-        selectMonthButton = (Button)findViewById(R.id.selectMonthButton);
-        selectMonthButton.setOnClickListener(new View.OnClickListener() {
+        buttonSelectMonth = (LinearLayout)findViewById(R.id.buttonSelectMonth);
+        buttonBack = (LinearLayout)findViewById(R.id.buttonBack);
+
+        // Processing "Change month" click
+        buttonSelectMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MonthYearPickerDialog monthYearPickerDialog = new MonthYearPickerDialog();
@@ -72,13 +86,22 @@ public class TaskCalendar extends AppCompatActivity {
                 monthYearPickerDialog.show(getFragmentManager(), "MonthYearPickerDialog");
             }
         });
-        DP = convertDpToPixels(this, 1);
+
+        // Processing "Back" click
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        // Drawing calendar for the current month
         drawTasksCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
         if (currentDayLayout != null) {
             scrollView.post(new Runnable() {
                 @Override
                 public void run() {
-                    scrollView.scrollTo(0, currentDayLayout.getTop());
+                    scrollView.scrollTo(0, currentDayLayout.getTop() + 5 * DP);
                 }
             });
         }
@@ -153,52 +176,97 @@ public class TaskCalendar extends AppCompatActivity {
         LinearLayout.LayoutParams calendarRowParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        calendarRowParams.height = 200 * DP;
+        calendarRowParams.height = 150 * DP;
         calendarRow.setLayoutParams(calendarRowParams);
         calendarRow.setOrientation(LinearLayout.HORIZONTAL);
-        calendarRow.setWeightSum(100);
+
+        LinearLayout firstDayColumnContainer = new LinearLayout(this);
+        LinearLayout.LayoutParams firstDayColumnContainerParams = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        firstDayColumnContainerParams.weight = 1;
+        firstDayColumnContainer.setLayoutParams(firstDayColumnContainerParams);
+        firstDayColumnContainer.setBackgroundColor(0xFFAAAAAA);
 
         LinearLayout firstDayColumn = new LinearLayout(this);
         LinearLayout.LayoutParams firstDayColumnParams = new LinearLayout.LayoutParams(
-                0,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        firstDayColumnParams.setMargins(0, 0, 1, 1);
-        firstDayColumnParams.weight = 33;
+        firstDayColumnParams.setMargins(1, 1, 1, 1);
         firstDayColumn.setLayoutParams(firstDayColumnParams);
-        firstDayColumn.setOrientation(LinearLayout.VERTICAL);
         firstDayColumn.setBackgroundColor(0xFFAAAAAA);
         firstDayColumn.setOrientation(LinearLayout.VERTICAL);
         addCalendarDay(firstDayColumn, firstDay, month, year);
+        firstDayColumnContainer.addView(firstDayColumn);
+
+        LinearLayout paddingLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams paddingParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        paddingParams.width = 5 * DP;
+        paddingLayout.setLayoutParams(paddingParams);
+
+        LinearLayout secondDayColumnContainer = new LinearLayout(this);
+        LinearLayout.LayoutParams secondDayColumnContainerParams = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        secondDayColumnContainerParams.weight = 1;
+        secondDayColumnContainer.setLayoutParams(secondDayColumnContainerParams);
+        secondDayColumnContainer.setBackgroundColor(0xFFAAAAAA);
 
         LinearLayout secondDayColumn = new LinearLayout(this);
         LinearLayout.LayoutParams secondDayColumnParams = new LinearLayout.LayoutParams(
-                0,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        secondDayColumnParams.setMargins(0, 0, 1, 1);
-        secondDayColumnParams.weight = 34;
+        secondDayColumnParams.setMargins(1, 1, 1, 1);
         secondDayColumn.setLayoutParams(secondDayColumnParams);
-        secondDayColumn.setOrientation(LinearLayout.VERTICAL);
         secondDayColumn.setBackgroundColor(0xFFAAAAAA);
         secondDayColumn.setOrientation(LinearLayout.VERTICAL);
         addCalendarDay(secondDayColumn, secondDay, month, year);
+        secondDayColumnContainer.addView(secondDayColumn);
+
+        LinearLayout paddingLayout2 = new LinearLayout(this);
+        paddingLayout2.setLayoutParams(paddingParams);
+
+        LinearLayout thirdDayColumnContainer = new LinearLayout(this);
+        LinearLayout.LayoutParams thirdDayColumnContainerParams = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        thirdDayColumnContainerParams.weight = 1;
+        thirdDayColumnContainer.setLayoutParams(thirdDayColumnContainerParams);
+        thirdDayColumnContainer.setBackgroundColor(0xFFAAAAAA);
 
         LinearLayout thirdDayColumn = new LinearLayout(this);
         LinearLayout.LayoutParams thirdDayColumnParams = new LinearLayout.LayoutParams(
-                0,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        thirdDayColumnParams.setMargins(0, 0, 0, 1);
-        thirdDayColumnParams.weight = 33;
+        thirdDayColumnParams.setMargins(1, 1, 1, 1);
         thirdDayColumn.setLayoutParams(thirdDayColumnParams);
-        thirdDayColumn.setOrientation(LinearLayout.VERTICAL);
         thirdDayColumn.setBackgroundColor(0xFFAAAAAA);
         thirdDayColumn.setOrientation(LinearLayout.VERTICAL);
         addCalendarDay(thirdDayColumn, thirdDay, month, year);
+        thirdDayColumnContainer.addView(thirdDayColumn);
 
-        calendarRow.addView(firstDayColumn);
-        calendarRow.addView(secondDayColumn);
-        calendarRow.addView(thirdDayColumn);
+        calendarRow.addView(firstDayColumnContainer);
+        calendarRow.addView(paddingLayout);
+        calendarRow.addView(secondDayColumnContainer);
+        calendarRow.addView(paddingLayout2);
+        calendarRow.addView(thirdDayColumnContainer);
+
+        if (secondDay == 0)
+            secondDayColumnContainer.setVisibility(View.INVISIBLE);
+        if (thirdDay == 0)
+            thirdDayColumnContainer.setVisibility(View.INVISIBLE);
 
         tasksCalendar.addView(calendarRow);
+
+        LinearLayout verticalPadding = new LinearLayout(this);
+        LinearLayout.LayoutParams verticalPaddingParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        verticalPaddingParams.height = 5 * DP;
+        verticalPadding.setLayoutParams(verticalPaddingParams);
+        tasksCalendar.addView(verticalPadding);
 
         Calendar calendar = Calendar.getInstance();
         if ((firstDay == calendar.get(Calendar.DAY_OF_MONTH)
@@ -219,23 +287,43 @@ public class TaskCalendar extends AppCompatActivity {
         LinearLayout.LayoutParams dayNameRowParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        dayNameRowParams.height = 30 * DP;
+        dayNameRowParams.height = 25 * DP;
         dayNameRowParams.setMargins(0, 0, 0, 1);
         dayNameRow.setOrientation(LinearLayout.HORIZONTAL);
         dayNameRow.setGravity(Gravity.CENTER);
         dayNameRow.setLayoutParams(dayNameRowParams);
-        dayNameRow.setBackgroundColor(0xFFEFEFEF);
+
+        RelativeLayout dayNameRelative = new RelativeLayout(this);
+        LinearLayout.LayoutParams dayNameRelativeParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        dayNameRelative.setLayoutParams(dayNameRelativeParams);
+
+        ImageView dayNameBg = new ImageView(this);
+        RelativeLayout.LayoutParams dayNameBgParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        dayNameBg.setLayoutParams(dayNameBgParams);
+        dayNameBg.setImageResource(R.drawable.calendar_day_header_bg);
+        dayNameBg.setScaleType(ImageView.ScaleType.FIT_XY);
 
         TextView dayName = new TextView(this);
-        LinearLayout.LayoutParams dayNameParams = new LinearLayout.LayoutParams(
+        RelativeLayout.LayoutParams dayNameParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        dayName.setTextColor(0xFF000000);
-        if (day != 0)
-            dayName.setText(day + " " + getHumanMonthNameGenitive(month));
-        dayName.setTypeface(null, Typeface.BOLD);
+        dayNameParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        dayNameParams.addRule(RelativeLayout.CENTER_VERTICAL);
         dayName.setLayoutParams(dayNameParams);
-        dayNameRow.addView(dayName);
+        dayName.setTextColor(0xFF333333);
+        dayName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        if (day != 0)
+            dayName.setText(day + " " + getHumanMonthNameGenitive(month) +
+                    " (" + getDayOfWeekStr(year, month, day) + ")");
+        dayName.setTypeface(null, Typeface.BOLD);
+
+        dayNameRelative.addView(dayNameBg);
+        dayNameRelative.addView(dayName);
+        dayNameRow.addView(dayNameRelative);
 
         LinearLayout dayTasks = new LinearLayout(this);
         LinearLayout.LayoutParams dayTasksParams = new LinearLayout.LayoutParams(
@@ -265,8 +353,6 @@ public class TaskCalendar extends AppCompatActivity {
                             else {
                                 if (task.currentCount == task.count)
                                     color = R.color.colorTaskDone;
-                                else if (task.currentCount != 0)
-                                    color = R.color.colorTaskInProcess;
                                 else
                                     color = R.color.colorTaskActual;
                             }
@@ -284,8 +370,7 @@ public class TaskCalendar extends AppCompatActivity {
                             color = R.color.colorTaskPostponed;
                             break;
                     }
-                    dayTaskRow.setBackgroundColor(getResources().getColor(color));
-                    dayTasks.addView(dayTaskRow);
+                    dayTaskRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), color, null));
 
                     TextView taskName = new TextView(this);
                     LinearLayout.LayoutParams taskNameParams = new LinearLayout.LayoutParams(
@@ -294,8 +379,10 @@ public class TaskCalendar extends AppCompatActivity {
                     taskName.setLayoutParams(taskNameParams);
                     taskName.setText(task.name);
                     taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9);
-                    taskName.setPadding(8 * DP, 0, 0, 0);
+                    taskName.setPadding(4 * DP, 0, 4 * DP, 0);
                     dayTaskRow.addView(taskName);
+
+                    dayTasks.addView(dayTaskRow);
         }
 
         LinearLayout dayTasksFillup = new LinearLayout(this);
@@ -349,4 +436,5 @@ public class TaskCalendar extends AppCompatActivity {
             //tasksCalendar.removeAllViews();
         }
     }
+
 }

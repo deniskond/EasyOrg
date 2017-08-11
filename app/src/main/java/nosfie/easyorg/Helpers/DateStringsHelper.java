@@ -1,5 +1,10 @@
 package nosfie.easyorg.Helpers;
 
+import android.util.Log;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class DateStringsHelper {
     public static void getHumanDateString(int year, int month, int date) {
 
@@ -73,5 +78,37 @@ public class DateStringsHelper {
         if (!startWithCapital)
             result = result.toLowerCase();
         return result;
+    }
+
+    public static String getDayOfWeekStr(int year, int month, int day) {
+        month--;
+        Calendar calendar = new GregorianCalendar(year, month, day);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        String dayOfWeekStr = "";
+        switch (dayOfWeek) {
+            case 1:
+                dayOfWeekStr = "вс";
+                break;
+            case 2:
+                dayOfWeekStr = "пн";
+                break;
+            case 3:
+                dayOfWeekStr = "вт";
+                break;
+            case 4:
+                dayOfWeekStr = "ср";
+                break;
+            case 5:
+                dayOfWeekStr = "чт";
+                break;
+            case 6:
+                dayOfWeekStr = "пт";
+                break;
+            case 7:
+                dayOfWeekStr = "сб";
+                break;
+        }
+        return dayOfWeekStr;
     }
 }

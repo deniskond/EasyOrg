@@ -1,144 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_dark"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/timespan_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_blue_dark"
+            android:id="@+id/buttonBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:srcCompat="@drawable/arrow_back" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="5dp"
-            android:weightSum="100">
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/month_text"
+                android:id="@+id/monthText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="50"
-                android:text="Май, 2017"
+                android:layout_weight="1"
+                android:paddingEnd="20dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="20dp"
+                android:paddingStart="5dp"
+                android:text="Календарь задач на август 2017"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/selectMonthButton"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="50"
-                android:text="Выбрать месяц"
-                android:textSize="14sp" />
-
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonSelectMonth"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                app:srcCompat="@drawable/dropdown_2" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/tasks_calendar_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/app_bg">
 
         <LinearLayout
             android:id="@+id/tasks_calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#AAAAAA"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/three_day_row"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/day_column"
+                    android:id="@+id/day_column_container"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="1px"
-                    android:layout_marginRight="1px"
-                    android:layout_weight="33"
+                    android:layout_weight="1"
                     android:background="#AAAAAA"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/day_name_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginBottom="1px"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/day_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1 мая"
-                            android:textColor="#000000"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/day_tasks"
+                        android:id="@+id/day_column"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_margin="1px"
                         android:background="#AAAAAA"
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/day_task_row"
+                            android:id="@+id/day_name_row"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_marginBottom="1px"
-                            android:background="#FFD966"
-                            android:gravity="center_vertical"
-                            android:minHeight="15dp"
+                            android:background="#FFFFFF"
+                            android:gravity="center"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/task_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="8dp"
-                                android:text="Название задачи"
-                                android:textSize="9sp" />
+                            <RelativeLayout
+                                android:id="@+id/day_name_relative"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/day_name_bg"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerHorizontal="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/calendar_day_header_bg" />
+
+                                <TextView
+                                    android:id="@+id/day_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="1 мая (пн)"
+                                    android:textColor="#000000"
+                                    android:textStyle="bold"
+                                    android:visibility="visible" />
+
+                            </RelativeLayout>
+
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/day_tasks_fillup"
+                            android:id="@+id/day_tasks"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#FFFFFF"
-                            android:orientation="horizontal"></LinearLayout>
+                            android:background="#AAAAAA"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/day_task_row"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="1px"
+                                android:background="#ffffff"
+                                android:gravity="center_vertical"
+                                android:minHeight="15dp"
+                                android:orientation="horizontal">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:minHeight="15dp">
+
+                                    <TextView
+                                        android:id="@+id/task_name"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_weight="1"
+                                        android:paddingLeft="8dp"
+                                        android:text="Название задачи"
+                                        android:textSize="9sp" />
+
+                                </RelativeLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/day_tasks_fillup"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#FFFFFF"
+                                android:orientation="horizontal"></LinearLayout>
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/day_padding"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
                     android:layout_marginRight="1px"
-                    android:layout_weight="34"
+                    android:layout_weight="1"
                     android:background="#FFFFFF"
                     android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/day_padding2"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
-                    android:layout_weight="33"
+                    android:layout_weight="1"
                     android:background="#FFFFFF"
                     android:orientation="vertical"></LinearLayout>
             </LinearLayout>
