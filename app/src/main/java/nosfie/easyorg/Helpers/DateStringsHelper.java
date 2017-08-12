@@ -111,4 +111,37 @@ public class DateStringsHelper {
         }
         return dayOfWeekStr;
     }
+
+    public static String getShortMonthName(int month, boolean startUppercase) {
+        String result = "";
+        switch (month) {
+            case 0:
+                return "Янв";
+            case 1:
+                return "Фев";
+            case 2:
+                return "Мар";
+            case 3:
+                return "Апр";
+            case 4:
+                return "Май";
+            case 5:
+                return "Июн";
+            case 6:
+                return "Июл";
+            case 7:
+                return "Авг";
+            case 8:
+                return "Сен";
+            case 9:
+                return "Окт";
+            case 10:
+                return "Ноя";
+            case 11:
+                return "Дек";
+        }
+        if (!startUppercase)
+            result = result.toLowerCase();
+        return result;
+    }
 }

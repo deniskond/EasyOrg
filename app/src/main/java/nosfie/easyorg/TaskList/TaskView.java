@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -42,6 +43,7 @@ import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.R;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static nosfie.easyorg.Helpers.DateStringsHelper.getShortMonthName;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
 public class TaskView {
@@ -52,7 +54,7 @@ public class TaskView {
     private static Callable updateCallback;
 
     public static LinearLayout getTaskRow(
-            final Context context, int num, final Task task, Callable uc) {
+            final Context context, int num, final Task task, Timespan timespan, Callable uc) {
 
         DP = convertDpToPixels(context, 1);
         updateCallback = uc;
@@ -185,10 +187,27 @@ public class TaskView {
         timeText.setLayoutParams(timeTextParams);
         timeText.setTextColor(0xFFE50000);
         timeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        timeText.setText(task.customStartTime.toString().replaceAll("-", ":"));
-        timeText.setId(2000 + task.id);
-        if (task.startTime.toString().equals("NONE"))
+        if (timespan == Timespan.TODAY) {
+            timeText.setText(task.customStartTime.toString().replaceAll("-", ":"));
+            if (task.startTime.toString().equals("NONE"))
+                timeText.setVisibility(View.GONE);
+        }
+        else if (timespan == Timespan.WEEK || timespan == Timespan.MONTH) {
+            if (task.customStartDate.toString().equals(task.customEndDate.toString()))
+                timeText.setText(Integer.toString(task.customEndDate.day) + " "
+                        + getShortMonthName(task.customEndDate.month, false));
+            else
+                timeText.setVisibility(View.GONE);
+        }
+        else if (timespan == Timespan.YEAR) {
+            if (task.customStartDate.month == task.customEndDate.month)
+                timeText.setText(getShortMonthName(task.customEndDate.month, false));
+            else
+                timeText.setVisibility(View.GONE);
+        }
+        else
             timeText.setVisibility(View.GONE);
+        timeText.setId(2000 + task.id);
         taskNameRelative.addView(timeText);
 
         ImageView cartIcon = new ImageView(context);

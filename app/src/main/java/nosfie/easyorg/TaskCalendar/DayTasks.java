@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.CustomDate;
 import nosfie.easyorg.DataStructures.Task;
+import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.R;
 import nosfie.easyorg.TaskList.TaskView;
@@ -115,7 +116,7 @@ public class DayTasks extends AppCompatActivity {
         int num = 1;
         for (Task task: tasks) {
             LinearLayout taskRow = TaskView.getTaskRow(
-                    DayTasks.this, num, task, new Callable() {
+                    DayTasks.this, num, task, Timespan.TODAY, new Callable() {
                         @Override
                         public Object call() throws Exception {
                             redrawProgressBar();

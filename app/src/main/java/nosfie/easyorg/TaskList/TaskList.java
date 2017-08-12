@@ -111,7 +111,12 @@ public class TaskList extends AppCompatActivity {
         String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
                 "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
 
-        Cursor cursor = DB.query("tasks", columns, null, null, null, null, "startTime");
+        Cursor cursor;
+
+        if (timespan == Timespan.TODAY)
+            cursor = DB.query("tasks", columns, null, null, null, null, "startTime");
+        else
+            cursor = DB.query("tasks", columns, null, null, null, null, "endDate ASC, startDate DESC");
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -141,7 +146,7 @@ public class TaskList extends AppCompatActivity {
         int num = 1;
         for (Task task: tasks) {
             LinearLayout taskRow = TaskView.getTaskRow(
-                    TaskList.this, num, task, new Callable() {
+                    TaskList.this, num, task, timespan, new Callable() {
                         @Override
                         public Object call() throws Exception {
                             redrawProgressBar();
