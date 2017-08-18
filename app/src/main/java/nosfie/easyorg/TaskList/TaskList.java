@@ -1,20 +1,15 @@
 package nosfie.easyorg.TaskList;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -33,14 +28,12 @@ public class TaskList extends AppCompatActivity {
     ArrayList<Task> tasks = new ArrayList<>();
     float scale;
     LinearLayout taskList, taskListShadow;
-    final int TASK_ROW_HEIGHT = 45;
     LinearLayout timespanButton;
     LinearLayout timespanSelector, cancelTimespanSelector;
     TextView timespanText;
     Timespan timespan = Timespan.TODAY;
     TextView progressBarText;
     ProgressBar progressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,18 +137,19 @@ public class TaskList extends AppCompatActivity {
 
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
-        for (Task task: tasks) {
-            LinearLayout taskRow = TaskView.getTaskRow(
-                    TaskList.this, num, task, timespan, new Callable() {
-                        @Override
-                        public Object call() throws Exception {
-                            redrawProgressBar();
-                            getTasks();
-                            return null;
-                        }
-                    });
-            taskList.addView(taskRow);
-            num++;
+        for (Task task: tasks)
+            if (task.type != Task.TYPE.TEMPLATE) {
+                LinearLayout taskRow = TaskView.getTaskRow(
+                        TaskList.this, num, task, true, true, timespan, new Callable() {
+                            @Override
+                            public Object call() throws Exception {
+                                redrawProgressBar();
+                                getTasks();
+                                return null;
+                            }
+                        });
+                taskList.addView(taskRow);
+                num++;
         }
         redrawProgressBar();
         if (tasks.size() == 0)

@@ -1,37 +1,55 @@
 package nosfie.easyorg.NewTask;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.TypedValue;
-import android.view.Gravity;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.Helpers.ViewHelper;
+import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
 
 public class NewTaskShoppingList extends AppCompatActivity {
 
-    TableLayout tableInner;
+    final int DEFAULT_INSERT_ROW_INDEX = 9;
+    TableLayout shoppingListContainer;
     Task task = new Task();
-    int insertRowIndex = 9;
+    int insertRowIndex = DEFAULT_INSERT_ROW_INDEX;
     Boolean lastScreen = false;
     ImageView buttonAdd, buttonTemplateFill;
     LinearLayout buttonBack, buttonNext, buttonClose;
@@ -47,7 +65,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
         actionBar.hide();
 
         // Setting up view elements
-        tableInner = (TableLayout)findViewById(R.id.table_inner);
+        shoppingListContainer = (TableLayout)findViewById(R.id.shoppingListContainer);
         buttonAdd = (ImageView)findViewById(R.id.buttonAdd);
         buttonTemplateFill = (ImageView)findViewById(R.id.buttonTemplateFill);
         buttonNext = (LinearLayout) findViewById(R.id.buttonNext);
@@ -82,7 +100,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
             for (int num = 1; num < insertRowIndex; num++)
                 addShoppingItemRow(num, "");
 
-        // Add shopping list button event listener (onTouch)
+        // "Add shopping list button" event listener (onTouch)
         buttonAdd.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -92,7 +110,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         buttonAdd.setImageResource(R.drawable.add_item_button_medium);
-                        addShoppingItemRow(insertRowIndex, "");
+                        shoppingListContainer.addView(getShoppingItemRow(NewTaskShoppingList.this, insertRowIndex, ""));
                         scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                         insertRowIndex++;
                         break;
@@ -111,7 +129,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         buttonTemplateFill.setImageResource(R.drawable.template_fill_button_medium);
-                        // TODO
+                        showSelectTemplateDialog();
                         break;
                 }
                 return true;
@@ -146,14 +164,17 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         buttonNext.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
                         task.shoppingList.clear();
-                        for (int i = 1; i < insertRowIndex; i++) {
-                            TableRow tableRow = (TableRow) tableInner.findViewWithTag("row" + Integer.toString(i));
-                            LinearLayout linearLayout = (LinearLayout) tableRow.getChildAt(0);
-                            EditText editText = (EditText) linearLayout.getChildAt(1);
-                            String item = editText.getText().toString();
-                            if (item != null && !item.isEmpty()) {
-                                task.shoppingList.add(item);
-                                task.shoppingListState.add(0);
+                        for (int id = 0; id < insertRowIndex; id++) {
+                            LinearLayout row = (LinearLayout)findViewById(id);
+                            if (row != null) {
+                                LinearLayout linear = (LinearLayout)(row.getChildAt(0));
+                                LinearLayout linear2 = (LinearLayout)(linear.getChildAt(1));
+                                EditText editText = (EditText)(linear2.getChildAt(0));
+                                String item = editText.getText().toString();
+                                if (!item.equals("") && !item.isEmpty()) {
+                                    task.shoppingList.add(item);
+                                    task.shoppingListState.add(0);
+                                }
                             }
                         }
                         if (task.shoppingList.size() == 0) {
@@ -180,62 +201,161 @@ public class NewTaskShoppingList extends AppCompatActivity {
         buttonNextText.setOnTouchListener(onTouchListener);
     }
 
-    protected void addShoppingItemRow(int num, String value) {
-        TableRow row = new TableRow(this);
-        TableLayout.LayoutParams params = new TableLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.setMargins(0, convertDpToPixels(this, 10), 0, 0);
-        row.setBackgroundColor(0x00000000);
-        row.setLayoutParams(params);
-        row.setTag("row" + num);
+    private void addShoppingItemRow(int num, String name) {
+        // Setting delete icon OnClickListener which will be used in each shopping list row
+        View.OnClickListener deleteIconListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (insertRowIndex == 2) {
+                    Toast.makeText(NewTaskShoppingList.this,
+                            "В списке покупок должен быть хотя бы один элемент ",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                LinearLayout row = (LinearLayout)(view.getParent()).getParent();
+                int id = row.getId();
+                ((ViewManager)row.getParent()).removeView(row);
+                for (int i = id + 1; i < insertRowIndex; i++) {
+                    LinearLayout nextRow = (LinearLayout)findViewById(i);
+                    nextRow.setId(i - 1);
+                    TextView number = (TextView)(((LinearLayout)nextRow.getChildAt(0)).getChildAt(0));
+                    number.setText(Integer.toString(i - 1));
+                }
+                insertRowIndex--;
+                return;
+            }
+        };
 
-        LinearLayout linearRow = new LinearLayout(this);
-        TableRow.LayoutParams linearParams = new TableRow.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        linearParams.weight = 1;
-        linearRow.setLayoutParams(linearParams);
+        TableRow itemRow = getShoppingItemRow(this, num, name);
+        LinearLayout row = (LinearLayout)itemRow.getChildAt(0);
+        ImageView deleteIcon = (ImageView)row.getChildAt(2);
+        deleteIcon.setOnClickListener(deleteIconListener);
+        shoppingListContainer.addView(itemRow);
+    }
 
-        TextView number = new TextView(this);
-        LinearLayout.LayoutParams numberParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-        numberParams.width = convertDpToPixels(this, 30);
-        numberParams.setMargins(ViewHelper.convertDpToPixels(this, 15), 0, 0, 0);
-        number.setPadding(0, 0, ViewHelper.convertDpToPixels(this, 10), 0);
-        number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        number.setLayoutParams(numberParams);
-        number.setText(Integer.toString(num));
+    private void showSelectTemplateDialog() {
+        // Getting templates and checking if there are any
+        final ArrayList<Task> templates = getAllTemplates();
+        if (templates.size() == 0) {
+            Toast.makeText(NewTaskShoppingList.this, "Нет ни одного шаблона списка покупок",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        EditText item = new EditText(this);
-        LinearLayout.LayoutParams itemParams =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-        itemParams.setMargins(0, 0,
-                ViewHelper.convertDpToPixels(this, 15), 0);
-        item.setPadding(
-            ViewHelper.convertDpToPixels(this, 8),
-            ViewHelper.convertDpToPixels(this, 5),
-            ViewHelper.convertDpToPixels(this, 5),
-            ViewHelper.convertDpToPixels(this, 5)
-        );
-        item.setSingleLine(true);
-        item.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        item.setBackgroundResource(R.drawable.border_small);
-        item.setGravity(Gravity.BOTTOM);
-        item.setTextColor(0xFF000000);
-        item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-        item.setLayoutParams(itemParams);
-        item.setText(value);
+        // Setting basic dialog elements
+        WindowManager windowManager = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog selectTemplateDialog = new Dialog(this);
+        LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View rootView = ((Activity)this).getWindow().getDecorView().findViewById(android.R.id.content);
+        View layout = inflater.inflate(R.layout.templates_dialog,
+                (ViewGroup)rootView.findViewById(R.id.dialog_root));
+        selectTemplateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        selectTemplateDialog.setContentView(layout);
+        LinearLayout root = (LinearLayout)layout.findViewById(R.id.dialog_root);
+        root.setMinimumWidth((int)(displaySize.x * 0.85f));
 
-        linearRow.addView(number);
-        linearRow.addView(item);
+        // Filling RadioGroup with templates
+        final RadioGroup templatesList = (RadioGroup)layout.findViewById(R.id.templatesList);
+        templatesList.removeAllViews();
+        boolean first = true;
+        for (Task template: templates) {
+            AppCompatRadioButton radioButton = new AppCompatRadioButton(this);
+            radioButton.setText(template.name);
+            RadioGroup.LayoutParams radioButtonParams = new RadioGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            int DP = convertDpToPixels(this, 1);
+            if (!first)
+                radioButtonParams.setMargins(0, 10 * DP, 0, 0);
+            else
+                first = false;
+            radioButton.setLayoutParams(radioButtonParams);
+            radioButton.setPadding(5 * DP, 0, 0, 0);
+            radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+                            new int[]{-android.R.attr.state_checked},
+                            new int[]{android.R.attr.state_checked}
+                    },
+                    new int[]{
+                            R.color.colorPrimary,
+                            R.color.colorAccent
+                    }
+            );
+            radioButton.setSupportButtonTintList(colorStateList);
+            templatesList.addView(radioButton);
+        }
 
-        row.addView(linearRow);
-        tableInner.addView(row);
+        // Setting OK and Cancel button listeners
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shoppingListContainer.removeAllViews();
+                insertRowIndex = DEFAULT_INSERT_ROW_INDEX;
+                int radioButtonID = templatesList.getCheckedRadioButtonId();
+                View radioButton = templatesList.findViewById(radioButtonID);
+                int idChecked = templatesList.indexOfChild(radioButton);
+                Task selectedTemplate = templates.get(idChecked);
+                int num = 1;
+                for (String item: selectedTemplate.shoppingList)
+                    addShoppingItemRow(num++, item);
+                if (num < insertRowIndex)
+                    for (int i = num; i < insertRowIndex; i++)
+                        addShoppingItemRow(num++, "");
+                else
+                    insertRowIndex = num;
+                selectTemplateDialog.dismiss();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectTemplateDialog.dismiss();
+            }
+        });
+
+        // Showing
+        selectTemplateDialog.show();
+    }
+
+    private ArrayList<Task> getAllTemplates() {
+        ArrayList<Task> templates = new ArrayList<>();
+        TasksConnector tasksConnector = new TasksConnector(getApplicationContext(),
+                Constants.DB_NAME, null, 1);
+        SQLiteDatabase DB = tasksConnector.getReadableDatabase();
+        String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
+                "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
+        Cursor cursor = DB.query("tasks", columns, "type=?", new String[] { "TEMPLATE" }, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            if (cursor.moveToFirst()) {
+                do {
+                    Task task = new Task(
+                            cursor.getInt(0),
+                            cursor.getString(1),
+                            cursor.getString(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getInt(5),
+                            cursor.getInt(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getString(9),
+                            cursor.getInt(10),
+                            cursor.getString(11)
+                    );
+                    templates.add(task);
+                } while (cursor.moveToNext());
+            }
+        }
+        DB.close();
+        return templates;
     }
 
 }

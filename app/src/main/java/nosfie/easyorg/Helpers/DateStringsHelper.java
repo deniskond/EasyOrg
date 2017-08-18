@@ -124,7 +124,7 @@ public class DateStringsHelper {
             case 3:
                 return "Апр";
             case 4:
-                return "Май";
+                return "Мая";
             case 5:
                 return "Июн";
             case 6:

@@ -23,7 +23,7 @@ public class Task {
     }
 
     public enum TYPE {
-        SIMPLE, SHOPPING_LIST, COUNTABLE
+        SIMPLE, SHOPPING_LIST, COUNTABLE, TEMPLATE
     }
 
     public enum START_DATE {

@@ -41,6 +41,7 @@ import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.R;
+import nosfie.easyorg.ShoppingLists.EditTemplate;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static nosfie.easyorg.Helpers.DateStringsHelper.getShortMonthName;
@@ -54,7 +55,8 @@ public class TaskView {
     private static Callable updateCallback;
 
     public static LinearLayout getTaskRow(
-            final Context context, int num, final Task task, Timespan timespan, Callable uc) {
+            final Context context, int num, final Task task,
+            boolean showIcon, boolean showEditButton, Timespan timespan, Callable uc) {
 
         DP = convertDpToPixels(context, 1);
         updateCallback = uc;
@@ -67,15 +69,16 @@ public class TaskView {
         row.setLayoutParams(params);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setBackgroundColor(0xFFAAAAAA);
-        row.setWeightSum(100);
+        //row.setWeightSum(100);
         row.setPadding(0, 0, 0, 1);
 
         // Number Row
         LinearLayout numberRow = new LinearLayout(context);
         LinearLayout.LayoutParams numberRowParams =
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+        numberRowParams.width = 45 * DP;
         numberRowParams.setMargins(0, 0, 1, 0);
-        numberRowParams.weight = 10;
+        //numberRowParams.weight = 10;
         numberRow.setGravity(Gravity.CENTER);
         numberRow.setLayoutParams(numberRowParams);
         numberRow.setBackgroundColor(0xFFFFFFFF);
@@ -111,7 +114,7 @@ public class TaskView {
         LinearLayout.LayoutParams taskNameRowParams =
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         taskNameRowParams.setMargins(0, 0, 1, 0);
-        taskNameRowParams.weight = 65;
+        taskNameRowParams.weight = 1;
         taskNameRow.setLayoutParams(taskNameRowParams);
         taskNameRow.setOrientation(LinearLayout.HORIZONTAL);
         taskNameRow.setMinimumHeight(DP * taskRowHeight);
@@ -195,13 +198,13 @@ public class TaskView {
         else if (timespan == Timespan.WEEK || timespan == Timespan.MONTH) {
             if (task.customStartDate.toString().equals(task.customEndDate.toString()))
                 timeText.setText(Integer.toString(task.customEndDate.day) + " "
-                        + getShortMonthName(task.customEndDate.month, false));
+                        + getShortMonthName(task.customEndDate.month - 1, false));
             else
                 timeText.setVisibility(View.GONE);
         }
         else if (timespan == Timespan.YEAR) {
             if (task.customStartDate.month == task.customEndDate.month)
-                timeText.setText(getShortMonthName(task.customEndDate.month, false));
+                timeText.setText(getShortMonthName(task.customEndDate.month - 1, false));
             else
                 timeText.setVisibility(View.GONE);
         }
@@ -210,20 +213,28 @@ public class TaskView {
         timeText.setId(2000 + task.id);
         taskNameRelative.addView(timeText);
 
-        ImageView cartIcon = new ImageView(context);
-        RelativeLayout.LayoutParams cartIconParams = new RelativeLayout.LayoutParams(
+
+        ImageView icon = new ImageView(context);
+        RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(
                 24 * DP,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        cartIconParams.setMargins(8 * DP, 8 * DP, 2 * DP, 8 * DP);
-        cartIconParams.addRule(RelativeLayout.RIGHT_OF, 2000 + task.id);
-        cartIcon.setLayoutParams(cartIconParams);
-        cartIcon.setImageResource(R.drawable.cart_icon_small);
-        cartIcon.setAdjustViewBounds(true);
-        cartIcon.setId(3000 + task.id);
-        if (task.type != Task.TYPE.SHOPPING_LIST)
-            cartIcon.setVisibility(View.GONE);
-        taskNameRelative.addView(cartIcon);
+        if (task.type == Task.TYPE.SHOPPING_LIST) {
+            iconParams.setMargins(8 * DP, 8 * DP, 2 * DP, 8 * DP);
+            icon.setImageResource(R.drawable.cart_icon_small);
+        }
+        else if (task.type == Task.TYPE.TEMPLATE) {
+            iconParams.width = 16 * DP;
+            iconParams.setMargins(11 * DP, 8 * DP, 0 * DP, 8 * DP);
+            icon.setImageResource(R.drawable.template_icon_small);
+        }
+        iconParams.addRule(RelativeLayout.RIGHT_OF, 2000 + task.id);
+        icon.setLayoutParams(iconParams);
+        icon.setAdjustViewBounds(true);
+        icon.setId(3000 + task.id);
+        taskNameRelative.addView(icon);
+        if ((task.type != Task.TYPE.TEMPLATE && task.type != Task.TYPE.SHOPPING_LIST) || !showIcon)
+            icon.setVisibility(View.GONE);
 
         TextView taskName = new TextView(context);
         RelativeLayout.LayoutParams taskNameParams = new RelativeLayout.LayoutParams(
@@ -238,6 +249,10 @@ public class TaskView {
         if (task.type == Task.TYPE.SIMPLE) {
             taskName.setText(task.name);
         }
+        else if (task.type == Task.TYPE.TEMPLATE) {
+            taskName.setText(Html.fromHtml("<font>" + task.name + "</font>" +
+                    " <font color=\"#e50000\">(" + task.count + ")</font>"));
+        }
         else {
             taskName.setText(Html.fromHtml("<font>" + task.name + "</font>" +
                     " <font color=\"#e50000\">(" + task.currentCount + "/" + task.count + ")</font>"));
@@ -249,13 +264,12 @@ public class TaskView {
         // Buttons row
         LinearLayout buttonsRow = new LinearLayout(context);
         LinearLayout.LayoutParams buttonsRowParams =
-                new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
         buttonsRowParams.setMargins(0, 0, 1, 0);
-        buttonsRowParams.weight = 25;
         buttonsRow.setLayoutParams(buttonsRowParams);
         buttonsRow.setBackgroundColor(0xFFFFFFFF);
         buttonsRow.setOrientation(LinearLayout.HORIZONTAL);
-        buttonsRow.setWeightSum(100);
         buttonsRow.setGravity(Gravity.CENTER_VERTICAL);
 
         ImageView editImage = new ImageView(context);
@@ -264,9 +278,9 @@ public class TaskView {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
         editImageParams.height = 28 * DP;
-        editImageParams.weight = 50;
+        editImageParams.weight = 1;
         editImage.setLayoutParams(editImageParams);
-        editImage.setPadding(5, 0, 0, 0);
+        editImage.setPadding(15, 0, 10, 0);
         editImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         editImage.setAdjustViewBounds(true);
         editImage.setImageResource(R.drawable.edit_icon_small);
@@ -276,6 +290,8 @@ public class TaskView {
                 processEditTaskClick(context, task);
             }
         });
+        if (!showEditButton)
+            editImage.setVisibility(View.GONE);
 
         buttonsRow.addView(editImage);
 
@@ -285,9 +301,12 @@ public class TaskView {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
         deleteImageParams.height = 28 * DP;
-        deleteImageParams.weight = 50;
+        deleteImageParams.weight = 1;
         deleteImage.setLayoutParams(deleteImageParams);
-        deleteImage.setPadding(0, 0, 5, 0);
+        if (!showEditButton)
+            deleteImage.setPadding(15, 0, 15, 0);
+        else
+            deleteImage.setPadding(10, 0, 15, 0);
         deleteImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         deleteImage.setAdjustViewBounds(true);
         deleteImage.setImageResource(R.drawable.delete_icon_small);
@@ -314,10 +333,18 @@ public class TaskView {
             case SHOPPING_LIST:
                 Intent intent = new Intent(context, ShoppingList.class);
                 intent.putExtra("id", task.id);
-                intent.putExtra("taskName", task.name + " " + task.customEndDate.toString());
+                intent.putExtra("taskName", task.name);
                 intent.putExtra("shoppingList", task.shoppingList);
                 intent.putExtra("shoppingListState", task.shoppingListState);
                 context.startActivity(intent);
+                break;
+            case TEMPLATE:
+                Intent templateIntent = new Intent(context, EditTemplate.class);
+                templateIntent.putExtra("id", task.id);
+                templateIntent.putExtra("taskName", task.name);
+                templateIntent.putExtra("shoppingList", task.shoppingList);
+                context.startActivity(templateIntent);
+                break;
         }
     }
 
@@ -493,7 +520,10 @@ public class TaskView {
     private static void processDeleteImageClick(final Context context, final Task task) {
         AlertDialog.Builder ad = new AlertDialog.Builder(context);
         ad.setTitle("Подтвердите удаление");  // заголовок
-        ad.setMessage("Вы действительно хотите удалить задачу \"" + task.name + "\" ?"); // сообщение
+        if (task.type == Task.TYPE.TEMPLATE)
+            ad.setMessage("Вы действительно хотите удалить шаблон \"" + task.name + "\" ?"); // сообщение
+        else
+            ad.setMessage("Вы действительно хотите удалить задачу \"" + task.name + "\" ?"); // сообщение
         ad.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 task.delete(context);

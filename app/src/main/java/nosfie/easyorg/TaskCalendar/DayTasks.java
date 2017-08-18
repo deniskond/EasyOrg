@@ -116,7 +116,7 @@ public class DayTasks extends AppCompatActivity {
         int num = 1;
         for (Task task: tasks) {
             LinearLayout taskRow = TaskView.getTaskRow(
-                    DayTasks.this, num, task, Timespan.TODAY, new Callable() {
+                    DayTasks.this, num, task, true, true, Timespan.TODAY, new Callable() {
                         @Override
                         public Object call() throws Exception {
                             redrawProgressBar();

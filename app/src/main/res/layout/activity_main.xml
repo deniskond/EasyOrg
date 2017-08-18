@@ -27,7 +27,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/new_task_button"
+                    android:id="@+id/newTask"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
@@ -40,7 +40,6 @@
                     android:weightSum="100">
 
                     <ImageView
-                        android:id="@+id/imageView12"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="85"
@@ -49,7 +48,6 @@
                         app:srcCompat="@drawable/note_icon" />
 
                     <TextView
-                        android:id="@+id/textView6"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="15"
@@ -59,7 +57,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/current_task_list"
+                    android:id="@+id/currentTaskList"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
@@ -70,7 +68,6 @@
                     android:weightSum="100">
 
                     <ImageView
-                        android:id="@+id/imageView11"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="85"
@@ -79,7 +76,6 @@
                         app:srcCompat="@drawable/stat_icon" />
 
                     <TextView
-                        android:id="@+id/textView5"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="15"
@@ -109,7 +105,6 @@
                     android:weightSum="100">
 
                     <ImageView
-                        android:id="@+id/imageView10"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="85"
@@ -118,7 +113,6 @@
                         app:srcCompat="@drawable/calendar_icon" />
 
                     <TextView
-                        android:id="@+id/textView4"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="15"
@@ -128,7 +122,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/current_shopping_list"
+                    android:id="@+id/shoppingLists"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
@@ -139,7 +133,6 @@
                     android:weightSum="100">
 
                     <ImageView
-                        android:id="@+id/imageView9"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="85"
@@ -148,7 +141,6 @@
                         app:srcCompat="@drawable/cart_icon" />
 
                     <TextView
-                        android:id="@+id/textView3"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="15"
@@ -165,6 +157,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/notes"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
@@ -177,7 +170,6 @@
                     android:weightSum="100">
 
                     <ImageView
-                        android:id="@+id/imageView7"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="85"
@@ -186,7 +178,6 @@
                         app:srcCompat="@drawable/analytics_icon" />
 
                     <TextView
-                        android:id="@+id/textView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="15"
@@ -196,7 +187,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/settings_button"
+                    android:id="@+id/settings"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="1px"
@@ -207,7 +198,6 @@
                     android:weightSum="100">
 
                     <ImageView
-                        android:id="@+id/imageView8"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="85"
@@ -216,7 +206,6 @@
                         app:srcCompat="@drawable/settings_icon" />
 
                     <TextView
-                        android:id="@+id/textView2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="15"

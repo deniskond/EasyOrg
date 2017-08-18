@@ -1,90 +1,57 @@
-package nosfie.easyorg.TaskList;
+package nosfie.easyorg.ShoppingLists;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.Helpers.ViewHelper;
+import nosfie.easyorg.DataStructures.Task;
+import nosfie.easyorg.NewTask.NewTaskShoppingList;
 import nosfie.easyorg.R;
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+
 import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
 
-public class EditShoppingList extends AppCompatActivity {
+public class AddTemplate extends AppCompatActivity {
 
-    ArrayList<String> shoppingList = new ArrayList<>();
-    int insertRowId = 1;
-    int taskId = 0;
-    String returnActivityName, timespan;
-    SQLiteDatabase DB;
-    TasksConnector tasksConnector;
-    int DP = 0;
-    TableLayout shoppingListItems;
-    ImageView buttonAdd;
     LinearLayout buttonBack, buttonSave;
     TextView buttonSaveText;
+    ImageView buttonAdd;
+    TableLayout shoppingListContainer;
+    int insertRowIndex = 4;
+    ScrollView scrollView;
+    Task task = new Task();
+    EditText templateName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_shopping_list);
+        setContentView(R.layout.shopping_lists_template);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        // Setting up DB
-        tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
-
-        // Setting DP value for current screen
-        DP = convertDpToPixels(this, 1);
-
         // Setting up view elements
-        shoppingListItems = (TableLayout)findViewById(R.id.shoppingListItems);
+        buttonBack = (LinearLayout)findViewById(R.id.buttonBack);
         buttonAdd = (ImageView)findViewById(R.id.buttonAdd);
-        buttonBack = (LinearLayout) findViewById(R.id.buttonBack);
+        shoppingListContainer = (TableLayout)findViewById(R.id.shoppingListContainer);
+        scrollView = (ScrollView)findViewById(R.id.scrollView);
         buttonSave = (LinearLayout)findViewById(R.id.buttonSave);
         buttonSaveText = (TextView)findViewById(R.id.buttonSaveText);
+        templateName = (EditText)findViewById(R.id.templateName);
 
-        // Getting shopping list items from intent
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            shoppingList = extras.getStringArrayList("shoppingList");
-            taskId = extras.getInt("id");
-            returnActivityName = extras.getString("returnActivity");
-            timespan = extras.getString("timespan");
-            drawShoppingListForEditing();
-        }
-
-        // "Add item" button
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addShoppingItemRow(insertRowId++, "");
-            }
-        });
-
-        // "Back" button
+        // Setting navigation buttons onClick listeners
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +59,27 @@ public class EditShoppingList extends AppCompatActivity {
             }
         });
 
-        // "Save" button
+        // "Add shopping list item" button event listener (onTouch)
+        buttonAdd.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        buttonAdd.setImageResource(R.drawable.add_item_button_medium_dark);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        buttonAdd.setImageResource(R.drawable.add_item_button_medium);
+                        addShoppingItemRow(insertRowIndex, "");
+                        //shoppingListContainer.addView(getShoppingItemRow(AddTemplate.this, insertRowIndex, ""));
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                        insertRowIndex++;
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Processing "Finish" button click; adding task to database and closing "Add task" section
         View.OnTouchListener onTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -102,37 +89,33 @@ public class EditShoppingList extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         buttonSave.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
-                        ArrayList<String> newShoppingList = new ArrayList<>();
-                        for (int id = 0; id < insertRowId; id++) {
+                        task.name = templateName.getText().toString();
+                        if (task.name.equals("")) {
+                            Toast.makeText(AddTemplate.this, "Введите название шаблона",Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        task.type = Task.TYPE.TEMPLATE;
+                        task.shoppingList.clear();
+                        for (int id = 0; id < insertRowIndex; id++) {
                             LinearLayout row = (LinearLayout)findViewById(id);
                             if (row != null) {
                                 LinearLayout linear = (LinearLayout)(row.getChildAt(0));
                                 LinearLayout linear2 = (LinearLayout)(linear.getChildAt(1));
                                 EditText editText = (EditText)(linear2.getChildAt(0));
                                 String item = editText.getText().toString();
-                                if (!item.equals(""))
-                                    newShoppingList.add(item);
+                                if (!item.equals("") && !item.isEmpty()) {
+                                    task.shoppingList.add(item);
+                                    task.shoppingListState.add(0);
+                                }
                             }
                         }
-                        String strShoppingList = "";
-                        String strShoppingListState = "";
-                        for (int i = 0; i < newShoppingList.size(); i++) {
-                            strShoppingListState += "0";
-                            String item = newShoppingList.get(i).replaceAll("|", "");
-                            if (i != newShoppingList.size() - 1)
-                                strShoppingList += item + "|";
-                            else
-                                strShoppingList += item;
+                        if (task.shoppingList.size() == 0) {
+                            Toast.makeText(AddTemplate.this, "Введите список покупок", Toast.LENGTH_SHORT).show();
+                            return true;
                         }
-                        DB = tasksConnector.getWritableDatabase();
-                        String query = "UPDATE tasks " +
-                                "SET shoppingList = '" + strShoppingList + "', " +
-                                "shoppingListState = '" + strShoppingListState + "', " +
-                                "currentCount = '0', status = 'ACTUAL', " +
-                                "count = '" + newShoppingList.size() + "' " +
-                                "WHERE _id = '" + taskId + "'";
-                        DB.execSQL(query);
-                        DB.close();
+                        task.count = task.shoppingList.size();
+                        task.insertIntoDatabase(getApplicationContext());
+                        Toast.makeText(AddTemplate.this, "Шаблон успешно добавлен!", Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                 }
@@ -141,13 +124,10 @@ public class EditShoppingList extends AppCompatActivity {
         };
         buttonSave.setOnTouchListener(onTouchListener);
         buttonSaveText.setOnTouchListener(onTouchListener);
-    }
 
-    protected void drawShoppingListForEditing() {
-        shoppingListItems.removeAllViews();
-        insertRowId = 1;
-        for (String item: shoppingList)
-            addShoppingItemRow(insertRowId++, item);
+        // Adding default number of shopping list rows
+        for (int num = 1; num < insertRowIndex; num++)
+            addShoppingItemRow(num, "");
     }
 
     private void addShoppingItemRow(int num, String name) {
@@ -155,8 +135,8 @@ public class EditShoppingList extends AppCompatActivity {
         View.OnClickListener deleteIconListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (insertRowId == 2) {
-                    Toast.makeText(EditShoppingList.this,
+                if (insertRowIndex == 2) {
+                    Toast.makeText(AddTemplate.this,
                             "В списке покупок должен быть хотя бы один элемент ",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -164,13 +144,13 @@ public class EditShoppingList extends AppCompatActivity {
                 LinearLayout row = (LinearLayout)(view.getParent()).getParent();
                 int id = row.getId();
                 ((ViewManager)row.getParent()).removeView(row);
-                for (int i = id + 1; i < insertRowId; i++) {
+                for (int i = id + 1; i < insertRowIndex; i++) {
                     LinearLayout nextRow = (LinearLayout)findViewById(i);
                     nextRow.setId(i - 1);
                     TextView number = (TextView)(((LinearLayout)nextRow.getChildAt(0)).getChildAt(0));
                     number.setText(Integer.toString(i - 1));
                 }
-                insertRowId--;
+                insertRowIndex--;
                 return;
             }
         };
@@ -179,7 +159,7 @@ public class EditShoppingList extends AppCompatActivity {
         LinearLayout row = (LinearLayout)itemRow.getChildAt(0);
         ImageView deleteIcon = (ImageView)row.getChildAt(2);
         deleteIcon.setOnClickListener(deleteIconListener);
-        shoppingListItems.addView(itemRow);
+        shoppingListContainer.addView(itemRow);
     }
 
 }
