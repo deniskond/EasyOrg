@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +37,8 @@ public class ShoppingLists extends AppCompatActivity {
             shoppingLists = new ArrayList<>();
     TextView result;
     int DP = 0;
-    ImageView addTemplateButton, addShoppingListButton;
+    LinearLayout addTemplateButton, addShoppingListButton;
+    ImageView addTemplateImage, addShoppingListImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,10 @@ public class ShoppingLists extends AppCompatActivity {
         templatesList = (LinearLayout)findViewById(R.id.templatesList);
         shoppingListsList = (LinearLayout)findViewById(R.id.shoppingListsList);
         result = (TextView)findViewById(R.id.result);
-        addTemplateButton = (ImageView)findViewById(R.id.addTemplateButton);
-        addShoppingListButton = (ImageView)findViewById(R.id.addShoppingListButton);
+        addTemplateButton = (LinearLayout) findViewById(R.id.addTemplateButton);
+        addShoppingListButton = (LinearLayout)findViewById(R.id.addShoppingListButton);
+        addTemplateImage = (ImageView)findViewById(R.id.addTemplateImage);
+        addShoppingListImage = (ImageView)findViewById(R.id.addShoppingListImage);
 
         // Setting navigation buttons onClickListeners
         buttonBack.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +86,10 @@ public class ShoppingLists extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        addTemplateButton.setImageResource(R.drawable.plus_dark);
+                        addTemplateImage.setImageResource(R.drawable.plus_dark);
                         break;
                     case MotionEvent.ACTION_UP:
-                        addTemplateButton.setImageResource(R.drawable.plus);
+                        addTemplateImage.setImageResource(R.drawable.plus);
                         Intent intent = new Intent(ShoppingLists.this, AddTemplate.class);
                         startActivity(intent);
                         break;

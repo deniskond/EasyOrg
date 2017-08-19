@@ -62,7 +62,7 @@ public class EditTemplate extends AppCompatActivity {
         }
 
         // Filling the view with template data
-        header.setText("Редактирование шаблона покупок");
+        header.setText("Редактирование шаблона");
         templateName.setText(task.name);
         shoppingListContainer.removeAllViews();
         int num = 1;

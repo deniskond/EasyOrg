@@ -69,16 +69,14 @@ public class TaskView {
         row.setLayoutParams(params);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setBackgroundColor(0xFFAAAAAA);
-        //row.setWeightSum(100);
         row.setPadding(0, 0, 0, 1);
 
         // Number Row
         LinearLayout numberRow = new LinearLayout(context);
         LinearLayout.LayoutParams numberRowParams =
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-        numberRowParams.width = 45 * DP;
+        numberRowParams.width = 40 * DP;
         numberRowParams.setMargins(0, 0, 1, 0);
-        //numberRowParams.weight = 10;
         numberRow.setGravity(Gravity.CENTER);
         numberRow.setLayoutParams(numberRowParams);
         numberRow.setBackgroundColor(0xFFFFFFFF);
@@ -280,7 +278,7 @@ public class TaskView {
         editImageParams.height = 28 * DP;
         editImageParams.weight = 1;
         editImage.setLayoutParams(editImageParams);
-        editImage.setPadding(15, 0, 10, 0);
+        editImage.setPadding(18, 0, 12, 0);
         editImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         editImage.setAdjustViewBounds(true);
         editImage.setImageResource(R.drawable.edit_icon_small);
@@ -304,9 +302,9 @@ public class TaskView {
         deleteImageParams.weight = 1;
         deleteImage.setLayoutParams(deleteImageParams);
         if (!showEditButton)
-            deleteImage.setPadding(15, 0, 15, 0);
+            deleteImage.setPadding(18, 0, 18, 0);
         else
-            deleteImage.setPadding(10, 0, 15, 0);
+            deleteImage.setPadding(12, 0, 18, 0);
         deleteImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         deleteImage.setAdjustViewBounds(true);
         deleteImage.setImageResource(R.drawable.delete_icon_small);
