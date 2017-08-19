@@ -1,11 +1,14 @@
 package nosfie.easyorg.TaskCalendar;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,6 +21,7 @@ import nosfie.easyorg.DataStructures.CustomDate;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.Database.TasksConnector;
+import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.R;
 import nosfie.easyorg.TaskList.TaskView;
 
@@ -32,8 +36,10 @@ public class DayTasks extends AppCompatActivity {
     TextView progressBarText, timespanText;
     ProgressBar progressBar;
     int day = 0, month = 0, year = 0;
-    LinearLayout buttonAdd, buttonClose;
+    LinearLayout addTaskButton, buttonClose;
     LinearLayout taskListShadow;
+    ImageView addTaskImage;
+    String humanDayString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +55,10 @@ public class DayTasks extends AppCompatActivity {
         progressBarText = (TextView)findViewById(R.id.progressBarText);
         progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
         timespanText = (TextView)findViewById(R.id.timespanText);
-        buttonAdd = (LinearLayout)findViewById(R.id.buttonAdd);
+        addTaskButton = (LinearLayout)findViewById(R.id.addTaskButton);
         buttonClose = (LinearLayout)findViewById(R.id.buttonClose);
         taskListShadow = (LinearLayout)findViewById(R.id.taskListShadow);
+        addTaskImage = (ImageView)findViewById(R.id.addTaskImage);
 
         // Getting date info from previous view
         Bundle extras = getIntent().getExtras();
@@ -59,6 +66,8 @@ public class DayTasks extends AppCompatActivity {
             day = extras.getInt("day");
             month = extras.getInt("month");
             year = extras.getInt("year");
+            humanDayString = day + " " + getHumanMonthNameGenitive(month) + " " + year +
+                    " (" + getDayOfWeekStr(year, month, day) + ")";
         }
 
         // Processing "Close" button click
@@ -69,9 +78,28 @@ public class DayTasks extends AppCompatActivity {
             }
         });
 
+        // "Add task" button onClickListener
+        addTaskButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        addTaskImage.setImageResource(R.drawable.plus_dark);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        addTaskImage.setImageResource(R.drawable.plus);
+                        Intent intent = new Intent(DayTasks.this, NewTaskFirstScreen.class);
+                        CustomDate date = new CustomDate(year, month, day);
+                        intent.putExtra("predefinedDate", date.toString());
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
+
         // Drawing task, etc.
-        timespanText.setText(day + " " + getHumanMonthNameGenitive(month) + " " + year +
-                " (" + getDayOfWeekStr(year, month, day) + ")");
+        timespanText.setText(humanDayString);
         getTasks();
         redrawProgressBar();
     }

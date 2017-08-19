@@ -41,13 +41,6 @@ public class MainActivity extends AppCompatActivity {
         DB.execSQL(tasksConnector.CREATE_TABLE);
         DB.close();
 
-        // Showing toast text (if exists)
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String toast = extras.getString("toast");
-            Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
-        }
-
         // Setting up view elements
         newTask = (LinearLayout)findViewById(R.id.newTask);
         currentTaskList = (LinearLayout)findViewById(R.id.currentTaskList);

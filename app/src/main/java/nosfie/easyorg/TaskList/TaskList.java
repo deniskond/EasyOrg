@@ -1,10 +1,12 @@
 package nosfie.easyorg.TaskList;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,7 +21,9 @@ import nosfie.easyorg.DataStructures.DayValues;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.Database.TasksConnector;
+import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.R;
+import nosfie.easyorg.ShoppingLists.ShoppingLists;
 
 public class TaskList extends AppCompatActivity {
 
@@ -28,56 +32,76 @@ public class TaskList extends AppCompatActivity {
     ArrayList<Task> tasks = new ArrayList<>();
     float scale;
     LinearLayout taskList, taskListShadow;
-    LinearLayout timespanButton;
+    LinearLayout timespanButton, addTaskButton;
     LinearLayout timespanSelector, cancelTimespanSelector;
     TextView timespanText;
     Timespan timespan = Timespan.TODAY;
     TextView progressBarText;
     ProgressBar progressBar;
+    ImageView addTaskImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         setContentView(R.layout.task_list);
 
-        taskList = (LinearLayout)findViewById(R.id.task_list);
-        taskListShadow = (LinearLayout)findViewById(R.id.task_list_shadow);
+        // Setting global variables values
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
         scale = getApplicationContext().getResources().getDisplayMetrics().density;
+
+        // Setting up view elements
+        taskList = (LinearLayout)findViewById(R.id.task_list);
+        taskListShadow = (LinearLayout)findViewById(R.id.task_list_shadow);
         timespanSelector = (LinearLayout)findViewById(R.id.timespan_selector);
         timespanText = (TextView)findViewById(R.id.timespan_text);
         progressBarText = (TextView)findViewById(R.id.progressBarText);
         progressBar = (ProgressBar)findViewById(R.id.mprogressBar);
         cancelTimespanSelector = (LinearLayout)findViewById(R.id.cancel_timespan_selector);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            timespan = Timespan.valueOf(extras.getString("timespan"));
-            switch (timespan) {
-                case TODAY:
-                    timespanText.setText("Задачи на сегодня");
-                    break;
-                case WEEK:
-                    timespanText.setText("Задачи на неделю");
-                    break;
-                case MONTH:
-                    timespanText.setText("Задачи на месяц");
-                    break;
-                case YEAR:
-                    timespanText.setText("Задачи на год");
-                    break;
-                case UNLIMITED:
-                    timespanText.setText("Бессрочные задачи");
-                    break;
-            }
-        }
-
-        getTasks();
-        setTimespanClickListeners();
-
         timespanButton = (LinearLayout)findViewById(R.id.timespan_button);
+        addTaskButton = (LinearLayout)findViewById(R.id.addTaskButton);
+        addTaskImage = (ImageView)findViewById(R.id.addTaskImage);
+
+        // Setting "Add task" button onTouchListener
+        addTaskButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        addTaskImage.setImageResource(R.drawable.plus_dark);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        addTaskImage.setImageResource(R.drawable.plus);
+                        Intent intent = new Intent(TaskList.this, NewTaskFirstScreen.class);
+                        String timespanStr = "";
+                        switch (timespan) {
+                            case TODAY:
+                                timespanStr = "DAY";
+                                break;
+                            case WEEK:
+                                timespanStr = "WEEK";
+                                break;
+                            case MONTH:
+                                timespanStr = "MONTH";
+                                break;
+                            case YEAR:
+                                timespanStr = "YEAR";
+                                break;
+                            case UNLIMITED:
+                                timespanStr = "NONE";
+                                break;
+                        }
+                        intent.putExtra("predefinedTimespan", timespanStr);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Setting timespan onClickListeners (toggle + each of timespans)
         timespanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +109,6 @@ public class TaskList extends AppCompatActivity {
                 timespanSelector.setVisibility(View.VISIBLE);
             }
         });
-
         timespanSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +116,10 @@ public class TaskList extends AppCompatActivity {
                     timespanSelector.setVisibility(View.GONE);
             }
         });
+        setTimespanClickListeners();
 
+        // Drawing tasks
+        getTasks();
     }
 
     protected void getTasks() {
@@ -107,9 +133,11 @@ public class TaskList extends AppCompatActivity {
         Cursor cursor;
 
         if (timespan == Timespan.TODAY)
-            cursor = DB.query("tasks", columns, null, null, null, null, "startTime");
+            cursor = DB.query("tasks", columns, "type != ?", new String[] { "TEMPLATE" },
+                    null, null, "startTime");
         else
-            cursor = DB.query("tasks", columns, null, null, null, null, "endDate ASC, startDate DESC");
+            cursor = DB.query("tasks", columns, "type != ?", new String[] { "TEMPLATE" },
+                    null, null, "endDate ASC, startDate DESC");
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -137,19 +165,18 @@ public class TaskList extends AppCompatActivity {
 
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
-        for (Task task: tasks)
-            if (task.type != Task.TYPE.TEMPLATE) {
-                LinearLayout taskRow = TaskView.getTaskRow(
-                        TaskList.this, num, task, true, true, timespan, new Callable() {
-                            @Override
-                            public Object call() throws Exception {
-                                redrawProgressBar();
-                                getTasks();
-                                return null;
-                            }
-                        });
-                taskList.addView(taskRow);
-                num++;
+        for (Task task: tasks) {
+            LinearLayout taskRow = TaskView.getTaskRow(
+                    TaskList.this, num, task, true, true, timespan, new Callable() {
+                        @Override
+                        public Object call() throws Exception {
+                            redrawProgressBar();
+                            getTasks();
+                            return null;
+                        }
+                    });
+            taskList.addView(taskRow);
+            num++;
         }
         redrawProgressBar();
         if (tasks.size() == 0)

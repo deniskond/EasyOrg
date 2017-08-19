@@ -1,5 +1,8 @@
 package nosfie.easyorg.DataStructures;
 
+import static nosfie.easyorg.Helpers.DateStringsHelper.getDayOfWeekStr;
+import static nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
+
 public class CustomDate {
     public int day;
     public int month;
@@ -20,5 +23,10 @@ public class CustomDate {
         return String.format("%04d", this.year) + "."
             + String.format("%02d", this.month) + "."
             + String.format("%02d", this.day);
+    }
+
+    public String toHumanString() {
+        return day + " " + getHumanMonthNameGenitive(month) + " " + year +
+                " (" + getDayOfWeekStr(year, month, day) + ")";
     }
 }

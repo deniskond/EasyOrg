@@ -10,12 +10,12 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:background="@drawable/app_bg"
         android:fillViewport="true"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +52,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -121,7 +120,6 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView14"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -144,7 +142,6 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:id="@+id/imageView14"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
                                 app:srcCompat="@drawable/simple_task_medium" />
@@ -153,6 +150,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/padding1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
@@ -169,7 +167,6 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView14"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -192,7 +189,6 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:id="@+id/imageView14"
                                 android:layout_width="wrap_content"
                                 android:layout_height="50dp"
                                 app:srcCompat="@drawable/countable_task_medium" />
@@ -201,6 +197,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/padding2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
@@ -217,7 +214,6 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView14"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -240,7 +236,6 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:id="@+id/imageView14"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
                                 app:srcCompat="@drawable/shopping_list_task_medium" />
@@ -327,7 +322,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -335,32 +329,6 @@
                     android:text="Время выполнения задачи:"
                     android:textColor="#333333"
                     android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/selectInterval"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp">
-
-                    <ImageView
-                        android:id="@+id/intervalRadio"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        app:srcCompat="@drawable/radio_checked_medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="Настраиваемый интервал"
-                        android:textColor="#555555"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/selectToday"
@@ -375,7 +343,7 @@
                         android:id="@+id/todayRadio"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        app:srcCompat="@drawable/radio_unchecked_medium" />
+                        app:srcCompat="@drawable/radio_checked_medium" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -383,6 +351,32 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
                         android:text="Сегодня в течение дня"
+                        android:textColor="#555555"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/selectInterval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingEnd="5dp"
+                    android:paddingRight="5dp">
+
+                    <ImageView
+                        android:id="@+id/intervalRadio"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:srcCompat="@drawable/radio_unchecked_medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="Настраиваемый интервал"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -404,6 +398,34 @@
                         app:srcCompat="@drawable/radio_unchecked_medium" />
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="Бессрочная"
+                        android:textColor="#555555"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/selectPredefined"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingEnd="5dp"
+                    android:paddingRight="5dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/predefinedRadio"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:srcCompat="@drawable/radio_checked_medium" />
+
+                    <TextView
+                        android:id="@+id/predefinedText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -437,7 +459,7 @@
                         android:layout_height="wrap_content"
                         android:capitalize="characters"
                         android:duplicateParentState="false"
-                        android:text="ДАЛЕЕ"
+                        android:text="ГОТОВО"
                         android:textColor="@android:color/white"
                         android:textSize="17sp"
                         android:textStyle="bold" />

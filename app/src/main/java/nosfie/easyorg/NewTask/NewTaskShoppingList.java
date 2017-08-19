@@ -79,7 +79,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
         if (extras != null) {
             task = new Task(extras);
             int num = 1;
-            for (String item: task.shoppingList) {
+            for (String item : task.shoppingList) {
                 if (item != null && !item.isEmpty()) {
                     addShoppingItemRow(num, item);
                     num++;
@@ -184,9 +184,10 @@ public class NewTaskShoppingList extends AppCompatActivity {
                         task.count = task.shoppingList.size();
                         Intent intent;
                         if (lastScreen) {
-                            intent = new Intent(NewTaskShoppingList.this, MainActivity.class);
                             task.insertIntoDatabase(getApplicationContext());
-                            intent.putExtra("toast", "Задача успешно добавлена!");
+                            Toast.makeText(getApplicationContext(), "Задача успешно добавлена!", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return true;
                         } else {
                             intent = new Intent(NewTaskShoppingList.this, NewTaskSecondScreen.class);
                             intent = task.formIntent(intent, task);

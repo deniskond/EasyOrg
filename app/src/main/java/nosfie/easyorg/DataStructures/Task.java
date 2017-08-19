@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.Database.TasksConnector;
@@ -51,17 +50,26 @@ public class Task {
     public Daytime customStartTime = new Daytime();
     public ArrayList<String> shoppingList = new ArrayList<>();
     public ArrayList<Integer> shoppingListState = new ArrayList<>();
+    public boolean predefinedShoppingList = false,
+                   usePredefinedTimespan = false,
+                   usePredefinedDate = false;
+
+    private void fillDefaultParameters() {
+        if (this.startDate == null) this.startDate = START_DATE.TODAY;
+        if (this.startTime == null) this.startTime = START_TIME.NONE;
+        if (this.deadline == null) this.deadline = DEADLINE.DAY;
+        if (this.customStartDate == null) this.customStartDate = new CustomDate();
+        if (this.customStartTime == null) this.customStartTime = new Daytime();
+        this.needReminder = false;
+        if (this.customEndDate == null) this.customEndDate = new CustomDate();
+        if (this.status == null) this.status = STATUS.ACTUAL;
+        if (this.type == null) this.type = TYPE.SIMPLE;
+        if (this.shoppingList == null) this.shoppingList = new ArrayList<>();
+        if (this.shoppingListState == null) this.shoppingListState = new ArrayList<>();
+    }
 
     public Task() {
-        this.startDate = START_DATE.TODAY;
-        this.startTime = START_TIME.NONE;
-        this.deadline = DEADLINE.CUSTOM;
-        this.customStartDate = new CustomDate();
-        this.customStartTime = new Daytime();
-        this.needReminder = false;
-        this.customEndDate = new CustomDate();
-        this.status = STATUS.ACTUAL;
-        this.type = TYPE.SIMPLE;
+        fillDefaultParameters();
     }
 
     public Task(int id, String name, String type, String startDate, String startTime,
@@ -120,28 +128,58 @@ public class Task {
     public Task(Bundle info) {
         // First screen
         this.name = info.getString("taskName");
-        this.type = TYPE.valueOf(info.getString("taskType"));
+        String taskTypeStr = info.getString("taskType");
+        if (taskTypeStr != null)
+            this.type = TYPE.valueOf(taskTypeStr);
         this.count = info.getInt("taskCount");
         this.currentCount = 0;
         // Shopping list screen
         this.shoppingList = info.getStringArrayList("shoppingList");
         this.shoppingListState = info.getIntegerArrayList("shoppingListState");
         // Second screen
-        this.startDate = START_DATE.valueOf(info.getString("startDate"));
+        String startDateStr = info.getString("startDate");
+        if (startDateStr != null)
+            this.startDate = START_DATE.valueOf(startDateStr );
         this.customStartDate.day = info.getInt("startDay");
         this.customStartDate.month = info.getInt("startMonth");
         this.customStartDate.year = info.getInt("startYear");
-        this.startTime = START_TIME.valueOf(info.getString("startTime"));
+        String startTimeStr = info.getString("startTime");
+        if (startTimeStr != null)
+            this.startTime = START_TIME.valueOf(startTimeStr);
         this.customStartTime.hours = info.getInt("startHours");
         this.customStartTime.minutes = info.getInt("startMinutes");
         this.needReminder = info.getBoolean("needReminder");
-        // Third screen
-        this.deadline = DEADLINE.valueOf(info.getString("deadline"));
+        String deadlineStr = info.getString("deadline");
+        if (deadlineStr != null)
+            this.deadline = DEADLINE.valueOf(deadlineStr);
         this.customEndDate.day = info.getInt("endDay");
         this.customEndDate.month = info.getInt("endMonth");
         this.customEndDate.year = info.getInt("endYear");
         // Default value
         this.status = STATUS.ACTUAL;
+        // Getting predefined task info
+        this.predefinedShoppingList = info.getBoolean("predefinedShoppingList");
+        if (this.predefinedShoppingList == true) {
+            this.type = Task.TYPE.SHOPPING_LIST;
+        }
+        String predefinedTimespanStr = info.getString("predefinedTimespan");
+        if (predefinedTimespanStr != null) {
+            this.usePredefinedTimespan = true;
+            this.startDate = Task.START_DATE.TODAY;
+            this.deadline = DEADLINE.valueOf(predefinedTimespanStr);
+        }
+        String predefinedDateStr = info.getString("predefinedDate");
+        if (predefinedDateStr != null) {
+            usePredefinedDate = true;
+            this.startDate = Task.START_DATE.CUSTOM;
+            String[] predefinedDateSplit = predefinedDateStr.split("\\.");
+            this.customStartDate.year = Integer.parseInt(predefinedDateSplit[0]);
+            this.customStartDate.month = Integer.parseInt(predefinedDateSplit[1]);
+            this.customStartDate.day = Integer.parseInt(predefinedDateSplit[2]);
+            this.deadline = Task.DEADLINE.DAY;
+        }
+        // Filling empty fields with default values
+        fillDefaultParameters();
     }
 
     public Intent formIntent(Intent intent, Task task) {
@@ -161,11 +199,16 @@ public class Task {
         intent.putExtra("startHours", task.customStartTime.hours);
         intent.putExtra("startMinutes", task.customStartTime.minutes);
         intent.putExtra("needReminder", task.needReminder);
-        // Third screen
         intent.putExtra("deadline", task.deadline.toString());
         intent.putExtra("endDay", task.customEndDate.day);
         intent.putExtra("endMonth", task.customEndDate.month);
         intent.putExtra("endYear", task.customEndDate.year);
+        // Predefined task info
+        intent.putExtra("predefinedShoppingList", this.predefinedShoppingList);
+        if (this.usePredefinedTimespan)
+            intent.putExtra("predefinedTimespan", this.deadline.toString());
+        if (this.usePredefinedDate)
+            intent.putExtra("predefinedDate", this.customStartDate.toString());
         return intent;
     }
 

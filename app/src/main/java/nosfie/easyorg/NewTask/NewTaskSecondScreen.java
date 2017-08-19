@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -353,11 +354,9 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         buttonNext.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
                         if (!deadlineChanged)
                             task.deadline = Task.DEADLINE.DAY;
-                        Intent intent;
-                        intent = new Intent(NewTaskSecondScreen.this, MainActivity.class);
                         task.insertIntoDatabase(getApplicationContext());
-                        intent.putExtra("toast", "Задача успешно добавлена!");
-                        startActivity(intent);
+                        Toast.makeText(getApplicationContext(), "Задача успешно добавлена!", Toast.LENGTH_SHORT).show();
+                        finish();
                         break;
                 }
                 return true;

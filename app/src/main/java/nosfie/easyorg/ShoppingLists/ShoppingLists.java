@@ -22,6 +22,7 @@ import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.Database.TasksConnector;
+import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.R;
 import nosfie.easyorg.TaskList.TaskView;
 
@@ -91,6 +92,25 @@ public class ShoppingLists extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         addTemplateImage.setImageResource(R.drawable.plus);
                         Intent intent = new Intent(ShoppingLists.this, AddTemplate.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Add shopping list onClickListener
+        addShoppingListButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        addShoppingListImage.setImageResource(R.drawable.plus_dark);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        addShoppingListImage.setImageResource(R.drawable.plus);
+                        Intent intent = new Intent(ShoppingLists.this, NewTaskFirstScreen.class);
+                        intent.putExtra("predefinedShoppingList", true);
                         startActivity(intent);
                         break;
                 }

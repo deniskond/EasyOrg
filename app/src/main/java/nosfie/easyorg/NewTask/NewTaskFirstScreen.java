@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nosfie.easyorg.DataStructures.Task;
+import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
@@ -56,7 +57,10 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         todayRadio = (ImageView)findViewById(R.id.todayRadio);
         timelessRadio = (ImageView)findViewById(R.id.timelessRadio);
 
-        // Setting up the info which is received from other "Add task" steps
+        // Getting info from intent:
+        // 1) The info which is received from other "Add task" steps;
+        // 2) Predefined task info when add task is issued through other app sections
+        // Both steps are done in Task(Bundle) constructor
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             task = new Task(extras);
@@ -72,6 +76,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
                     countableTaskSelector.setBackgroundResource(R.drawable.border_small);
                     shoppingListSelector.setBackgroundResource(R.drawable.border_big_selected);
+                    buttonNextText.setText("ДАЛЕЕ");
                     break;
                 case COUNTABLE:
                     simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
@@ -81,15 +86,55 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     countEdit.setVisibility(View.VISIBLE);
                     break;
             }
-            if (task.deadline == Task.DEADLINE.NONE) {
+            if (task.deadline == Task.DEADLINE.CUSTOM) {
+                intervalRadio.setImageResource(R.drawable.radio_checked_medium);
+                todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                timelessRadio.setImageResource(R.drawable.radio_unchecked_medium);
+            }
+            else if (task.deadline == Task.DEADLINE.NONE) {
                 intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
                 todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
                 timelessRadio.setImageResource(R.drawable.radio_checked_medium);
             }
-            else if (task.deadline == Task.DEADLINE.DAY && task.startTime == Task.START_TIME.NONE) {
-                intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
-                todayRadio.setImageResource(R.drawable.radio_checked_medium);
-                timelessRadio.setImageResource(R.drawable.radio_unchecked_medium);
+            if (task.predefinedShoppingList) {
+                if (task.name == null)
+                    taskName.setText("Список покупок");
+                simpleTaskSelector.setVisibility(View.GONE);
+                countableTaskSelector.setVisibility(View.GONE);
+                LinearLayout padding1 = (LinearLayout)findViewById(R.id.padding1);
+                LinearLayout padding2 = (LinearLayout)findViewById(R.id.padding2);
+                padding1.setVisibility(View.GONE);
+                padding2.setVisibility(View.GONE);
+            }
+            if (task.usePredefinedTimespan || task.usePredefinedDate) {
+                selectToday.setVisibility(View.GONE);
+                selectInterval.setVisibility(View.GONE);
+                selectTimeless.setVisibility(View.GONE);
+                LinearLayout selectPredefined = (LinearLayout)findViewById(R.id.selectPredefined);
+                selectPredefined.setVisibility(View.VISIBLE);
+                TextView predefinedText = (TextView)findViewById(R.id.predefinedText);
+                if (task.usePredefinedTimespan) {
+                    switch (task.deadline) {
+                        case DAY:
+                            predefinedText.setText("Сегодня");
+                            break;
+                        case WEEK:
+                            predefinedText.setText("До конца недели");
+                            break;
+                        case MONTH:
+                            predefinedText.setText("До конца месяца");
+                            break;
+                        case YEAR:
+                            predefinedText.setText("До конца года");
+                            break;
+                        case NONE:
+                            predefinedText.setText("Бессрочная");
+                            break;
+                    }
+                }
+                else {
+                    predefinedText.setText(task.customStartDate.toHumanString());
+                }
             }
         }
 
@@ -97,7 +142,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         simpleTaskSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (task.type == Task.TYPE.SIMPLE)
+                if (task.type == Task.TYPE.SIMPLE || task.predefinedShoppingList == true)
                     return;
                 simpleTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
                 countableTaskSelector.setBackgroundResource(R.drawable.border_small);
@@ -114,7 +159,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         countableTaskSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (task.type == Task.TYPE.COUNTABLE)
+                if (task.type == Task.TYPE.COUNTABLE || task.predefinedShoppingList == true)
                     return;
                 simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
                 countableTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
@@ -252,13 +297,16 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                         }
 
                         Intent intent;
-                        if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE) {
+                        if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE
+                                || task.usePredefinedTimespan || task.usePredefinedDate) {
                             task.startTime = Task.START_TIME.NONE;
-                            task.startDate = Task.START_DATE.TODAY;
+                            if (!task.usePredefinedDate)
+                                task.startDate = Task.START_DATE.TODAY;
                             if (task.type != Task.TYPE.SHOPPING_LIST) {
-                                intent = new Intent(NewTaskFirstScreen.this, MainActivity.class);
                                 task.insertIntoDatabase(getApplicationContext());
-                                intent.putExtra("toast", "Задача успешно добавлена!");
+                                Toast.makeText(getApplicationContext(), "Задача успешно добавлена!",Toast.LENGTH_SHORT).show();
+                                finish();
+                                return true;
                             } else {
                                 intent = new Intent(NewTaskFirstScreen.this, NewTaskShoppingList.class);
                                 intent.putExtra("lastScreen", true);
@@ -280,7 +328,6 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         };
         buttonNext.setOnTouchListener(onTouchListener);
         buttonNextText.setOnTouchListener(onTouchListener);
-
     }
 
 }
