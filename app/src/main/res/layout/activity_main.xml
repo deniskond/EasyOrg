@@ -175,7 +175,7 @@
                         android:layout_weight="85"
                         android:contentDescription="@string/finances"
                         android:padding="10dip"
-                        app:srcCompat="@drawable/analytics_icon" />
+                        app:srcCompat="@drawable/pencil_icon" />
 
                     <TextView
                         android:layout_width="match_parent"

@@ -1,8 +1,6 @@
 package nosfie.easyorg.ShoppingLists;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,22 +16,19 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.R;
 import nosfie.easyorg.TaskList.TaskView;
 
+import static nosfie.easyorg.Database.Queries.getAllTasksFromDB;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
 public class ShoppingLists extends AppCompatActivity {
 
     LinearLayout buttonBack, buttonCancel;
     LinearLayout shoppingListsList, templatesList;
-    SQLiteDatabase DB;
-    TasksConnector tasksConnector;
     ArrayList<Task> templates = new ArrayList<>(),
             shoppingLists = new ArrayList<>();
     TextView result;
@@ -48,9 +43,6 @@ public class ShoppingLists extends AppCompatActivity {
         setContentView(R.layout.shopping_lists);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
-        // Database setup
-        tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
 
         // DP setup
         DP = convertDpToPixels(this, 1);
@@ -125,38 +117,13 @@ public class ShoppingLists extends AppCompatActivity {
     private void drawTemplatesAndShoppingLists() {
         templates.clear();
         shoppingLists.clear();
-
-        DB = tasksConnector.getReadableDatabase();
-        String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
-                "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
-        Cursor cursor;
-        cursor = DB.query("tasks", columns, null, null, null, null, "status ASC, endDate");
-        if (cursor != null) {
-            cursor.moveToFirst();
-            if (cursor.moveToFirst()) {
-                do {
-                    Task task = new Task(
-                            cursor.getInt(0),
-                            cursor.getString(1),
-                            cursor.getString(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5),
-                            cursor.getInt(6),
-                            cursor.getString(7),
-                            cursor.getString(8),
-                            cursor.getString(9),
-                            cursor.getInt(10),
-                            cursor.getString(11)
-                    );
-                    if (task.type == Task.TYPE.TEMPLATE)
-                        templates.add(task);
-                    else if (task.type == Task.TYPE.SHOPPING_LIST)
-                        shoppingLists.add(task);
-                } while (cursor.moveToNext());
-            }
+        ArrayList<Task> tasks = getAllTasksFromDB(this);
+        for (Task task: tasks) {
+            if (task.type == Task.TYPE.TEMPLATE)
+                templates.add(task);
+            else if (task.type == Task.TYPE.SHOPPING_LIST)
+                shoppingLists.add(task);
         }
-        DB.close();
         drawTemplates();
         drawShoppingLists();
     }

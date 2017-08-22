@@ -1,8 +1,6 @@
 package nosfie.easyorg.TaskList;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +21,11 @@ import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.R;
-import nosfie.easyorg.ShoppingLists.ShoppingLists;
+
+import static nosfie.easyorg.Database.Queries.getTasksForTaskListFromDB;
 
 public class TaskList extends AppCompatActivity {
 
-    SQLiteDatabase DB;
     TasksConnector tasksConnector;
     ArrayList<Task> tasks = new ArrayList<>();
     float scale;
@@ -45,6 +43,7 @@ public class TaskList extends AppCompatActivity {
         // Setting up view and hiding action bar
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
         setContentView(R.layout.task_list);
 
@@ -125,44 +124,7 @@ public class TaskList extends AppCompatActivity {
     protected void getTasks() {
         tasks.clear();
         taskList.removeAllViews();
-        DB = tasksConnector.getReadableDatabase();
-
-        String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
-                "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
-
-        Cursor cursor;
-
-        if (timespan == Timespan.TODAY)
-            cursor = DB.query("tasks", columns, "type != ?", new String[] { "TEMPLATE" },
-                    null, null, "startTime");
-        else
-            cursor = DB.query("tasks", columns, "type != ?", new String[] { "TEMPLATE" },
-                    null, null, "endDate ASC, startDate DESC");
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-            if (cursor.moveToFirst()) {
-                do {
-                    Task task = new Task(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getInt(5),
-                        cursor.getInt(6),
-                        cursor.getString(7),
-                        cursor.getString(8),
-                        cursor.getString(9),
-                        cursor.getInt(10),
-                        cursor.getString(11)
-                    );
-                    tasks.add(task);
-                } while (cursor.moveToNext());
-            }
-        }
-        DB.close();
-
+        tasks = getTasksForTaskListFromDB(TaskList.this, timespan);
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (Task task: tasks) {

@@ -14,5 +14,7 @@
     <!-- UI Colors -->
     <color name="colorButtonNext">#25DB53</color>
     <color name="colorButtonNextClicked">#20C049</color>
+    <color name="checkboxChecked">#FF4081</color>
+    <color name="checkboxUnchecked">#787878</color>
 
 </resources>

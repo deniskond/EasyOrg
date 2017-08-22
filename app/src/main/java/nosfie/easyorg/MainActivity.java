@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
+import nosfie.easyorg.Notes.Notes;
 import nosfie.easyorg.Settings.Settings;
 import nosfie.easyorg.ShoppingLists.ShoppingLists;
 import nosfie.easyorg.TaskCalendar.TaskCalendar;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     TasksConnector tasksConnector;
     SQLiteDatabase DB;
-    LinearLayout newTask, currentTaskList, settings, shoppingLists, taskCalendar;
+    LinearLayout newTask, currentTaskList, settings, shoppingLists, taskCalendar, notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
         shoppingLists = (LinearLayout)findViewById(R.id.shoppingLists);
         settings = (LinearLayout)findViewById(R.id.settings);
         taskCalendar = (LinearLayout)findViewById(R.id.calendar);
+        notes = (LinearLayout)findViewById(R.id.notes);
 
-        // Setting up navigation button listeners
+        // Setting up category button listeners
         newTask.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -81,6 +83,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        taskCalendar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        taskCalendar.setBackgroundColor(0xFFEEEEEE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        taskCalendar.setBackgroundColor(0xFFFFFFFF);
+                        Intent intent = new Intent(MainActivity.this, TaskCalendar.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
         shoppingLists.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -91,6 +109,22 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         shoppingLists.setBackgroundColor(0xFFFFFFFF);
                         Intent intent = new Intent(MainActivity.this, ShoppingLists.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
+        notes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        notes.setBackgroundColor(0xFFEEEEEE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        notes.setBackgroundColor(0xFFFFFFFF);
+                        Intent intent = new Intent(MainActivity.this, Notes.class);
                         startActivity(intent);
                         break;
                 }
@@ -113,23 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        taskCalendar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        taskCalendar.setBackgroundColor(0xFFEEEEEE);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        taskCalendar.setBackgroundColor(0xFFFFFFFF);
-                        Intent intent = new Intent(MainActivity.this, TaskCalendar.class);
-                        startActivity(intent);
-                        break;
-                }
-                return true;
-            }
-        });
-
     }
 
 }

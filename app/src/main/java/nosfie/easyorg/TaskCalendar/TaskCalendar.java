@@ -2,16 +2,13 @@ package nosfie.easyorg.TaskCalendar;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +31,7 @@ import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.Dialogs.MonthYearPickerDialog;
 import nosfie.easyorg.R;
 
+import static nosfie.easyorg.Database.Queries.getCalendarTasksFromDB;
 import static nosfie.easyorg.Helpers.ViewHelper.*;
 import static nosfie.easyorg.Helpers.DateStringsHelper.*;
 
@@ -128,47 +126,13 @@ public class TaskCalendar extends AppCompatActivity {
         String monthStr = getMonthString(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
         monthText.setText(monthStr);
         int monthMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
         String firstDayOfMonth = calendar.get(Calendar.YEAR) + "."
                 + String.format("%02d", calendar.get(Calendar.MONTH) + 1) + "."
                 + "01";
-
         String lastDayOfMonth = calendar.get(Calendar.YEAR) + "."
                 + String.format("%02d", calendar.get(Calendar.MONTH) + 1) + "."
                 + monthMax;
-
-        DB = tasksConnector.getReadableDatabase();
-
-        String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
-                "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
-
-        Cursor cursor = DB.query("tasks", columns,
-                "endDate >= '" + firstDayOfMonth + "' AND endDate <= '" + lastDayOfMonth + "'",
-                null, null, null, "startTime");
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-            if (cursor.moveToFirst()) {
-                do {
-                    Task task = new Task(
-                            cursor.getInt(0),
-                            cursor.getString(1),
-                            cursor.getString(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5),
-                            cursor.getInt(6),
-                            cursor.getString(7),
-                            cursor.getString(8),
-                            cursor.getString(9),
-                            cursor.getInt(10),
-                            cursor.getString(11)
-                    );
-                    allMonthTasks.add(task);
-                } while (cursor.moveToNext());
-            }
-        }
-        DB.close();
+        allMonthTasks = getCalendarTasksFromDB(this, firstDayOfMonth, lastDayOfMonth);
 
         for (int i = 0; i < monthMax / 3; i++)
             addCalendarRow(i * 3 + 1, i * 3 + 2, i * 3 + 3,

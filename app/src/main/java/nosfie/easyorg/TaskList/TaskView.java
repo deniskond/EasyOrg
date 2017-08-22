@@ -40,6 +40,7 @@ import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
+import nosfie.easyorg.Notes.ViewNote;
 import nosfie.easyorg.R;
 import nosfie.easyorg.ShoppingLists.EditTemplate;
 
@@ -82,7 +83,30 @@ public class TaskView {
         numberRow.setBackgroundColor(0xFFFFFFFF);
         numberRow.setOrientation(LinearLayout.HORIZONTAL);
 
-        if (task.needReminder) {
+        if (task.type == Task.TYPE.NOTE && task.count != 0) {
+            ImageView noteIcon = new ImageView(context);
+            LinearLayout.LayoutParams reminderParams =
+                    new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            reminderParams.width = 20 * DP;
+            noteIcon.setLayoutParams(reminderParams);
+            noteIcon.setAdjustViewBounds(true);
+            switch (task.count) {
+                case 1:
+                    noteIcon.setImageResource(R.drawable.note_icon_1);
+                    break;
+                case 2:
+                    noteIcon.setImageResource(R.drawable.note_icon_2);
+                    break;
+                case 3:
+                    noteIcon.setImageResource(R.drawable.note_icon_3);
+                    break;
+                case 4:
+                    noteIcon.setImageResource(R.drawable.note_icon_4);
+                    break;
+            }
+            numberRow.addView(noteIcon);
+        }
+        else if (task.needReminder) {
             ImageView reminder = new ImageView(context);
             LinearLayout.LayoutParams reminderParams =
                     new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -175,7 +199,6 @@ public class TaskView {
         taskBg.setBackgroundColor(context.getResources().getColor(color));
         taskBg.setId(task.id);
         taskBgContainer.addView(taskBg);
-
         taskNameRelative.addView(taskBgContainer);
 
         TextView timeText = new TextView(context);
@@ -211,7 +234,6 @@ public class TaskView {
         timeText.setId(2000 + task.id);
         taskNameRelative.addView(timeText);
 
-
         ImageView icon = new ImageView(context);
         RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(
                 24 * DP,
@@ -231,8 +253,12 @@ public class TaskView {
         icon.setAdjustViewBounds(true);
         icon.setId(3000 + task.id);
         taskNameRelative.addView(icon);
-        if ((task.type != Task.TYPE.TEMPLATE && task.type != Task.TYPE.SHOPPING_LIST) || !showIcon)
-            icon.setVisibility(View.GONE);
+
+        // Icon visibility rules
+        if (task.type == Task.TYPE.SIMPLE) icon.setVisibility(View.GONE);
+        if (task.type == Task.TYPE.COUNTABLE) icon.setVisibility(View.GONE);
+        if (!showIcon) icon.setVisibility(View.GONE);
+        if (task.type == Task.TYPE.NOTE) icon.setVisibility(View.GONE);
 
         TextView taskName = new TextView(context);
         RelativeLayout.LayoutParams taskNameParams = new RelativeLayout.LayoutParams(
@@ -245,6 +271,15 @@ public class TaskView {
         taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         taskName.setGravity(Gravity.CENTER_VERTICAL);
         if (task.type == Task.TYPE.SIMPLE) {
+            taskName.setText(task.name);
+        }
+        else if (task.type == Task.TYPE.NOTE) {
+            if (task.name == null || task.name == "" || task.name.length() == 0) {
+                if (task.text.length() > 20)
+                    task.name = task.text.substring(0, 20) + "...";
+                else
+                    task.name = task.text;
+            }
             taskName.setText(task.name);
         }
         else if (task.type == Task.TYPE.TEMPLATE) {
@@ -342,6 +377,14 @@ public class TaskView {
                 templateIntent.putExtra("taskName", task.name);
                 templateIntent.putExtra("shoppingList", task.shoppingList);
                 context.startActivity(templateIntent);
+                break;
+            case NOTE:
+                Intent noteIntent = new Intent(context, ViewNote.class);
+                noteIntent.putExtra("id", task.id);
+                noteIntent.putExtra("name", task.name);
+                noteIntent.putExtra("text", task.text);
+                noteIntent.putExtra("date", task.customEndDate.toHumanString());
+                context.startActivity(noteIntent);
                 break;
         }
     }
@@ -518,10 +561,17 @@ public class TaskView {
     private static void processDeleteImageClick(final Context context, final Task task) {
         AlertDialog.Builder ad = new AlertDialog.Builder(context);
         ad.setTitle("Подтвердите удаление");  // заголовок
-        if (task.type == Task.TYPE.TEMPLATE)
-            ad.setMessage("Вы действительно хотите удалить шаблон \"" + task.name + "\" ?"); // сообщение
-        else
-            ad.setMessage("Вы действительно хотите удалить задачу \"" + task.name + "\" ?"); // сообщение
+        switch (task.type) {
+            case TEMPLATE:
+                ad.setMessage("Вы действительно хотите удалить шаблон \"" + task.name + "\" ?");
+                break;
+            case NOTE:
+                ad.setMessage("Вы действительно хотите удалить заметку \"" + task.name + "\" ?");
+                break;
+            default:
+                ad.setMessage("Вы действительно хотите удалить задачу \"" + task.name + "\" ?");
+                break;
+        }
         ad.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 task.delete(context);
@@ -530,7 +580,17 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(context, "Задача удалена", Toast.LENGTH_SHORT).show();
+                switch (task.type) {
+                    case TEMPLATE:
+                        Toast.makeText(context, "Шаблон удален", Toast.LENGTH_SHORT).show();
+                        break;
+                    case NOTE:
+                        Toast.makeText(context, "Заметка удалена", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Toast.makeText(context, "Задача удалена", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
         ad.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {

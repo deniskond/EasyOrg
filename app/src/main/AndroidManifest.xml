@@ -42,6 +42,12 @@
         </activity>
         <activity android:name=".ShoppingLists.EditTemplate" android:noHistory="true" android:label="Редактирование шаблона" android:windowSoftInputMode="stateHidden">
         </activity>
+        <activity android:name=".Notes.Notes" android:label="Заметки">
+        </activity>
+        <activity android:name=".Notes.AddNote" android:label="Добавление заметки" android:noHistory="true" android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity android:name=".Notes.ViewNote" android:label="Добавление заметки" android:noHistory="true" android:windowSoftInputMode="stateHidden">
+        </activity>
     </application>
 
 </manifest>

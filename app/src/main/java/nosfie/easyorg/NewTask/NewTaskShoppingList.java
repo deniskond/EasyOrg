@@ -41,6 +41,7 @@ import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
+import static nosfie.easyorg.Database.Queries.getAllTemplatesFromDB;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
 
@@ -236,7 +237,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
 
     private void showSelectTemplateDialog() {
         // Getting templates and checking if there are any
-        final ArrayList<Task> templates = getAllTemplates();
+        final ArrayList<Task> templates = getAllTemplatesFromDB(this);
         if (templates.size() == 0) {
             Toast.makeText(NewTaskShoppingList.this, "Нет ни одного шаблона списка покупок",
                     Toast.LENGTH_SHORT).show();
@@ -283,8 +284,8 @@ public class NewTaskShoppingList extends AppCompatActivity {
                             new int[]{android.R.attr.state_checked}
                     },
                     new int[]{
-                            R.color.colorPrimary,
-                            R.color.colorAccent
+                            R.color.checkboxChecked,
+                            R.color.checkboxUnchecked
                     }
             );
             radioButton.setSupportButtonTintList(colorStateList);
@@ -323,40 +324,6 @@ public class NewTaskShoppingList extends AppCompatActivity {
 
         // Showing
         selectTemplateDialog.show();
-    }
-
-    private ArrayList<Task> getAllTemplates() {
-        ArrayList<Task> templates = new ArrayList<>();
-        TasksConnector tasksConnector = new TasksConnector(getApplicationContext(),
-                Constants.DB_NAME, null, 1);
-        SQLiteDatabase DB = tasksConnector.getReadableDatabase();
-        String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
-                "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
-        Cursor cursor = DB.query("tasks", columns, "type=?", new String[] { "TEMPLATE" }, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            if (cursor.moveToFirst()) {
-                do {
-                    Task task = new Task(
-                            cursor.getInt(0),
-                            cursor.getString(1),
-                            cursor.getString(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5),
-                            cursor.getInt(6),
-                            cursor.getString(7),
-                            cursor.getString(8),
-                            cursor.getString(9),
-                            cursor.getInt(10),
-                            cursor.getString(11)
-                    );
-                    templates.add(task);
-                } while (cursor.moveToNext());
-            }
-        }
-        DB.close();
-        return templates;
     }
 
 }

@@ -22,7 +22,7 @@ public class Task {
     }
 
     public enum TYPE {
-        SIMPLE, SHOPPING_LIST, COUNTABLE, TEMPLATE
+        SIMPLE, SHOPPING_LIST, COUNTABLE, TEMPLATE, NOTE
     }
 
     public enum START_DATE {
@@ -39,6 +39,7 @@ public class Task {
 
     public int id;
     public String name;
+    public String text;
     public int count, currentCount;
     public boolean needReminder;
     public CustomDate customStartDate = new CustomDate(), customEndDate = new CustomDate();
@@ -123,6 +124,8 @@ public class Task {
         if (shoppingListState != null)
             for (int pos = 0; pos < shoppingListState.length(); pos++)
                 this.shoppingListState.add(Integer.parseInt(shoppingListState.substring(pos, pos + 1)));
+
+        this.text = shoppingList;
     }
 
     public Task(Bundle info) {
@@ -180,6 +183,8 @@ public class Task {
         }
         // Filling empty fields with default values
         fillDefaultParameters();
+
+        Log.d("qq", this.toString());
     }
 
     public Intent formIntent(Intent intent, Task task) {
@@ -325,7 +330,10 @@ public class Task {
             else
                 strShoppingList += item;
         }
-        CV.put("shoppingList", strShoppingList);
+        if (this.type != TYPE.NOTE)
+            CV.put("shoppingList", strShoppingList);
+        else
+            CV.put("shoppingList", this.text);
         CV.put("status", this.status.toString());
         CV.put("currentcount", this.currentCount);
 
@@ -334,7 +342,7 @@ public class Task {
             shoppingListStateStr += Integer.toString(digit);
         CV.put("shoppingListState", shoppingListStateStr);
 
-        Log.d("qq", this.toString());
+        //Log.d("qq", this.toString());
         return CV;
     }
 
@@ -351,7 +359,8 @@ public class Task {
                 "\n Custom start time: " + this.customStartTime +
                 "\n Start date: " + this.startDate +
                 "\n Status: " + this.status +
-                "\n Type: " + this.type;
+                "\n Type: " + this.type +
+                "\n Text: " + this.text;
     }
 
 }
