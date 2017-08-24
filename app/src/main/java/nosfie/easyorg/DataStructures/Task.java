@@ -183,8 +183,6 @@ public class Task {
         }
         // Filling empty fields with default values
         fillDefaultParameters();
-
-        Log.d("qq", this.toString());
     }
 
     public Intent formIntent(Intent intent, Task task) {
@@ -348,7 +346,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Start date: " + this.customStartDate +
+        return  "id: " + this.id +
+                "\n Start date: " + this.customStartDate +
                 "\n End date: " + this.customEndDate +
                 "\n Deadline: " + this.deadline +
                 "\n Start time: " + this.startTime +

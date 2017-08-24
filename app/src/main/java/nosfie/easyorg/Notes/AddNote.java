@@ -130,6 +130,7 @@ public class AddNote extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Введите текст заметки",Toast.LENGTH_SHORT).show();
                             return true;
                         }
+
                         note.insertIntoDatabase(AddNote.this);
                         Toast.makeText(getApplicationContext(), "Заметка добавлена",Toast.LENGTH_SHORT).show();
                         finish();

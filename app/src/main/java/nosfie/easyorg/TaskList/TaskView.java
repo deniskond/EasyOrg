@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -58,6 +59,8 @@ public class TaskView {
     public static LinearLayout getTaskRow(
             final Context context, int num, final Task task,
             boolean showIcon, boolean showEditButton, Timespan timespan, Callable uc) {
+
+        //Log.d("qq", task.toString());
 
         DP = convertDpToPixels(context, 1);
         updateCallback = uc;
@@ -280,6 +283,7 @@ public class TaskView {
                 else
                     task.name = task.text;
             }
+            task.name = task.name.replace('\n', ' ');
             taskName.setText(task.name);
         }
         else if (task.type == Task.TYPE.TEMPLATE) {
@@ -356,6 +360,7 @@ public class TaskView {
     }
 
     private static void processTaskNameClick(final Context context, final Task task) {
+        Log.d("qq", task.toString());
         switch (task.type) {
             case SIMPLE:
                 showSimpleTaskDialog(context, task);
@@ -383,7 +388,8 @@ public class TaskView {
                 noteIntent.putExtra("id", task.id);
                 noteIntent.putExtra("name", task.name);
                 noteIntent.putExtra("text", task.text);
-                noteIntent.putExtra("date", task.customEndDate.toHumanString());
+                noteIntent.putExtra("date", task.customEndDate.toString());
+                noteIntent.putExtra("count", task.count);
                 context.startActivity(noteIntent);
                 break;
         }
@@ -613,6 +619,9 @@ public class TaskView {
             case COUNTABLE:
                 showCountableTaskEditDialog(context, task);
                 break;
+            case NOTE:
+                showNoteEditDialog(context, task);
+                break;
         }
     }
 
@@ -681,7 +690,10 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                if (task.type != Task.TYPE.NOTE)
+                    Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, "Заметка обновлена", Toast.LENGTH_SHORT).show();
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -1088,6 +1100,251 @@ public class TaskView {
         });
         countableTaskDialog = builder.create();
         countableTaskDialog.show();
+    }
+
+    private static void showNoteEditDialog(final Context context, final Task task) {
+        final CharSequence[] items = {
+                "Название",
+                "Иконку"
+        };
+        final AlertDialog noteDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Изменить:");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        showEditTaskNameDialog(context, task);
+                        break;
+                    case 1:
+                        showEditIconDialog(context, task);
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        noteDialog = builder.create();
+        noteDialog.show();
+    }
+
+    private static void showEditIconDialog(final Context context, final Task task) {
+        // Setting basic dialog elements
+        WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog selectIconDialog = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View rootView = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
+        View layout = inflater.inflate(R.layout.note_icon_dialog,
+                (ViewGroup)rootView.findViewById(R.id.dialog_root));
+        selectIconDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        selectIconDialog.setContentView(layout);
+        LinearLayout root = (LinearLayout)layout.findViewById(R.id.dialog_root);
+        root.setMinimumWidth((int)(displaySize.x * 0.85f));
+
+        // Adding "no icon" option
+        LinearLayout iconsContainer = (LinearLayout)layout.findViewById(R.id.iconsContainer);
+
+        final LinearLayout noIconRow = new LinearLayout(layout.getContext());
+        LinearLayout.LayoutParams noIconRowParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        noIconRow.setLayoutParams(noIconRowParams);
+        noIconRow.setPadding(5 * DP, 5 * DP, 5 * DP, 5 * DP);
+        noIconRow.setGravity(Gravity.CENTER_VERTICAL);
+        noIconRow.setOrientation(LinearLayout.HORIZONTAL);
+
+        final LinearLayout noIconBorder = new LinearLayout(layout.getContext());
+        LinearLayout.LayoutParams noIconBorderParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        noIconBorderParams.width = 34 * DP;
+        noIconBorderParams.height = 34 * DP;
+        noIconBorder.setLayoutParams(noIconBorderParams);
+        noIconBorder.setBackgroundResource(R.drawable.border_small);
+        noIconBorder.setOrientation(LinearLayout.HORIZONTAL);
+
+        TextView noIconText = new TextView(layout.getContext());
+        LinearLayout.LayoutParams noIconTextParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        noIconTextParams.setMargins(10 * DP, 0, 0, 0);
+        noIconText.setLayoutParams(noIconTextParams);
+        noIconText.setText("Нет иконки");
+        noIconText.setTextColor(0xFF555555);
+        noIconText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
+        noIconRow.addView(noIconBorder);
+        noIconRow.addView(noIconText);
+        iconsContainer.addView(noIconRow);
+
+        // Setting up dialog elements
+        final LinearLayout videoRow = (LinearLayout)layout.findViewById(R.id.videoRow);
+        final LinearLayout audioRow = (LinearLayout)layout.findViewById(R.id.audioRow);
+        final LinearLayout moneyRow = (LinearLayout)layout.findViewById(R.id.moneyRow);
+        final LinearLayout carRow = (LinearLayout)layout.findViewById(R.id.carRow);
+        final LinearLayout videoBorder = (LinearLayout)layout.findViewById(R.id.videoBorder);
+        final LinearLayout audioBorder = (LinearLayout)layout.findViewById(R.id.audioBorder);
+        final LinearLayout moneyBorder = (LinearLayout)layout.findViewById(R.id.moneyBorder);
+        final LinearLayout carBorder = (LinearLayout)layout.findViewById(R.id.carBorder);
+
+        // Setting OK and Cancel button listeners
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                task.synchronize(context);
+                Toast.makeText(context, "Заметка обновлена", Toast.LENGTH_SHORT).show();
+                try {
+                    updateCallback.call();
+                }
+                catch (Exception ignored) {}
+                selectIconDialog.dismiss();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectIconDialog.dismiss();
+            }
+        });
+
+        // Setting icons select onClickListeners
+        videoRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 1)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        videoRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        videoRow.setBackgroundColor(0x00000000);
+                        task.count = 1;
+                        videoBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        noIconBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        audioRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 2)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        audioRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        audioRow.setBackgroundColor(0x00000000);
+                        task.count = 2;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        noIconBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        moneyRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 3)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        moneyRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        moneyRow.setBackgroundColor(0x00000000);
+                        task.count = 3;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        noIconBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        carRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 4)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        carRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        carRow.setBackgroundColor(0x00000000);
+                        task.count = 4;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        noIconBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        noIconRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 0)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        noIconRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        noIconRow.setBackgroundColor(0x00000000);
+                        task.count = 0;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        noIconBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Setting selected element
+        switch (task.count) {
+            case 0:
+                noIconBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 1:
+                videoBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 2:
+                audioBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 3:
+                moneyBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 4:
+                carBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+        }
+
+        // Showing
+        selectIconDialog.show();
     }
 
 }
