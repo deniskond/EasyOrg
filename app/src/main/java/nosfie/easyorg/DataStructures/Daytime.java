@@ -8,6 +8,11 @@ public class Daytime {
         this.minutes = 0;
     }
 
+    public Daytime(int hours, int minutes) {
+        this.hours = hours;
+        this.minutes = minutes;
+    }
+
     @Override
     public String toString() {
         return String.format("%02d", this.hours) + "-" +

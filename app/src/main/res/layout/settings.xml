@@ -246,7 +246,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -270,7 +270,7 @@
                         <LinearLayout
                             android:id="@+id/timeMidnight"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -280,14 +280,14 @@
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_checked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="8dp"
                                 android:layout_marginStart="8dp"
-                                android:text="В полночь (0:00)"
+                                android:text="В полночь (00:00)"
                                 android:textColor="#555555"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -295,7 +295,7 @@
                         <LinearLayout
                             android:id="@+id/timeCustom"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -330,7 +330,7 @@
                             android:id="@+id/customTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:width="130dp"
+                            android:width="110dp"
                             android:background="@drawable/border_small"
                             android:gravity="bottom"
                             android:paddingBottom="5dp"
@@ -350,7 +350,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -374,7 +374,7 @@
                         <LinearLayout
                             android:id="@+id/timeExact"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -399,7 +399,7 @@
                         <LinearLayout
                             android:id="@+id/time5Min"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -424,7 +424,7 @@
                         <LinearLayout
                             android:id="@+id/time10Min"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -449,7 +449,7 @@
                         <LinearLayout
                             android:id="@+id/time30Min"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -474,7 +474,7 @@
                         <LinearLayout
                             android:id="@+id/time1Hour"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="28dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 

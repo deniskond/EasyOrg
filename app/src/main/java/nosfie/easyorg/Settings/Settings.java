@@ -1,5 +1,6 @@
 package nosfie.easyorg.Settings;
 
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,16 +10,20 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
+import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.R;
 
 public class Settings extends AppCompatActivity  implements ColorPickerDialogListener {
@@ -28,12 +33,16 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
     }
 
     LinearLayout rectInProcess, rectDone, rectNotDone, rectPartlyDone, rectPostponed;
-    LinearLayout byDefaultButton;
+    LinearLayout byDefaultButton, buttonBack;
     ImageView byDefaultImage;
     int colorLayoutId = 0;
     LinearLayout timeExact, time5Min, time10Min, time30Min, time1Hour;
     ImageView timeExactRadio, time5MinRadio, time10MinRadio, time30MinRadio, time1HourRadio;
     REMINDER_TIME reminderTime;
+    LinearLayout timeMidnight, timeCustom;
+    ImageView timeMidnightRadio, timeCustomRadio;
+    Daytime dayMargin = new Daytime();
+    TextView customTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,12 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         time10MinRadio = (ImageView)findViewById(R.id.time10MinRadio);
         time30MinRadio = (ImageView)findViewById(R.id.time30MinRadio);
         time1HourRadio = (ImageView)findViewById(R.id.time1HourRadio);
+        buttonBack = (LinearLayout)findViewById(R.id.buttonBack);
+        timeMidnight = (LinearLayout)findViewById(R.id.timeMidnight);
+        timeCustom = (LinearLayout)findViewById(R.id.timeCustom);
+        timeMidnightRadio = (ImageView)findViewById(R.id.timeMidnightRadio);
+        timeCustomRadio = (ImageView)findViewById(R.id.timeCustomRadio);
+        customTime = (TextView)findViewById(R.id.customTime);
 
         // Setting up colors from SharedPreferences values
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
@@ -74,6 +89,18 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         rectNotDone.setBackgroundColor(colorTaskFailed);
         rectPartlyDone.setBackgroundColor(colorTaskInProcess);
         rectPostponed.setBackgroundColor(colorTaskPostponed);
+
+        // Setting up selected day margin option from SharedPreferences values
+        String[] timeSplit = preferences.getString("dayMargin", "").split(":");
+        int hours = Integer.parseInt(timeSplit[0]);
+        int minutes = Integer.parseInt(timeSplit[1]);
+        dayMargin = new Daytime(hours, minutes);
+        if (hours == 0 && minutes == 0)
+            timeMidnightRadio.setImageResource(R.drawable.radio_checked_medium);
+        else {
+            timeCustomRadio.setImageResource(R.drawable.radio_checked_medium);
+            customTime.setText(dayMargin.toString().replace('-', ':'));
+        }
 
         // Setting up selected reminder option from SharedPreferences values
         reminderTime = REMINDER_TIME.valueOf(preferences.getString("reminderTime", ""));
@@ -149,7 +176,53 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
             }
         });
 
-        // Setting improvised radio buttons onClickListeners for reminder settings
+        // Setting improvised radio buttons onTouchListeners for day margin settings
+        timeMidnight.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (dayMargin.hours == 0 && dayMargin.minutes == 0)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        timeMidnight.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        timeMidnight.setBackgroundColor(0x00000000);
+                        dayMargin.hours = 0;
+                        dayMargin.minutes = 0;
+                        timeMidnightRadio.setImageResource(R.drawable.radio_checked_medium);
+                        timeCustomRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        customTime.setText("Не выбрано");
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        String dayMarginStr = dayMargin.toString();
+                        dayMarginStr = dayMarginStr.replace('-', ':');
+                        editor.putString("dayMargin", dayMarginStr);
+                        editor.commit();
+                        break;
+                }
+                return true;
+            }
+        });
+        timeCustom.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        timeCustom.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        timeCustom.setBackgroundColor(0x00000000);
+                        timeMidnightRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                        timeCustomRadio.setImageResource(R.drawable.radio_checked_medium);
+                        showTimePickerDialog();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Setting improvised radio buttons onTouchListeners for reminder settings
         timeExact.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -238,6 +311,14 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         break;
                 }
                 return true;
+            }
+        });
+
+        // Setting navigation button onClickListener
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
@@ -337,5 +418,34 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
             time1HourRadio.setImageResource(R.drawable.radio_checked_medium);
         else
             time1HourRadio.setImageResource(R.drawable.radio_unchecked_medium);
+    }
+
+    private void showTimePickerDialog() {
+        TimePickerDialog tpd = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hours, int minutes) {
+                dayMargin.hours = hours;
+                dayMargin.minutes = minutes;
+                customTime.setText(dayMargin.toString().replace('-', ':'));
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                String dayMarginStr = dayMargin.toString();
+                dayMarginStr = dayMarginStr.replace('-', ':');
+                //Log.d("qq", dayMarginStr);
+                editor.putString("dayMargin", dayMarginStr);
+                editor.commit();
+            }
+        }, dayMargin.hours, dayMargin.minutes, true);
+        tpd.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (dayMargin.hours == 0 && dayMargin.minutes == 0) {
+                    timeMidnightRadio.setImageResource(R.drawable.radio_checked_medium);
+                    timeCustomRadio.setImageResource(R.drawable.radio_unchecked_medium);
+                    customTime.setText("Не выбрано");
+                }
+            }
+        });
+        tpd.show();
     }
 }
