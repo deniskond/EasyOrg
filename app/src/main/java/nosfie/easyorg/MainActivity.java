@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt("colorTaskPostponed", ResourcesCompat.getColor(getResources(), R.color.colorTaskPostponed, null));
             editor.putInt("colorTaskFailed", ResourcesCompat.getColor(getResources(), R.color.colorTaskFailed, null));
             editor.putInt("colorTaskInProcess", ResourcesCompat.getColor(getResources(), R.color.colorTaskInProcess, null));
+            editor.putString("reminderTime", "EXACT");
             editor.commit();
         }
 

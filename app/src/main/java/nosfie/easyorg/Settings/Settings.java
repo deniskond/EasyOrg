@@ -23,10 +23,17 @@ import nosfie.easyorg.R;
 
 public class Settings extends AppCompatActivity  implements ColorPickerDialogListener {
 
+    enum REMINDER_TIME {
+        EXACT, FIVE_MINS, TEN_MINS, THIRTY_MINS, ONE_HOUR
+    }
+
     LinearLayout rectInProcess, rectDone, rectNotDone, rectPartlyDone, rectPostponed;
     LinearLayout byDefaultButton;
     ImageView byDefaultImage;
     int colorLayoutId = 0;
+    LinearLayout timeExact, time5Min, time10Min, time30Min, time1Hour;
+    ImageView timeExactRadio, time5MinRadio, time10MinRadio, time30MinRadio, time1HourRadio;
+    REMINDER_TIME reminderTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,16 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         rectPostponed = (LinearLayout)findViewById(R.id.rectPostponed);
         byDefaultButton = (LinearLayout)findViewById(R.id.byDefaultButton);
         byDefaultImage = (ImageView)findViewById(R.id.byDefaultImage);
+        timeExact = (LinearLayout)findViewById(R.id.timeExact);
+        time5Min = (LinearLayout)findViewById(R.id.time5Min);
+        time10Min = (LinearLayout)findViewById(R.id.time10Min);
+        time30Min = (LinearLayout)findViewById(R.id.time30Min);
+        time1Hour = (LinearLayout)findViewById(R.id.time1Hour);
+        timeExactRadio = (ImageView)findViewById(R.id.timeExactRadio);
+        time5MinRadio = (ImageView)findViewById(R.id.time5MinRadio);
+        time10MinRadio = (ImageView)findViewById(R.id.time10MinRadio);
+        time30MinRadio = (ImageView)findViewById(R.id.time30MinRadio);
+        time1HourRadio = (ImageView)findViewById(R.id.time1HourRadio);
 
         // Setting up colors from SharedPreferences values
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
@@ -57,6 +74,26 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         rectNotDone.setBackgroundColor(colorTaskFailed);
         rectPartlyDone.setBackgroundColor(colorTaskInProcess);
         rectPostponed.setBackgroundColor(colorTaskPostponed);
+
+        // Setting up selected reminder option from SharedPreferences values
+        reminderTime = REMINDER_TIME.valueOf(preferences.getString("reminderTime", ""));
+        switch (reminderTime) {
+            case EXACT:
+                timeExactRadio.setImageResource(R.drawable.radio_checked_medium);
+                break;
+            case FIVE_MINS:
+                time5MinRadio.setImageResource(R.drawable.radio_checked_medium);
+                break;
+            case TEN_MINS:
+                time10MinRadio.setImageResource(R.drawable.radio_checked_medium);
+                break;
+            case THIRTY_MINS:
+                time30MinRadio.setImageResource(R.drawable.radio_checked_medium);
+                break;
+            case ONE_HOUR:
+                time1HourRadio.setImageResource(R.drawable.radio_checked_medium);
+                break;
+        }
 
         // Setting up color selectors onClickListeners
         rectInProcess.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +143,98 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                     case MotionEvent.ACTION_UP:
                         byDefaultImage.setImageResource(R.drawable.by_default_button_medium);
                         showByDefaultPromptDialog();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Setting improvised radio buttons onClickListeners for reminder settings
+        timeExact.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (reminderTime == REMINDER_TIME.EXACT)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        timeExact.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        timeExact.setBackgroundColor(0x00000000);
+                        reminderTime = REMINDER_TIME.EXACT;
+                        selectReminderRadio(reminderTime);
+                        break;
+                }
+                return true;
+            }
+        });
+        time5Min.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (reminderTime == REMINDER_TIME.FIVE_MINS)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        time5Min.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        time5Min.setBackgroundColor(0x00000000);
+                        reminderTime = REMINDER_TIME.FIVE_MINS;
+                        selectReminderRadio(reminderTime);
+                        break;
+                }
+                return true;
+            }
+        });
+        time10Min.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (reminderTime == REMINDER_TIME.TEN_MINS)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        time10Min.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        time10Min.setBackgroundColor(0x00000000);
+                        reminderTime = REMINDER_TIME.TEN_MINS;
+                        selectReminderRadio(reminderTime);
+                        break;
+                }
+                return true;
+            }
+        });
+        time30Min.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (reminderTime == REMINDER_TIME.THIRTY_MINS)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        time30Min.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        time30Min.setBackgroundColor(0x00000000);
+                        reminderTime = REMINDER_TIME.THIRTY_MINS;
+                        selectReminderRadio(reminderTime);
+                        break;
+                }
+                return true;
+            }
+        });
+        time1Hour.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (reminderTime == REMINDER_TIME.ONE_HOUR)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        time1Hour.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        time1Hour.setBackgroundColor(0x00000000);
+                        reminderTime = REMINDER_TIME.ONE_HOUR;
+                        selectReminderRadio(reminderTime);
                         break;
                 }
                 return true;
@@ -181,5 +310,32 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         rectNotDone.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTaskFailed, null));
         rectPartlyDone.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTaskInProcess, null));
         rectPostponed.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTaskPostponed, null));
+    }
+
+    private void selectReminderRadio(REMINDER_TIME reminderTime) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("reminderTime", reminderTime.toString());
+        editor.commit();
+        if (reminderTime == REMINDER_TIME.EXACT)
+            timeExactRadio.setImageResource(R.drawable.radio_checked_medium);
+        else
+            timeExactRadio.setImageResource(R.drawable.radio_unchecked_medium);
+        if (reminderTime == REMINDER_TIME.FIVE_MINS)
+            time5MinRadio.setImageResource(R.drawable.radio_checked_medium);
+        else
+            time5MinRadio.setImageResource(R.drawable.radio_unchecked_medium);
+        if (reminderTime == REMINDER_TIME.TEN_MINS)
+            time10MinRadio.setImageResource(R.drawable.radio_checked_medium);
+        else
+            time10MinRadio.setImageResource(R.drawable.radio_unchecked_medium);
+        if (reminderTime == REMINDER_TIME.THIRTY_MINS)
+            time30MinRadio.setImageResource(R.drawable.radio_checked_medium);
+        else
+            time30MinRadio.setImageResource(R.drawable.radio_unchecked_medium);
+        if (reminderTime == REMINDER_TIME.ONE_HOUR)
+            time1HourRadio.setImageResource(R.drawable.radio_checked_medium);
+        else
+            time1HourRadio.setImageResource(R.drawable.radio_unchecked_medium);
     }
 }
