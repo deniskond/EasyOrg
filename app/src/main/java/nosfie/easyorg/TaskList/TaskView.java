@@ -60,8 +60,6 @@ public class TaskView {
             final Context context, int num, final Task task,
             boolean showIcon, boolean showEditButton, Timespan timespan, Callable uc) {
 
-        //Log.d("qq", task.toString());
-
         DP = convertDpToPixels(context, 1);
         updateCallback = uc;
 
@@ -1143,41 +1141,10 @@ public class TaskView {
         LinearLayout root = (LinearLayout)layout.findViewById(R.id.dialog_root);
         root.setMinimumWidth((int)(displaySize.x * 0.85f));
 
-        // Adding "no icon" option
-        LinearLayout iconsContainer = (LinearLayout)layout.findViewById(R.id.iconsContainer);
-
-        final LinearLayout noIconRow = new LinearLayout(layout.getContext());
-        LinearLayout.LayoutParams noIconRowParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        noIconRow.setLayoutParams(noIconRowParams);
-        noIconRow.setPadding(5 * DP, 5 * DP, 5 * DP, 5 * DP);
-        noIconRow.setGravity(Gravity.CENTER_VERTICAL);
-        noIconRow.setOrientation(LinearLayout.HORIZONTAL);
-
-        final LinearLayout noIconBorder = new LinearLayout(layout.getContext());
-        LinearLayout.LayoutParams noIconBorderParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        noIconBorderParams.width = 34 * DP;
-        noIconBorderParams.height = 34 * DP;
-        noIconBorder.setLayoutParams(noIconBorderParams);
-        noIconBorder.setBackgroundResource(R.drawable.border_small);
-        noIconBorder.setOrientation(LinearLayout.HORIZONTAL);
-
-        TextView noIconText = new TextView(layout.getContext());
-        LinearLayout.LayoutParams noIconTextParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        noIconTextParams.setMargins(10 * DP, 0, 0, 0);
-        noIconText.setLayoutParams(noIconTextParams);
-        noIconText.setText("Нет иконки");
-        noIconText.setTextColor(0xFF555555);
-        noIconText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-
-        noIconRow.addView(noIconBorder);
-        noIconRow.addView(noIconText);
-        iconsContainer.addView(noIconRow);
+        // Showing "no icon" option
+        final LinearLayout noIconRow = (LinearLayout)layout.findViewById(R.id.noIconRow);
+        final LinearLayout noIconBorder = (LinearLayout)layout.findViewById(R.id.noIconBorder);
+        noIconRow.setVisibility(View.VISIBLE);
 
         // Setting up dialog elements
         final LinearLayout videoRow = (LinearLayout)layout.findViewById(R.id.videoRow);
@@ -1300,7 +1267,6 @@ public class TaskView {
                 return true;
             }
         });
-
         noIconRow.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
