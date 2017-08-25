@@ -1,8 +1,11 @@
 package nosfie.easyorg;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -36,11 +39,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // First start actions;
+        // First start actions
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
         DB = tasksConnector.getWritableDatabase();
         DB.execSQL(tasksConnector.CREATE_TABLE);
         DB.close();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        int colorTaskActual = preferences.getInt("colorTaskActual", -1);
+        if (colorTaskActual == -1) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt("colorTaskActual", ResourcesCompat.getColor(getResources(), R.color.colorTaskActual, null));
+            editor.putInt("colorTaskDone", ResourcesCompat.getColor(getResources(), R.color.colorTaskDone, null));
+            editor.putInt("colorTaskPostponed", ResourcesCompat.getColor(getResources(), R.color.colorTaskPostponed, null));
+            editor.putInt("colorTaskFailed", ResourcesCompat.getColor(getResources(), R.color.colorTaskFailed, null));
+            editor.putInt("colorTaskInProcess", ResourcesCompat.getColor(getResources(), R.color.colorTaskInProcess, null));
+            editor.commit();
+        }
 
         // Setting up view elements
         newTask = (LinearLayout)findViewById(R.id.newTask);

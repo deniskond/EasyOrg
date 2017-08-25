@@ -2,12 +2,15 @@ package nosfie.easyorg.TaskCalendar;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -50,6 +53,11 @@ public class TaskCalendar extends AppCompatActivity {
     int dayTasksYear = 0, dayTasksMonth = 0;
     ImageView currentPressed;
     Boolean needChangeOnCurrentPressed = false;
+    int colorTaskActual = 0,
+        colorTaskDone = 0,
+        colorTaskFailed = 0,
+        colorTaskInProcess = 0,
+        colorTaskPostponed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +72,12 @@ public class TaskCalendar extends AppCompatActivity {
         startMonth = calendar.get(Calendar.MONTH) + 1;
         DP = convertDpToPixels(this, 1);
         tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TaskCalendar.this);
+        colorTaskActual = preferences.getInt("colorTaskActual", -1);
+        colorTaskDone = preferences.getInt("colorTaskDone", -1);
+        colorTaskFailed = preferences.getInt("colorTaskFailed", -1);
+        colorTaskInProcess = preferences.getInt("colorTaskInProcess", -1);
+        colorTaskPostponed = preferences.getInt("colorTaskPostponed", -1);
 
         // Setting up view elements
         tasksCalendar = (LinearLayout)findViewById(R.id.tasks_calendar);
@@ -327,28 +341,28 @@ public class TaskCalendar extends AppCompatActivity {
                     switch (task.status) {
                         case ACTUAL:
                             if (task.type == Task.TYPE.SIMPLE)
-                                color = R.color.colorTaskActual;
+                                color = colorTaskActual;
                             else {
                                 if (task.currentCount == task.count)
-                                    color = R.color.colorTaskDone;
+                                    color = colorTaskDone;
                                 else
-                                    color = R.color.colorTaskActual;
+                                    color = colorTaskInProcess;
                             }
                             break;
                         case DONE:
-                            color = R.color.colorTaskDone;
+                            color = colorTaskDone;
                             break;
                         case NOT_DONE:
-                            color = R.color.colorTaskFailed;
+                            color = colorTaskFailed;
                             break;
                         case IN_PROCESS:
-                            color = R.color.colorTaskInProcess;
+                            color = colorTaskInProcess;
                             break;
                         case POSTPONED:
-                            color = R.color.colorTaskPostponed;
+                            color = colorTaskPostponed;
                             break;
                     }
-                    dayTaskRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), color, null));
+                    dayTaskRow.setBackgroundColor(color);
 
                     TextView taskName = new TextView(this);
                     LinearLayout.LayoutParams taskNameParams = new LinearLayout.LayoutParams(

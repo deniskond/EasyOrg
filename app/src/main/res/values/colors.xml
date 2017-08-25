@@ -5,11 +5,11 @@
     <color name="colorAccent">#FF4081</color>
 
     <!-- Default task states colors -->
-    <color name="colorTaskActual">#FFFFFF</color>
-    <color name="colorTaskDone">#FFD966</color>
-    <color name="colorTaskPostponed">#CCCCCC</color>
-    <color name="colorTaskFailed">#FF8E8E</color>
-    <color name="colorTaskInProcess">#C8E4FC</color>
+    <color name="colorTaskActual">#ffffff</color>
+    <color name="colorTaskDone">#ffd966</color>
+    <color name="colorTaskPostponed">#cccccc</color>
+    <color name="colorTaskFailed">#ff8e8e</color>
+    <color name="colorTaskInProcess">#c8e4fc</color>
 
     <!-- UI Colors -->
     <color name="colorButtonNext">#25DB53</color>

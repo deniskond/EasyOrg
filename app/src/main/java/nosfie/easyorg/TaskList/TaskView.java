@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -55,13 +57,26 @@ public class TaskView {
     private static int DP = 0;
     private static int taskRowHeight = Constants.TASK_ROW_HEIGHT;
     private static Callable updateCallback;
+    private static int
+            colorTaskActual = 0,
+            colorTaskDone = 0,
+            colorTaskFailed = 0,
+            colorTaskInProcess = 0,
+            colorTaskPostponed = 0;
 
     public static LinearLayout getTaskRow(
             final Context context, int num, final Task task,
             boolean showIcon, boolean showEditButton, Timespan timespan, Callable uc) {
 
+        // Filling values
         DP = convertDpToPixels(context, 1);
         updateCallback = uc;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        final int colorTaskActual = preferences.getInt("colorTaskActual", -1);
+        final int colorTaskDone = preferences.getInt("colorTaskDone", -1);
+        final int colorTaskFailed = preferences.getInt("colorTaskFailed", -1);
+        final int colorTaskInProcess = preferences.getInt("colorTaskInProcess", -1);
+        final int colorTaskPostponed = preferences.getInt("colorTaskPostponed", -1);
 
         // Main row
         LinearLayout row = new LinearLayout(context);
@@ -163,7 +178,7 @@ public class TaskView {
         );
         taskBgContainer.setLayoutParams(taskBgContainerParams);
         taskBgContainer.setOrientation(LinearLayout.HORIZONTAL);
-        taskBgContainer.setBackgroundColor(context.getResources().getColor(R.color.colorTaskActual));
+        taskBgContainer.setBackgroundColor(colorTaskActual);
         taskBgContainer.setWeightSum(100);
 
         LinearLayout taskBg = new LinearLayout(context);
@@ -180,24 +195,24 @@ public class TaskView {
         switch (task.status) {
             case ACTUAL:
                 if (task.type == Task.TYPE.SIMPLE)
-                    color = R.color.colorTaskActual;
+                    color = colorTaskActual;
                 else
-                    color = R.color.colorTaskDone;
+                    color = colorTaskDone;
                 break;
             case DONE:
-                color = R.color.colorTaskDone;
+                color = colorTaskDone;
                 break;
             case NOT_DONE:
-                color = R.color.colorTaskFailed;
+                color = colorTaskFailed;
                 break;
             case IN_PROCESS:
-                color = R.color.colorTaskInProcess;
+                color = colorTaskInProcess;
                 break;
             case POSTPONED:
-                color = R.color.colorTaskPostponed;
+                color = colorTaskPostponed;
                 break;
         }
-        taskBg.setBackgroundColor(context.getResources().getColor(color));
+        taskBg.setBackgroundColor(color);
         taskBg.setId(task.id);
         taskBgContainer.addView(taskBg);
         taskNameRelative.addView(taskBgContainer);
@@ -526,29 +541,29 @@ public class TaskView {
                 switch (item)
                 {
                     case 0:
-                        color = R.color.colorTaskActual;
+                        color = colorTaskActual;
                         task.status = Task.STATUS.ACTUAL;
                         break;
                     case 1:
-                        color = R.color.colorTaskDone;
+                        color = colorTaskDone;
                         task.status = Task.STATUS.DONE;
                         break;
                     case 2:
-                        color = R.color.colorTaskFailed;
+                        color = colorTaskFailed;
                         task.status = Task.STATUS.NOT_DONE;
                         break;
                     case 3:
-                        color = R.color.colorTaskInProcess;
+                        color = colorTaskInProcess;
                         task.status = Task.STATUS.IN_PROCESS;
                         break;
                     case 4:
-                        color = R.color.colorTaskPostponed;
+                        color = colorTaskPostponed;
                         task.status = Task.STATUS.POSTPONED;
                         break;
                 }
                 View rootView = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
                 LinearLayout taskRow = (LinearLayout)rootView.findViewById(task.id);
-                taskRow.setBackgroundColor(context.getResources().getColor(color));
+                taskRow.setBackgroundColor(color);
                 task.synchronize(context);
                 try {
                     updateCallback.call();
@@ -564,7 +579,7 @@ public class TaskView {
 
     private static void processDeleteImageClick(final Context context, final Task task) {
         AlertDialog.Builder ad = new AlertDialog.Builder(context);
-        ad.setTitle("Подтвердите удаление");  // заголовок
+        ad.setTitle("Подтвердите удаление");
         switch (task.type) {
             case TEMPLATE:
                 ad.setMessage("Вы действительно хотите удалить шаблон \"" + task.name + "\" ?");
