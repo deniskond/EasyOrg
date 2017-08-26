@@ -345,6 +345,8 @@ public class TaskCalendar extends AppCompatActivity {
                             else {
                                 if (task.currentCount == task.count)
                                     color = colorTaskDone;
+                                else if (task.currentCount == 0)
+                                    color = colorTaskActual;
                                 else
                                     color = colorTaskInProcess;
                             }

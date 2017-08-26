@@ -17,6 +17,8 @@ import android.widget.Toast;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.R;
 
+import static nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
+
 public class ViewNote extends AppCompatActivity {
 
     EditText noteText;
@@ -58,7 +60,11 @@ public class ViewNote extends AppCompatActivity {
             note.customEndDate.year = Integer.parseInt(dateSplit[0]);
             note.customEndDate.month = Integer.parseInt(dateSplit[1]);
             note.customEndDate.day = Integer.parseInt(dateSplit[2]);
-            windowTitle.setText("Заметка от " + note.customEndDate.toHumanString());
+            windowTitle.setText("Заметка от " +
+                    note.customEndDate.day + " " +
+                    getHumanMonthNameGenitive(note.customEndDate.month) + " " +
+                    note.customEndDate.year
+            );
             note.count = extras.getInt("count");
             switch (note.count) {
                 case 0:

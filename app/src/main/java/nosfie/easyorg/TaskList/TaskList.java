@@ -265,7 +265,7 @@ public class TaskList extends AppCompatActivity {
             String today = dayValues.today.toString();
             if ((startDate.equals(today) && endDate.equals(today)) ||
                 (endDate.equals(today) && task.status != Task.STATUS.DONE
-                    && task.status != Task.STATUS.NOT_DONE))
+                    && task.status != Task.STATUS.NOT_DONE && task.status != Task.STATUS.IN_PROCESS))
                 todayTasks.add(task);
         }
         if (timespan == Timespan.TODAY)
@@ -279,7 +279,8 @@ public class TaskList extends AppCompatActivity {
             if ((endDate.equals(endOfWeek)) ||
                 (endDate.compareTo(startOfWeek) > 0 &&
                  endDate.compareTo(endOfWeek) <= 0 &&
-                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE)) {
+                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE
+                        && task.status != Task.STATUS.IN_PROCESS)) {
                 if (!todayTasks.contains(task))
                     weekTasks.add(task);
             }
@@ -295,7 +296,8 @@ public class TaskList extends AppCompatActivity {
             if (endDate.equals(endOfMonth) ||
                 (endDate.compareTo(startOfMonth) >= 0 &&
                  endDate.compareTo(endOfMonth) <= 0 &&
-                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE)) {
+                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE
+                        && task.status != Task.STATUS.IN_PROCESS)) {
                 if (!todayTasks.contains(task) && !weekTasks.contains(task))
                     monthTasks.add(task);
             }
@@ -311,7 +313,8 @@ public class TaskList extends AppCompatActivity {
             if (endDate.equals(endOfYear) ||
                 (endDate.compareTo(startOfYear) >= 0 &&
                  endDate.compareTo(endOfYear) <= 0 &&
-                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE)) {
+                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE
+                        && task.status != Task.STATUS.IN_PROCESS)) {
                 if (!todayTasks.contains(task) && !weekTasks.contains(task) && !monthTasks.contains(task))
                     yearTasks.add(task);
             }
