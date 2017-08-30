@@ -2,6 +2,7 @@ package nosfie.easyorg.Settings;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,7 +11,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,12 +25,12 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.R;
+import nosfie.easyorg.Reminder.Receiver;
+import nosfie.easyorg.Reminder.ReminderTime;
+
+import static nosfie.easyorg.Reminder.NotificationHelper.updateAllNotifications;
 
 public class Settings extends AppCompatActivity  implements ColorPickerDialogListener {
-
-    enum REMINDER_TIME {
-        EXACT, FIVE_MINS, TEN_MINS, THIRTY_MINS, ONE_HOUR
-    }
 
     LinearLayout rectInProcess, rectDone, rectNotDone, rectPartlyDone, rectPostponed;
     LinearLayout byDefaultButton, buttonBack;
@@ -38,7 +38,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
     int colorLayoutId = 0;
     LinearLayout timeExact, time5Min, time10Min, time30Min, time1Hour;
     ImageView timeExactRadio, time5MinRadio, time10MinRadio, time30MinRadio, time1HourRadio;
-    REMINDER_TIME reminderTime;
+    ReminderTime reminderTime;
     LinearLayout timeMidnight, timeCustom;
     ImageView timeMidnightRadio, timeCustomRadio;
     Daytime dayMargin = new Daytime();
@@ -103,7 +103,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         }
 
         // Setting up selected reminder option from SharedPreferences values
-        reminderTime = REMINDER_TIME.valueOf(preferences.getString("reminderTime", ""));
+        reminderTime = ReminderTime.valueOf(preferences.getString("ReminderTime", ""));
         switch (reminderTime) {
             case EXACT:
                 timeExactRadio.setImageResource(R.drawable.radio_checked_medium);
@@ -226,7 +226,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         timeExact.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if (reminderTime == REMINDER_TIME.EXACT)
+                if (reminderTime == ReminderTime.EXACT)
                     return true;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -234,8 +234,9 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         break;
                     case MotionEvent.ACTION_UP:
                         timeExact.setBackgroundColor(0x00000000);
-                        reminderTime = REMINDER_TIME.EXACT;
+                        reminderTime = ReminderTime.EXACT;
                         selectReminderRadio(reminderTime);
+                        updateAllNotifications(getApplicationContext());
                         break;
                 }
                 return true;
@@ -244,7 +245,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         time5Min.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if (reminderTime == REMINDER_TIME.FIVE_MINS)
+                if (reminderTime == ReminderTime.FIVE_MINS)
                     return true;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -252,8 +253,9 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         break;
                     case MotionEvent.ACTION_UP:
                         time5Min.setBackgroundColor(0x00000000);
-                        reminderTime = REMINDER_TIME.FIVE_MINS;
+                        reminderTime = ReminderTime.FIVE_MINS;
                         selectReminderRadio(reminderTime);
+                        updateAllNotifications(getApplicationContext());
                         break;
                 }
                 return true;
@@ -262,7 +264,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         time10Min.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if (reminderTime == REMINDER_TIME.TEN_MINS)
+                if (reminderTime == ReminderTime.TEN_MINS)
                     return true;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -270,8 +272,9 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         break;
                     case MotionEvent.ACTION_UP:
                         time10Min.setBackgroundColor(0x00000000);
-                        reminderTime = REMINDER_TIME.TEN_MINS;
+                        reminderTime = ReminderTime.TEN_MINS;
                         selectReminderRadio(reminderTime);
+                        updateAllNotifications(getApplicationContext());
                         break;
                 }
                 return true;
@@ -280,7 +283,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         time30Min.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if (reminderTime == REMINDER_TIME.THIRTY_MINS)
+                if (reminderTime == ReminderTime.THIRTY_MINS)
                     return true;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -288,8 +291,9 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         break;
                     case MotionEvent.ACTION_UP:
                         time30Min.setBackgroundColor(0x00000000);
-                        reminderTime = REMINDER_TIME.THIRTY_MINS;
+                        reminderTime = ReminderTime.THIRTY_MINS;
                         selectReminderRadio(reminderTime);
+                        updateAllNotifications(getApplicationContext());
                         break;
                 }
                 return true;
@@ -298,7 +302,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         time1Hour.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if (reminderTime == REMINDER_TIME.ONE_HOUR)
+                if (reminderTime == ReminderTime.ONE_HOUR)
                     return true;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -306,8 +310,9 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         break;
                     case MotionEvent.ACTION_UP:
                         time1Hour.setBackgroundColor(0x00000000);
-                        reminderTime = REMINDER_TIME.ONE_HOUR;
+                        reminderTime = ReminderTime.ONE_HOUR;
                         selectReminderRadio(reminderTime);
+                        updateAllNotifications(getApplicationContext());
                         break;
                 }
                 return true;
@@ -321,7 +326,13 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                 finish();
             }
         });
+    }
 
+    Intent createIntent(String action, String extra) {
+        Intent intent = new Intent(this, Receiver.class);
+        intent.setAction(action);
+        intent.putExtra("extra", extra);
+        return intent;
     }
 
     @Override
@@ -393,28 +404,28 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         rectPostponed.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTaskPostponed, null));
     }
 
-    private void selectReminderRadio(REMINDER_TIME reminderTime) {
+    private void selectReminderRadio(ReminderTime reminderTime) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("reminderTime", reminderTime.toString());
+        editor.putString("ReminderTime", reminderTime.toString());
         editor.commit();
-        if (reminderTime == REMINDER_TIME.EXACT)
+        if (reminderTime == ReminderTime.EXACT)
             timeExactRadio.setImageResource(R.drawable.radio_checked_medium);
         else
             timeExactRadio.setImageResource(R.drawable.radio_unchecked_medium);
-        if (reminderTime == REMINDER_TIME.FIVE_MINS)
+        if (reminderTime == ReminderTime.FIVE_MINS)
             time5MinRadio.setImageResource(R.drawable.radio_checked_medium);
         else
             time5MinRadio.setImageResource(R.drawable.radio_unchecked_medium);
-        if (reminderTime == REMINDER_TIME.TEN_MINS)
+        if (reminderTime == ReminderTime.TEN_MINS)
             time10MinRadio.setImageResource(R.drawable.radio_checked_medium);
         else
             time10MinRadio.setImageResource(R.drawable.radio_unchecked_medium);
-        if (reminderTime == REMINDER_TIME.THIRTY_MINS)
+        if (reminderTime == ReminderTime.THIRTY_MINS)
             time30MinRadio.setImageResource(R.drawable.radio_checked_medium);
         else
             time30MinRadio.setImageResource(R.drawable.radio_unchecked_medium);
-        if (reminderTime == REMINDER_TIME.ONE_HOUR)
+        if (reminderTime == ReminderTime.ONE_HOUR)
             time1HourRadio.setImageResource(R.drawable.radio_checked_medium);
         else
             time1HourRadio.setImageResource(R.drawable.radio_unchecked_medium);

@@ -15,6 +15,10 @@ import java.util.Calendar;
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.Database.TasksConnector;
 
+import static nosfie.easyorg.Reminder.NotificationHelper.createNotification;
+import static nosfie.easyorg.Reminder.NotificationHelper.deleteNotification;
+import static nosfie.easyorg.Reminder.NotificationHelper.updateNotification;
+
 public class Task {
 
     public enum STATUS {
@@ -220,8 +224,10 @@ public class Task {
         SQLiteDatabase DB = tasksConnector.getWritableDatabase();
         DB.execSQL(tasksConnector.CREATE_TABLE);
         ContentValues CV = getContentValues();
-        DB.insert("tasks", null, CV);
+        this.id = (int)DB.insert("tasks", null, CV);
         DB.close();
+        if (this.needReminder)
+            createNotification(context, this);
     }
 
     public void synchronize(Context context) {
@@ -230,6 +236,10 @@ public class Task {
         ContentValues CV = getContentValues();
         DB.update("tasks", CV, "_id = ?", new String[] { Integer.toString(this.id) });
         DB.close();
+        if (this.needReminder)
+            updateNotification(context, this);
+        else
+            deleteNotification(context, this);
     }
 
     public void delete(Context context) {
@@ -237,6 +247,8 @@ public class Task {
         SQLiteDatabase DB = tasksConnector.getWritableDatabase();
         DB.delete("tasks", "_id = " + this.id, null);
         DB.close();
+        if (this.needReminder)
+            deleteNotification(context, this);
     }
 
     public ContentValues getContentValues() {
@@ -340,7 +352,6 @@ public class Task {
             shoppingListStateStr += Integer.toString(digit);
         CV.put("shoppingListState", shoppingListStateStr);
 
-        //Log.d("qq", this.toString());
         return CV;
     }
 

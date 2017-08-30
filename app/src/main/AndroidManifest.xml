@@ -48,6 +48,7 @@
         </activity>
         <activity android:name=".Notes.ViewNote" android:label="Добавление заметки" android:noHistory="true" android:windowSoftInputMode="stateHidden">
         </activity>
+        <receiver android:name=".Reminder.Receiver" />
     </application>
 
 </manifest>

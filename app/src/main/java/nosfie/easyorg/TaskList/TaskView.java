@@ -373,7 +373,7 @@ public class TaskView {
     }
 
     private static void processTaskNameClick(final Context context, final Task task) {
-        Log.d("qq", task.toString());
+        //Log.d("qq", task.toString());
         switch (task.type) {
             case SIMPLE:
                 showSimpleTaskDialog(context, task);
