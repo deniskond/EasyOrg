@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.support.v4.app.NotificationCompat;
 
 import nosfie.easyorg.R;
 
@@ -18,7 +19,7 @@ public class Receiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctx, Intent intent) {
         NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification.Builder(ctx)
+        Notification notification = new NotificationCompat.Builder(ctx)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setContentTitle(intent.getExtras().getString("Title"))
                 .setContentText(intent.getExtras().getString("Content"))
@@ -26,8 +27,9 @@ public class Receiver extends BroadcastReceiver {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(false)
                 .setColor(0xff0000ff)
-                .setLights(0xff0000ff, 500, 500)
+                .setLights(0xff0000ff, 100, 100)
                 .setOnlyAlertOnce(false)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build();
         nm.notify(1, notification);
     }
