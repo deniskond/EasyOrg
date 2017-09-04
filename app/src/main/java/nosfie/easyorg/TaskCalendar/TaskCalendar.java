@@ -3,14 +3,11 @@ package nosfie.easyorg.TaskCalendar;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -28,9 +25,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import nosfie.easyorg.Constants;
+import nosfie.easyorg.DataStructures.DayValues;
 import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.Dialogs.MonthYearPickerDialog;
 import nosfie.easyorg.R;
 
@@ -40,8 +36,6 @@ import static nosfie.easyorg.Helpers.DateStringsHelper.*;
 
 public class TaskCalendar extends AppCompatActivity {
 
-    SQLiteDatabase DB;
-    TasksConnector tasksConnector;
     LinearLayout tasksCalendar;
     int DP;
     TextView monthText;
@@ -58,6 +52,7 @@ public class TaskCalendar extends AppCompatActivity {
         colorTaskFailed = 0,
         colorTaskInProcess = 0,
         colorTaskPostponed = 0;
+    DayValues dayValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +66,13 @@ public class TaskCalendar extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         startMonth = calendar.get(Calendar.MONTH) + 1;
         DP = convertDpToPixels(this, 1);
-        tasksConnector = new TasksConnector(getApplicationContext(), Constants.DB_NAME, null, 1);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TaskCalendar.this);
         colorTaskActual = preferences.getInt("colorTaskActual", -1);
         colorTaskDone = preferences.getInt("colorTaskDone", -1);
         colorTaskFailed = preferences.getInt("colorTaskFailed", -1);
         colorTaskInProcess = preferences.getInt("colorTaskInProcess", -1);
         colorTaskPostponed = preferences.getInt("colorTaskPostponed", -1);
+        dayValues = new DayValues(this);
 
         // Setting up view elements
         tasksCalendar = (LinearLayout)findViewById(R.id.tasks_calendar);
@@ -261,12 +256,13 @@ public class TaskCalendar extends AppCompatActivity {
         tasksCalendar.addView(verticalPadding);
 
         Calendar calendar = Calendar.getInstance();
-        if ((firstDay == calendar.get(Calendar.DAY_OF_MONTH)
-            || secondDay == calendar.get(Calendar.DAY_OF_MONTH)
-            || thirdDay == calendar.get(Calendar.DAY_OF_MONTH))
+        if ((firstDay == dayValues.today.day
+            || secondDay == dayValues.today.day
+            || thirdDay == dayValues.today.day)
                 && month == calendar.get(Calendar.MONTH) + 1
-                && year == calendar.get(Calendar.YEAR))
+                && year == calendar.get(Calendar.YEAR)) {
             currentDayLayout = calendarRow;
+        }
     }
 
     private void addCalendarDay(final LinearLayout dayColumn, final int day, final int month, final int year) {

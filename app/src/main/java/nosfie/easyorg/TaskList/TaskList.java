@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -258,7 +259,7 @@ public class TaskList extends AppCompatActivity {
         }
 
         ArrayList<Task> todayTasks = new ArrayList<>();
-        DayValues dayValues = new DayValues();
+        DayValues dayValues = new DayValues(TaskList.this);
         for (Task task: tasks) {
             String startDate = task.customStartDate.toString();
             String endDate = task.customEndDate.toString();

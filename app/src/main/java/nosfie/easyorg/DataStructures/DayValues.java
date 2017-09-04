@@ -1,5 +1,9 @@
 package nosfie.easyorg.DataStructures;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.util.Calendar;
 
 public class DayValues {
@@ -13,10 +17,19 @@ public class DayValues {
     public CustomDate startOfYear = new CustomDate();
     public CustomDate endOfYear = new CustomDate();
 
-    public DayValues() {
+    public DayValues(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String[] timeSplit = preferences.getString("dayMargin", "").split(":");
+        int hours = Integer.parseInt(timeSplit[0]);
+        int minutes = Integer.parseInt(timeSplit[1]);
+
         Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.HOUR_OF_DAY) < 3)
-            calendar.add(Calendar.HOUR_OF_DAY, -3);
+        if ((int)calendar.get(Calendar.HOUR) < hours)
+            calendar.add(Calendar.HOUR, -hours);
+        if ((int)calendar.get(Calendar.HOUR) == hours && calendar.get(Calendar.MINUTE) < minutes) {
+            calendar.add(Calendar.HOUR, -hours);
+            calendar.add(Calendar.MINUTE, -minutes);
+        }
 
         // TODAY
         this.today.year = calendar.get(Calendar.YEAR);

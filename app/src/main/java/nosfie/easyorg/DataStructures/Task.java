@@ -223,7 +223,7 @@ public class Task {
         TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
         SQLiteDatabase DB = tasksConnector.getWritableDatabase();
         DB.execSQL(tasksConnector.CREATE_TABLE);
-        ContentValues CV = getContentValues();
+        ContentValues CV = getContentValues(context);
         this.id = (int)DB.insert("tasks", null, CV);
         DB.close();
         if (this.needReminder)
@@ -233,7 +233,7 @@ public class Task {
     public void synchronize(Context context) {
         TasksConnector tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
         SQLiteDatabase DB = tasksConnector.getWritableDatabase();
-        ContentValues CV = getContentValues();
+        ContentValues CV = getContentValues(context);
         DB.update("tasks", CV, "_id = ?", new String[] { Integer.toString(this.id) });
         DB.close();
         if (this.needReminder)
@@ -251,9 +251,9 @@ public class Task {
             deleteNotification(context, this);
     }
 
-    public ContentValues getContentValues() {
+    public ContentValues getContentValues(Context context) {
         Calendar calendar = Calendar.getInstance();
-        DayValues dayValues = new DayValues();
+        DayValues dayValues = new DayValues(context);
         ContentValues CV = new ContentValues();
         CV.put("name", this.name);
         CV.put("type", this.type.toString());

@@ -1,12 +1,15 @@
 package nosfie.easyorg.Database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 
 import nosfie.easyorg.Constants;
+import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
 
@@ -26,7 +29,7 @@ public class Queries {
         DB = tasksConnector.getReadableDatabase();
         Cursor cursor = DB.query("tasks", columns, "type = ?", new String[] { "NOTE" },
                 null, null, "endDate ASC, startDate DESC");
-        return getTasksByQuery(context, cursor);
+        return getTasksByQuery(cursor);
     }
 
     public static ArrayList<Task> getTasksForTaskListFromDB(Context context, Timespan timespan) {
@@ -39,7 +42,8 @@ public class Queries {
         else
             cursor = DB.query("tasks", columns, "type != ? AND type != ?", new String[] { "TEMPLATE", "NOTE" },
                     null, null, "endDate ASC, startDate DESC");
-        return getTasksByQuery(context, cursor);
+        ArrayList<Task> tasks = getTasksByQuery(cursor);
+        return orderTasksWithDayMargin(context, tasks);
     }
 
     public static ArrayList<Task> getDayTasksFromDB(Context context, String todayStr) {
@@ -47,7 +51,8 @@ public class Queries {
         DB = tasksConnector.getReadableDatabase();
         Cursor cursor = DB.query("tasks", columns, "endDate = '" + todayStr + "' AND type != ? AND type != ?",
                 new String[] { "TEMPLATE", "NOTE" }, null, null, "startTime");
-        return getTasksByQuery(context, cursor);
+        ArrayList<Task> tasks = getTasksByQuery(cursor);
+        return orderTasksWithDayMargin(context, tasks);
     }
 
     public static ArrayList<Task> getCalendarTasksFromDB(Context context, String firstDayOfMonth,
@@ -57,24 +62,25 @@ public class Queries {
         Cursor cursor = DB.query("tasks", columns,
                 "endDate >= '" + firstDayOfMonth + "' AND endDate <= '" + lastDayOfMonth + "' AND " +
                         "type != ? AND type != ?", new String[] { "TEMPLATE", "NOTE" }, null, null, "startTime");
-        return getTasksByQuery(context, cursor);
+        return getTasksByQuery(cursor);
     }
 
     public static ArrayList<Task> getAllTasksFromDB(Context context) {
         tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
         DB = tasksConnector.getReadableDatabase();
         Cursor cursor = DB.query("tasks", columns, null, null, null, null, "status ASC, endDate");
-        return getTasksByQuery(context, cursor);
+        ArrayList<Task> tasks = getTasksByQuery(cursor);
+        return orderTasksWithDayMargin(context, tasks);
     }
 
     public static ArrayList<Task> getAllTemplatesFromDB(Context context) {
         tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
         DB = tasksConnector.getReadableDatabase();
         Cursor cursor = DB.query("tasks", columns, "type=?", new String[] { "TEMPLATE" }, null, null, null);
-        return getTasksByQuery(context, cursor);
+        return getTasksByQuery(cursor);
     }
 
-    private static ArrayList<Task> getTasksByQuery(Context context, Cursor cursor) {
+    private static ArrayList<Task> getTasksByQuery(Cursor cursor) {
         ArrayList<Task> tasks = new ArrayList<>();
         if (cursor != null) {
             cursor.moveToFirst();
@@ -104,6 +110,39 @@ public class Queries {
                 cursor.getInt(10),
                 cursor.getString(11)
         );
+    }
+
+    private static ArrayList<Task> orderTasksWithDayMargin(Context context, ArrayList<Task> tasks) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String[] timeSplit = preferences.getString("dayMargin", "").split(":");
+        Daytime dayMargin = new Daytime(Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]));
+        ArrayList<Task> orderedTasks = new ArrayList<>();
+
+        // Adding tasks after dayMargin
+        for (Task task: tasks)
+            if (task.startTime == Task.START_TIME.CUSTOM) {
+                if (task.customStartTime.hours > dayMargin.hours ||
+                    (task.customStartTime.hours == dayMargin.hours &&
+                    task.customStartTime.minutes >= dayMargin.minutes)) {
+                        orderedTasks.add(task);
+                }
+            }
+        // Adding tasks before dayMargin
+        for (Task task: tasks)
+            if (task.startTime == Task.START_TIME.CUSTOM) {
+                if (task.customStartTime.hours < dayMargin.hours ||
+                        (task.customStartTime.hours == dayMargin.hours &&
+                                task.customStartTime.minutes < dayMargin.minutes)) {
+                        orderedTasks.add(task);
+                }
+            }
+        // Adding all other tasks with unset startTime
+        for (Task task: tasks)
+            if (task.startTime != Task.START_TIME.CUSTOM) {
+                orderedTasks.add(task);
+            }
+
+        return orderedTasks;
     }
 
 }

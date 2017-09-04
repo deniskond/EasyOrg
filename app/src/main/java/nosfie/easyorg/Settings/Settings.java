@@ -442,7 +442,6 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                 SharedPreferences.Editor editor = preferences.edit();
                 String dayMarginStr = dayMargin.toString();
                 dayMarginStr = dayMarginStr.replace('-', ':');
-                //Log.d("qq", dayMarginStr);
                 editor.putString("dayMargin", dayMarginStr);
                 editor.commit();
             }
