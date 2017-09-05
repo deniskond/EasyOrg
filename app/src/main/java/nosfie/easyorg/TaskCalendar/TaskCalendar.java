@@ -66,7 +66,7 @@ public class TaskCalendar extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         startMonth = calendar.get(Calendar.MONTH) + 1;
         DP = convertDpToPixels(this, 1);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TaskCalendar.this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         colorTaskActual = preferences.getInt("colorTaskActual", -1);
         colorTaskDone = preferences.getInt("colorTaskDone", -1);
         colorTaskFailed = preferences.getInt("colorTaskFailed", -1);

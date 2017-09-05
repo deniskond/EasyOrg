@@ -78,7 +78,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         customTime = (TextView)findViewById(R.id.customTime);
 
         // Setting up colors from SharedPreferences values
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final int colorTaskActual = preferences.getInt("colorTaskActual", -1);
         final int colorTaskDone = preferences.getInt("colorTaskDone", -1);
         final int colorTaskFailed = preferences.getInt("colorTaskFailed", -1);
@@ -193,7 +193,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         timeMidnightRadio.setImageResource(R.drawable.radio_checked_medium);
                         timeCustomRadio.setImageResource(R.drawable.radio_unchecked_medium);
                         customTime.setText("Не выбрано");
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = preferences.edit();
                         String dayMarginStr = dayMargin.toString();
                         dayMarginStr = dayMarginStr.replace('-', ':');
@@ -337,7 +337,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
 
     @Override
     public void onColorSelected(int dialogId, @ColorInt int color) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
         switch (colorLayoutId) {
             case (R.id.rectInProcess):
@@ -389,7 +389,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
     }
 
     private void setDefaultTaskColors() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("colorTaskActual", ResourcesCompat.getColor(getResources(), R.color.colorTaskActual, null));
         editor.putInt("colorTaskDone", ResourcesCompat.getColor(getResources(), R.color.colorTaskDone, null));
@@ -405,7 +405,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
     }
 
     private void selectReminderRadio(ReminderTime reminderTime) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("ReminderTime", reminderTime.toString());
         editor.commit();
@@ -438,7 +438,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                 dayMargin.hours = hours;
                 dayMargin.minutes = minutes;
                 customTime.setText(dayMargin.toString().replace('-', ':'));
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 String dayMarginStr = dayMargin.toString();
                 dayMarginStr = dayMarginStr.replace('-', ':');

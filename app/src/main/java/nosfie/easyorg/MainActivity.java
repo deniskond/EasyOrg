@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
         DB = tasksConnector.getWritableDatabase();
         DB.execSQL(tasksConnector.CREATE_TABLE);
         DB.close();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        int colorTaskActual = preferences.getInt("colorTaskActual", -1);
-        if (colorTaskActual == -1) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int colorTaskActual = preferences.getInt("colorTaskActual", -2);
+        if (colorTaskActual == -2) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("colorTaskActual", ResourcesCompat.getColor(getResources(), R.color.colorTaskActual, null));
             editor.putInt("colorTaskDone", ResourcesCompat.getColor(getResources(), R.color.colorTaskDone, null));
