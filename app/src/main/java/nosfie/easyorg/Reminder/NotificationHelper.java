@@ -47,7 +47,6 @@ public class NotificationHelper {
     public static void updateNotification(Context context, Task task) {
         Intent intent = new Intent(context, Receiver.class);
         intent.setAction(Integer.toString(task.id));
-        //Log.d("qq", "Content: " + task.customStartTime.toString().replace("-", ":") + " " + task.name);
         intent.putExtra("Title", "EasyOrg - Напоминание");
         intent.putExtra("Content", task.customStartTime.toString().replace("-", ":") + " " + task.name);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent,
@@ -73,10 +72,8 @@ public class NotificationHelper {
                 task.customStartTime.minutes);
         long taskTime = taskCalendar.getTimeInMillis();
         long currentTime = System.currentTimeMillis();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        ReminderTime reminderTime = ReminderTime.valueOf(preferences.getString("ReminderTime", ""));
-        long reminderBias;
-        switch (reminderTime) {
+        long reminderBias = 0;
+        switch (task.reminderTime) {
             case EXACT:
                 reminderBias = 0;
                 break;
@@ -92,10 +89,8 @@ public class NotificationHelper {
             case ONE_HOUR:
                 reminderBias = 60 * 60 * 1000;
                 break;
-            default:
-                reminderBias = 0;
-                break;
         }
+
         Log.d("qq", "Alarm in " + Long.toString((taskTime - reminderBias - currentTime) / 1000));
         return taskTime - reminderBias - currentTime;
     }

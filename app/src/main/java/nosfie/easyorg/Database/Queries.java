@@ -20,7 +20,8 @@ import nosfie.easyorg.DataStructures.Timespan;
 public class Queries {
 
     final static String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
-            "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState"};
+            "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState",
+            "reminderTime"};
     static TasksConnector tasksConnector;
     static SQLiteDatabase DB;
 
@@ -108,7 +109,8 @@ public class Queries {
                 cursor.getString(8),
                 cursor.getString(9),
                 cursor.getInt(10),
-                cursor.getString(11)
+                cursor.getString(11),
+                cursor.getString(12)
         );
     }
 

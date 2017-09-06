@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -664,7 +663,7 @@ public class TaskView {
                         showEditTaskEndDateDialog(context, task);
                         break;
                     case 4:
-                        toggleTaskReminder(context, task);
+                        showEditTaskReminder(context, task);
                         break;
                 }
                 dialog.dismiss();
@@ -961,23 +960,105 @@ public class TaskView {
         editEndDateDialog.show();
     }
 
-    private static void toggleTaskReminder(final Context context, Task task) {
-        if (task.startTime.toString().equals("NONE"))
+    private static void showEditTaskReminder(final Context context, final Task task) {
+        if (task.startTime.toString().equals("NONE")) {
             Toast.makeText(context, "Установите сначала время начала задачи",
                     Toast.LENGTH_SHORT).show();
-        else {
-            task.needReminder = !task.needReminder;
-            task.synchronize(context);
-            try {
-                updateCallback.call();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (task.needReminder)
-                Toast.makeText(context, "Напоминание установлено", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(context, "Напоминание убрано", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editReminderDialog = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View rootView = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
+        View layout = inflater.inflate(R.layout.reminder_dialog,
+                (ViewGroup)rootView.findViewById(R.id.dialog_root));
+        editReminderDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editReminderDialog.setContentView(layout);
+        LinearLayout editTextRoot = (LinearLayout)layout.findViewById(R.id.dialog_root);
+        editTextRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        final RadioButton radioNone = (RadioButton)layout.findViewById(R.id.radioNone);
+        radioNone.setVisibility(View.VISIBLE);
+        final RadioButton radioExact = (RadioButton)layout.findViewById(R.id.radioExact);
+        final RadioButton radio5Min = (RadioButton)layout.findViewById(R.id.radio5Min);
+        final RadioButton radio10Min = (RadioButton)layout.findViewById(R.id.radio10Min);
+        final RadioButton radio30Min = (RadioButton)layout.findViewById(R.id.radio30Min);
+        final RadioButton radio1Hour = (RadioButton)layout.findViewById(R.id.radio1Hour);
+        if (task.needReminder == false) {
+            radioNone.setChecked(true);
+        }
+        else {
+            switch (task.reminderTime) {
+                case EXACT:
+                    radioExact.setChecked(true);
+                    break;
+                case FIVE_MINS:
+                    radio5Min.setChecked(true);
+                    break;
+                case TEN_MINS:
+                    radio10Min.setChecked(true);
+                    break;
+                case THIRTY_MINS:
+                    radio30Min.setChecked(true);
+                    break;
+                case ONE_HOUR:
+                    radio1Hour.setChecked(true);
+                    break;
+            }
+        }
+
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioNone.isChecked()) {
+                    task.needReminder = false;
+                    task.reminderTime = Task.REMINDER_TIME.EXACT;
+                }
+                else if (radioExact.isChecked()) {
+                    task.needReminder = true;
+                    task.reminderTime = Task.REMINDER_TIME.EXACT;
+                }
+                else if (radio5Min.isChecked()) {
+                    task.needReminder = true;
+                    task.reminderTime = Task.REMINDER_TIME.FIVE_MINS;
+                }
+                else if (radio10Min.isChecked()) {
+                    task.needReminder = true;
+                    task.reminderTime = Task.REMINDER_TIME.TEN_MINS;
+                }
+                else if (radio30Min.isChecked()) {
+                    task.needReminder = true;
+                    task.reminderTime = Task.REMINDER_TIME.THIRTY_MINS;
+                }
+                else if (radio1Hour.isChecked()) {
+                    task.needReminder = true;
+                    task.reminderTime = Task.REMINDER_TIME.ONE_HOUR;
+                }
+                task.synchronize(context);
+                try {
+                    updateCallback.call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (task.needReminder)
+                    Toast.makeText(context, "Напоминание изменено", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, "Напоминание убрано", Toast.LENGTH_SHORT).show();
+                editReminderDialog.dismiss();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editReminderDialog.dismiss();
+            }
+        });
+        editReminderDialog.show();
     }
 
     private static void showCountableTaskEditDialog(final Context context, final Task task) {
@@ -1011,7 +1092,7 @@ public class TaskView {
                         showEditTaskEndDateDialog(context, task);
                         break;
                     case 5:
-                        toggleTaskReminder(context, task);
+                        showEditTaskReminder(context, task);
                         break;
                 }
                 dialog.dismiss();
@@ -1105,7 +1186,7 @@ public class TaskView {
                         showEditTaskEndDateDialog(context, task);
                         break;
                     case 5:
-                        toggleTaskReminder(context, task);
+                        showEditTaskReminder(context, task);
                         break;
                 }
                 dialog.dismiss();

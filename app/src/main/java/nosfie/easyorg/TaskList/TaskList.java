@@ -129,6 +129,7 @@ public class TaskList extends AppCompatActivity {
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (Task task: tasks) {
+            Log.d("qq", task.toString());
             LinearLayout taskRow = TaskView.getTaskRow(
                     TaskList.this, num, task, true, true, timespan, new Callable() {
                         @Override

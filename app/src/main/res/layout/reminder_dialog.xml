@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Напоминание:"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp">
+
+        <RadioButton
+            android:id="@+id/radioNone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:checked="true"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:text="Нет напоминания"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <RadioButton
+            android:id="@+id/radioExact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:checked="true"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:text="Ровно по времени задачи"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio5Min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:text="За 5 минут"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio10Min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:text="За 10 минут"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio30Min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:text="За 30 минут"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio1Hour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:text="За 1 час"
+            android:textSize="18sp" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="1px"
+            android:layout_marginRight="1px"
+            android:layout_weight="50"
+            android:background="#d6d7d7"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/buttonOK"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1px"
+            android:layout_marginStart="1px"
+            android:layout_weight="50"
+            android:background="#d6d7d7"
+            android:text="OK" />
+    </LinearLayout>
+
+</LinearLayout>

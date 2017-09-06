@@ -41,6 +41,10 @@ public class Task {
         DAY, WEEK, MONTH, YEAR, NONE, CUSTOM
     }
 
+    public enum REMINDER_TIME {
+        EXACT, FIVE_MINS, TEN_MINS, THIRTY_MINS, ONE_HOUR
+    }
+
     public int id;
     public String name;
     public String text;
@@ -58,6 +62,7 @@ public class Task {
     public boolean predefinedShoppingList = false,
                    usePredefinedTimespan = false,
                    usePredefinedDate = false;
+    public REMINDER_TIME reminderTime;
 
     private void fillDefaultParameters() {
         if (this.startDate == null) this.startDate = START_DATE.TODAY;
@@ -71,6 +76,7 @@ public class Task {
         if (this.type == null) this.type = TYPE.SIMPLE;
         if (this.shoppingList == null) this.shoppingList = new ArrayList<>();
         if (this.shoppingListState == null) this.shoppingListState = new ArrayList<>();
+        if (this.reminderTime == null) this.reminderTime = REMINDER_TIME.EXACT;
     }
 
     public Task() {
@@ -79,7 +85,7 @@ public class Task {
 
     public Task(int id, String name, String type, String startDate, String startTime,
                 int count, int reminder, String endDate, String shoppingList, String taskStatus,
-                int currentCount, String shoppingListState) {
+                int currentCount, String shoppingListState, String reminderTime) {
         this.id = id;
         this.name = name;
         this.type = TYPE.valueOf(type);
@@ -107,6 +113,10 @@ public class Task {
             this.needReminder = false;
         else
             this.needReminder = true;
+        if (reminderTime != null)
+            this.reminderTime = REMINDER_TIME.valueOf(reminderTime);
+        else
+            this.reminderTime = REMINDER_TIME.EXACT;
         if (endDate.equals("0000.00.00")) {
             this.deadline = DEADLINE.NONE;
             this.customEndDate = new CustomDate();
@@ -285,6 +295,7 @@ public class Task {
             CV.put("reminder", 1);
         else
             CV.put("reminder", 0);
+        CV.put("reminderTime", this.reminderTime.toString());
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
         String dateInString = this.customStartDate.day
@@ -370,6 +381,7 @@ public class Task {
                 "\n Start date: " + this.startDate +
                 "\n Status: " + this.status +
                 "\n Type: " + this.type +
+                "\n Reminder time: " + this.reminderTime +
                 "\n Text: " + this.text;
     }
 

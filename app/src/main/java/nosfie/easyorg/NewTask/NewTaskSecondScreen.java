@@ -1,21 +1,32 @@
 package nosfie.easyorg.NewTask;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -48,6 +59,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             startingDateList = new ArrayList<>(),
             startingTimeList = new ArrayList<>(),
             deadlineList = new ArrayList<>();
+    boolean reminderSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,9 +251,12 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                             if (task.needReminder == true) {
                                 task.needReminder = false;
                                 needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
+                                reminderSelected = false;
+                                needReminderText.setText("Нужно напоминание");
                             } else {
                                 task.needReminder = true;
                                 needReminderImage.setImageResource(R.drawable.checkbox_checked_medium);
+                                showReminderDialog();
                             }
                         }
                         break;
@@ -481,6 +496,75 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             else
                 radioList.get(num).setImageResource(R.drawable.radio_unchecked_medium);
         }
+    }
+
+    public void showReminderDialog() {
+        WindowManager windowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        final Dialog editReminderDialog = new Dialog(this);
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View rootView = ((Activity)this).getWindow().getDecorView().findViewById(android.R.id.content);
+        View layout = inflater.inflate(R.layout.reminder_dialog,
+                (ViewGroup)rootView.findViewById(R.id.dialog_root));
+        editReminderDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        editReminderDialog.setContentView(layout);
+        LinearLayout editTextRoot = (LinearLayout)layout.findViewById(R.id.dialog_root);
+        editTextRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
+        final RadioButton radioExact = (RadioButton)layout.findViewById(R.id.radioExact);
+        final RadioButton radio5Min = (RadioButton)layout.findViewById(R.id.radio5Min);
+        final RadioButton radio10Min = (RadioButton)layout.findViewById(R.id.radio10Min);
+        final RadioButton radio30Min = (RadioButton)layout.findViewById(R.id.radio30Min);
+        final RadioButton radio1Hour = (RadioButton)layout.findViewById(R.id.radio1Hour);
+        Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
+        Button buttonCancel = (Button)layout.findViewById(R.id.buttonCancel);
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reminderSelected = true;
+                String reminderOption = "";
+                if (radioExact.isChecked()) {
+                    task.reminderTime = Task.REMINDER_TIME.EXACT;
+                    reminderOption = "ровно по времени";
+                }
+                else if (radio5Min.isChecked()) {
+                    task.reminderTime = Task.REMINDER_TIME.FIVE_MINS;
+                    reminderOption = "за 5 минут";
+                }
+                else if (radio10Min.isChecked()) {
+                    task.reminderTime = Task.REMINDER_TIME.TEN_MINS;
+                    reminderOption = "за 10 минут";
+                }
+                else if (radio30Min.isChecked()) {
+                    task.reminderTime = Task.REMINDER_TIME.THIRTY_MINS;
+                    reminderOption = "за 30 минут";
+                }
+                else if (radio1Hour.isChecked()) {
+                    task.reminderTime = Task.REMINDER_TIME.ONE_HOUR;
+                    reminderOption = "за 1 час";
+                }
+                needReminderText.setText("Нужно напоминание (" + reminderOption + ")");
+                editReminderDialog.dismiss();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editReminderDialog.dismiss();
+            }
+        });
+        editReminderDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (reminderSelected == false) {
+                    task.needReminder = false;
+                    needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
+                    needReminderText.setText("Нужно напоминание");
+                }
+            }
+        });
+        editReminderDialog.show();
     }
 
 }
