@@ -12,10 +12,13 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +56,7 @@ import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
 public class TaskView {
 
+    private static boolean ignoreCheckedChange = false;
     private static Calendar alertDialogCalendar = Calendar.getInstance();
     private static int DP = 0;
     private static int taskRowHeight = Constants.TASK_ROW_HEIGHT;
@@ -529,7 +534,12 @@ public class TaskView {
                 break;
         }
 
-        final CharSequence[] items = {"Актуальна", "Выполнена", "Не будет выполнена", "Частично выполнена", "Отложена"};
+        final CharSequence[] items = {
+                "Актуальна",
+                "Выполнена",
+                "Не будет выполнена",
+                "Частично выполнена",
+                "Отложена"};
         final AlertDialog simpleTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Отметить статус задачи");
@@ -640,6 +650,7 @@ public class TaskView {
     private static void showSimpleTaskEditDialog(final Context context, final Task task) {
         final CharSequence[] items = {
                 "Название",
+                "Количественную цель",
                 "Дату начала",
                 "Время начала",
                 "Дату окончания",
@@ -654,15 +665,18 @@ public class TaskView {
                         showEditTaskNameDialog(context, task);
                         break;
                     case 1:
-                        showEditTaskStartDateDialog(context, task);
+                        showEditTaskCountDialog(context, task);
                         break;
                     case 2:
-                        showEditTaskStartTimeDialog(context, task);
+                        showEditTaskStartDateDialog(context, task);
                         break;
                     case 3:
-                        showEditTaskEndDateDialog(context, task);
+                        showEditTaskStartTimeDialog(context, task);
                         break;
                     case 4:
+                        showEditTaskEndDateDialog(context, task);
+                        break;
+                    case 5:
                         showEditTaskReminder(context, task);
                         break;
                 }
@@ -1115,7 +1129,40 @@ public class TaskView {
         editCountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         editCountDialog.setContentView(layout);
         final EditText editTask = (EditText)layout.findViewById(R.id.task_count);
-        editTask.setText(Integer.toString(task.count));
+        if (task.count != 0)
+            editTask.setText(Integer.toString(task.count));
+        final RadioButton radioNoCount = (RadioButton)layout.findViewById(R.id.radioNoCount);
+        final RadioButton radioIsCount = (RadioButton)layout.findViewById(R.id.radioIsCount);
+        if (task.type == Task.TYPE.COUNTABLE)
+            radioIsCount.setChecked(true);
+        if (task.type == Task.TYPE.SIMPLE) {
+            radioNoCount.setChecked(true);
+            editTask.setText("");
+        }
+        editTask.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (ignoreCheckedChange)
+                    ignoreCheckedChange = false;
+                else
+                    radioIsCount.setChecked(true);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        radioNoCount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    ignoreCheckedChange = true;
+                    editTask.setText("");
+                }
+            }
+        });
         LinearLayout editTextRoot = (LinearLayout)layout.findViewById(R.id.edit_count_root);
         editTextRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
         Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
@@ -1123,8 +1170,19 @@ public class TaskView {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                task.count = Integer.parseInt(editTask.getText().toString());
-                if (task.currentCount >= task.count) {
+                if (editTask.getText().toString().length() > 0)
+                    task.count = Integer.parseInt(editTask.getText().toString());
+                else
+                    task.count = 0;
+                if (task.count == 0)
+                    task.type = Task.TYPE.SIMPLE;
+                else {
+                    if (radioIsCount.isChecked())
+                        task.type = Task.TYPE.COUNTABLE;
+                    else
+                        task.type = Task.TYPE.SIMPLE;
+                }
+                if (task.currentCount >= task.count && task.count != 0) {
                     task.currentCount = task.count;
                     task.status = Task.STATUS.DONE;
                 }

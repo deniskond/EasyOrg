@@ -61,7 +61,6 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         timeMidnightRadio = (ImageView)findViewById(R.id.timeMidnightRadio);
         timeCustomRadio = (ImageView)findViewById(R.id.timeCustomRadio);
         customTime = (TextView)findViewById(R.id.customTime);
-        buttonRT = (Button)findViewById(R.id.buttonRT);
 
         // Setting up colors from SharedPreferences values
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
