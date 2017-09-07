@@ -1,5 +1,8 @@
 package nosfie.easyorg.DataStructures;
 
+import android.icu.util.Calendar;
+import android.icu.util.GregorianCalendar;
+
 import static nosfie.easyorg.Helpers.DateStringsHelper.getDayOfWeekStr;
 import static nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
 
@@ -28,6 +31,11 @@ public class CustomDate {
     public String toHumanString() {
         return day + " " + getHumanMonthNameGenitive(month) + " " + year +
                 " (" + getDayOfWeekStr(year, month, day) + ")";
+    }
+
+    public long toMillis() {
+        Calendar calendar = new GregorianCalendar(this.year, this.month - 1, this.day);
+        return calendar.getTimeInMillis();
     }
 
 }

@@ -67,6 +67,7 @@ public class TaskView {
             colorTaskFailed = 0,
             colorTaskInProcess = 0,
             colorTaskPostponed = 0;
+    private static Daytime dayMargin;
 
     public static LinearLayout getTaskRow(
             final Context context, int num, final Task task,
@@ -81,6 +82,10 @@ public class TaskView {
         final int colorTaskFailed = preferences.getInt("colorTaskFailed", -1);
         final int colorTaskInProcess = preferences.getInt("colorTaskInProcess", -1);
         final int colorTaskPostponed = preferences.getInt("colorTaskPostponed", -1);
+        String[] timeSplit = preferences.getString("dayMargin", "").split(":");
+        int hours = Integer.parseInt(timeSplit[0]);
+        int minutes = Integer.parseInt(timeSplit[1]);
+        dayMargin = new Daytime(hours, minutes);
 
         // Main row
         LinearLayout row = new LinearLayout(context);
@@ -651,9 +656,8 @@ public class TaskView {
         final CharSequence[] items = {
                 "Название",
                 "Количественную цель",
-                "Дату начала",
+                "Дату начала и окончания",
                 "Время начала",
-                "Дату окончания",
                 "Напоминание"};
         final AlertDialog simpleTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -674,9 +678,6 @@ public class TaskView {
                         showEditTaskStartTimeDialog(context, task);
                         break;
                     case 4:
-                        showEditTaskEndDateDialog(context, task);
-                        break;
-                    case 5:
                         showEditTaskReminder(context, task);
                         break;
                 }
@@ -751,7 +752,9 @@ public class TaskView {
         editStartDateDialog.setContentView(layout);
 
         final CalendarView calendarView = (CalendarView)layout.findViewById(R.id.calendarView);
-        long today = Calendar.getInstance().getTimeInMillis() - 3 * 60 * 60 * 1000;
+        long today = Calendar.getInstance().getTimeInMillis();
+        today -= dayMargin.hours * 60 * 60 * 1000;
+        today -= dayMargin.minutes * 60 * 1000;
         Calendar todayCalendar = Calendar.getInstance();
         todayCalendar.setTimeInMillis(today);
         todayCalendar.add(Calendar.HOUR_OF_DAY, -todayCalendar.get(Calendar.HOUR_OF_DAY));
@@ -791,14 +794,8 @@ public class TaskView {
                 task.customStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
                 if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
                     task.customEndDate = task.customStartDate;
-                task.synchronize(context);
                 editStartDateDialog.dismiss();
-                try {
-                    updateCallback.call();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                showEditTaskEndDateDialog(context, task);
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -907,14 +904,12 @@ public class TaskView {
         if (task.deadline == Task.DEADLINE.NONE)
             calendar = Calendar.getInstance();
 
-        long today = Calendar.getInstance().getTimeInMillis() - 3 * 60 * 60 * 1000;
-        Calendar todayCalendar = Calendar.getInstance();
-        todayCalendar.setTimeInMillis(today);
-        todayCalendar.add(Calendar.HOUR_OF_DAY, -todayCalendar.get(Calendar.HOUR_OF_DAY));
-        todayCalendar.add(Calendar.MINUTE, -todayCalendar.get(Calendar.MINUTE));
-        todayCalendar.add(Calendar.SECOND, -todayCalendar.get(Calendar.SECOND));
-
-        calendarView.setMinDate(todayCalendar.getTimeInMillis());
+        Calendar startDateCalendar = new GregorianCalendar(
+                task.customStartDate.year,
+                task.customStartDate.month - 1,
+                task.customStartDate.day
+        );
+        calendarView.setMinDate(startDateCalendar.getTimeInMillis());
         calendarView.setDate(calendar.getTimeInMillis(), false, true);
 
         // MinDate bug workaround
@@ -1079,9 +1074,8 @@ public class TaskView {
         final CharSequence[] items = {
                 "Название",
                 "Количественную цель",
-                "Дату начала",
+                "Дату начала и окончания",
                 "Время начала",
-                "Дату окончания",
                 "Напоминание"
         };
         final AlertDialog countableTaskDialog;
@@ -1103,9 +1097,6 @@ public class TaskView {
                         showEditTaskStartTimeDialog(context, task);
                         break;
                     case 4:
-                        showEditTaskEndDateDialog(context, task);
-                        break;
-                    case 5:
                         showEditTaskReminder(context, task);
                         break;
                 }
@@ -1213,9 +1204,8 @@ public class TaskView {
         final CharSequence[] items = {
                 "Название",
                 "Список покупок",
-                "Дату начала",
+                "Дату начала и окончания",
                 "Время начала",
-                "Дату окончания",
                 "Напоминание"
         };
         final AlertDialog countableTaskDialog;
@@ -1241,9 +1231,6 @@ public class TaskView {
                         showEditTaskStartTimeDialog(context, task);
                         break;
                     case 4:
-                        showEditTaskEndDateDialog(context, task);
-                        break;
-                    case 5:
                         showEditTaskReminder(context, task);
                         break;
                 }

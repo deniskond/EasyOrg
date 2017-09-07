@@ -8,7 +8,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +35,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
+import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
@@ -60,6 +64,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
             startingTimeList = new ArrayList<>(),
             deadlineList = new ArrayList<>();
     boolean reminderSelected = false;
+    Daytime dayMargin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,13 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         setContentView(R.layout.new_task_second_screen);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        // Getting SharedPreferences day margin
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String[] timeSplit = preferences.getString("dayMargin", "").split(":");
+        int hours = Integer.parseInt(timeSplit[0]);
+        int minutes = Integer.parseInt(timeSplit[1]);
+        dayMargin = new Daytime(hours, minutes);
 
         // Setting up view elements
         buttonNext = (LinearLayout)findViewById(R.id.buttonNext);
@@ -391,6 +403,10 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     dateAndTime.get(Calendar.MONTH),
                     dateAndTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setOnCancelListener(onDateCancelListener);
+        long today = new Date().getTime();
+        today -= dayMargin.hours * 60 * 60 * 1000;
+        today -= dayMargin.hours * 60 * 1000;
+        datePickerDialog.getDatePicker().setMinDate(today);
         datePickerDialog.show();
     }
 
@@ -462,6 +478,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setOnCancelListener(onDeadlineDateCancelListener);
+        datePickerDialog.getDatePicker().setMinDate(task.customStartDate.toMillis());
         datePickerDialog.show();
     }
 
