@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -43,6 +44,7 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.Callable;
 
 import nosfie.easyorg.Constants;
+import nosfie.easyorg.DataStructures.CustomDate;
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
@@ -61,6 +63,7 @@ public class TaskView {
     private static int DP = 0;
     private static int taskRowHeight = Constants.TASK_ROW_HEIGHT;
     private static Callable updateCallback;
+    private static Callable stateCallback;
     private static int
             colorTaskActual = 0,
             colorTaskDone = 0,
@@ -68,14 +71,17 @@ public class TaskView {
             colorTaskInProcess = 0,
             colorTaskPostponed = 0;
     private static Daytime dayMargin;
+    private static CustomDate swapStartDate = new CustomDate();
 
     public static LinearLayout getTaskRow(
             final Context context, int num, final Task task,
-            boolean showIcon, boolean showEditButton, Timespan timespan, Callable uc) {
+            boolean showIcon, boolean showEditButton, Timespan timespan,
+            Callable uc, Callable sc) {
 
         // Filling values
         DP = convertDpToPixels(context, 1);
         updateCallback = uc;
+        stateCallback = sc;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final int colorTaskActual = preferences.getInt("colorTaskActual", -1);
         final int colorTaskDone = preferences.getInt("colorTaskDone", -1);
@@ -382,7 +388,6 @@ public class TaskView {
     }
 
     private static void processTaskNameClick(final Context context, final Task task) {
-        //Log.d("qq", task.toString());
         switch (task.type) {
             case SIMPLE:
                 showSimpleTaskDialog(context, task);
@@ -509,7 +514,7 @@ public class TaskView {
                     task.status = Task.STATUS.DONE;
                 task.synchronize(context);
                 try {
-                    updateCallback.call();
+                    stateCallback.call();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -580,7 +585,7 @@ public class TaskView {
                 taskRow.setBackgroundColor(color);
                 task.synchronize(context);
                 try {
-                    updateCallback.call();
+                    stateCallback.call();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -734,6 +739,7 @@ public class TaskView {
 
 
     private static void showEditTaskStartDateDialog(final Context context, final Task task) {
+        //swapStartDate = task.customStartDate;
         Calendar calendar = new GregorianCalendar(
                 task.customStartDate.year,
                 task.customStartDate.month - 1,
@@ -788,12 +794,15 @@ public class TaskView {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                task.startDate = Task.START_DATE.CUSTOM;
-                task.customStartDate.year = alertDialogCalendar.get(Calendar.YEAR);
-                task.customStartDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
-                task.customStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
-                if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
-                    task.customEndDate = task.customStartDate;
+                //task.startDate = Task.START_DATE.CUSTOM;
+                //task.customStartDate.year = alertDialogCalendar.get(Calendar.YEAR);
+                //task.customStartDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
+                //task.customStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
+                swapStartDate.year = alertDialogCalendar.get(Calendar.YEAR);
+                swapStartDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
+                swapStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
+                //if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
+                //    task.customEndDate = task.customStartDate;
                 editStartDateDialog.dismiss();
                 showEditTaskEndDateDialog(context, task);
             }
@@ -905,9 +914,9 @@ public class TaskView {
             calendar = Calendar.getInstance();
 
         Calendar startDateCalendar = new GregorianCalendar(
-                task.customStartDate.year,
-                task.customStartDate.month - 1,
-                task.customStartDate.day
+                swapStartDate.year,
+                swapStartDate.month - 1,
+                swapStartDate.day
         );
         calendarView.setMinDate(startDateCalendar.getTimeInMillis());
         calendarView.setDate(calendar.getTimeInMillis(), false, true);
@@ -937,6 +946,9 @@ public class TaskView {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                task.startDate = Task.START_DATE.CUSTOM;
+                task.customStartDate = swapStartDate;
+
                 if (radioNoTime.isChecked()) {
                     task.deadline = Task.DEADLINE.NONE;
                     task.needReminder = false;
@@ -947,10 +959,10 @@ public class TaskView {
                     task.customEndDate.year = alertDialogCalendar.get(Calendar.YEAR);
                     task.customEndDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
                     task.customEndDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
-                    if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
-                        task.customStartDate = task.customEndDate;
                 }
+                Log.d("qq", task.toString());
                 task.synchronize(context);
+                swapStartDate = new CustomDate();
                 editEndDateDialog.dismiss();
                 try {
                     updateCallback.call();

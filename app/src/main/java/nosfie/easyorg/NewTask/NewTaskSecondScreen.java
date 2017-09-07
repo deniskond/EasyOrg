@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import nosfie.easyorg.DataStructures.CustomDate;
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.MainActivity;

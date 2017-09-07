@@ -84,7 +84,7 @@ public class Notes extends AppCompatActivity {
                             drawNotes();
                             return null;
                         }
-                    });
+                    }, null);
             notesContainer.addView(taskRow);
             num++;
         }

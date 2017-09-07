@@ -38,6 +38,8 @@ public class TaskList extends AppCompatActivity {
     TextView progressBarText;
     ProgressBar progressBar;
     ImageView addTaskImage;
+    int lockedID = -1;
+    Timespan lockedTimespan = Timespan.TODAY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +130,22 @@ public class TaskList extends AppCompatActivity {
         tasks = getTasksForTaskListFromDB(TaskList.this, timespan);
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
-        for (Task task: tasks) {
+        for (final Task task: tasks) {
             Log.d("qq", task.toString());
             LinearLayout taskRow = TaskView.getTaskRow(
                     TaskList.this, num, task, true, true, timespan, new Callable() {
                         @Override
                         public Object call() throws Exception {
+                            lockedID = -1;
+                            redrawProgressBar();
+                            getTasks();
+                            return null;
+                        }
+                    }, new Callable() {
+                        @Override
+                        public Object call() throws Exception {
+                            lockedTimespan = timespan;
+                            lockedID = task.id;
                             redrawProgressBar();
                             getTasks();
                             return null;
@@ -265,9 +277,16 @@ public class TaskList extends AppCompatActivity {
             String startDate = task.customStartDate.toString();
             String endDate = task.customEndDate.toString();
             String today = dayValues.today.toString();
-            if ((startDate.equals(today) && endDate.equals(today)) ||
-                (endDate.equals(today) && task.status != Task.STATUS.DONE
-                    && task.status != Task.STATUS.NOT_DONE && task.status != Task.STATUS.IN_PROCESS))
+            if ((startDate.equals(today) && endDate.equals(today))
+                ||
+                (endDate.equals(today) &&
+                 task.status != Task.STATUS.DONE &&
+                 task.status != Task.STATUS.NOT_DONE &&
+                 task.status != Task.STATUS.IN_PROCESS
+                )
+                ||
+                (lockedTimespan == Timespan.TODAY && lockedID == task.id)
+               )
                 todayTasks.add(task);
         }
         if (timespan == Timespan.TODAY)
@@ -275,16 +294,31 @@ public class TaskList extends AppCompatActivity {
 
         ArrayList<Task> weekTasks = new ArrayList<>();
         for (Task task: tasks) {
+            String startDate = task.customStartDate.toString();
             String endDate = task.customEndDate.toString();
             String startOfWeek = dayValues.startOfWeek.toString();
             String endOfWeek = dayValues.endOfWeek.toString();
-            if ((endDate.equals(endOfWeek)) ||
+            if ((endDate.equals(endOfWeek))
+                 ||
+                (startDate.compareTo(startOfWeek) > 0 &&
+                 startDate.compareTo(endOfWeek) <= 0 &&
+                 endDate.compareTo(startOfWeek) > 0 &&
+                 endDate.compareTo(endOfWeek) <= 0 &&
+                 task.status != Task.STATUS.DONE &&
+                 task.status != Task.STATUS.NOT_DONE &&
+                 task.status != Task.STATUS.IN_PROCESS)
+                 ||
                 (endDate.compareTo(startOfWeek) > 0 &&
                  endDate.compareTo(endOfWeek) <= 0 &&
-                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE
-                        && task.status != Task.STATUS.IN_PROCESS)) {
-                if (!todayTasks.contains(task))
-                    weekTasks.add(task);
+                 startDate.compareTo(startOfWeek) > 0 &&
+                 startDate.compareTo(endOfWeek) <= 0 &&
+                 !startDate.equals(endDate)
+                )
+                 ||
+                (lockedTimespan == Timespan.WEEK && lockedID == task.id)
+               ) {
+                   if (!todayTasks.contains(task))
+                       weekTasks.add(task);
             }
         }
         if (timespan == Timespan.WEEK)
@@ -292,16 +326,25 @@ public class TaskList extends AppCompatActivity {
 
         ArrayList<Task> monthTasks = new ArrayList<>();
         for (Task task: tasks) {
+            String startDate = task.customStartDate.toString();
             String endDate = task.customEndDate.toString();
             String startOfMonth = dayValues.startOfMonth.toString();
             String endOfMonth = dayValues.endOfMonth.toString();
-            if (endDate.equals(endOfMonth) ||
-                (endDate.compareTo(startOfMonth) >= 0 &&
+            if (endDate.equals(endOfMonth)
+                ||
+                (startDate.compareTo(startOfMonth) >= 0 &&
+                 startDate.compareTo(endOfMonth) <= 0 &&
+                 endDate.compareTo(startOfMonth) >= 0 &&
                  endDate.compareTo(endOfMonth) <= 0 &&
-                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE
-                        && task.status != Task.STATUS.IN_PROCESS)) {
-                if (!todayTasks.contains(task) && !weekTasks.contains(task))
-                    monthTasks.add(task);
+                 task.status != Task.STATUS.DONE &&
+                 task.status != Task.STATUS.NOT_DONE &&
+                 task.status != Task.STATUS.IN_PROCESS
+                )
+                ||
+                (lockedTimespan == Timespan.MONTH && lockedID == task.id)
+               ) {
+                   if (!todayTasks.contains(task) && !weekTasks.contains(task))
+                       monthTasks.add(task);
             }
         }
         if (timespan == Timespan.MONTH)
@@ -312,11 +355,17 @@ public class TaskList extends AppCompatActivity {
             String endDate = task.customEndDate.toString();
             String endOfYear = dayValues.endOfYear.toString();
             String startOfYear = dayValues.startOfYear.toString();
-            if (endDate.equals(endOfYear) ||
+            if (endDate.equals(endOfYear)
+                ||
                 (endDate.compareTo(startOfYear) >= 0 &&
                  endDate.compareTo(endOfYear) <= 0 &&
-                 task.status != Task.STATUS.DONE && task.status != Task.STATUS.NOT_DONE
-                        && task.status != Task.STATUS.IN_PROCESS)) {
+                 task.status != Task.STATUS.DONE &&
+                 task.status != Task.STATUS.NOT_DONE &&
+                 task.status != Task.STATUS.IN_PROCESS
+                )
+                ||
+                (lockedTimespan == Timespan.YEAR && lockedID == task.id)
+            ) {
                 if (!todayTasks.contains(task) && !weekTasks.contains(task) && !monthTasks.contains(task))
                     yearTasks.add(task);
             }

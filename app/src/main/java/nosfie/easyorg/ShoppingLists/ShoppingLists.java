@@ -140,7 +140,7 @@ public class ShoppingLists extends AppCompatActivity {
                             drawTemplatesAndShoppingLists();
                             return null;
                         }
-                    });
+                    }, null);
             templatesList.addView(taskRow);
             num++;
             templatesEmpty = false;
@@ -183,7 +183,7 @@ public class ShoppingLists extends AppCompatActivity {
                             drawTemplatesAndShoppingLists();
                             return null;
                         }
-                    });
+                    }, null);
             shoppingListsList.addView(taskRow);
             result.setText(result.getText() + task.name + " " + task.customEndDate.toString() + "\n");
             num++;

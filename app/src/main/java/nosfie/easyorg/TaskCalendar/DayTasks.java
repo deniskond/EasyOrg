@@ -115,6 +115,13 @@ public class DayTasks extends AppCompatActivity {
                             getTasks();
                             return null;
                         }
+                    }, new Callable() {
+                        @Override
+                        public Object call() throws Exception {
+                            redrawProgressBar();
+                            getTasks();
+                            return null;
+                        }
                     });
             taskList.addView(taskRow);
             num++;
