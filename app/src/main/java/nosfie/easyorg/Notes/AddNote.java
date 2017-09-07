@@ -164,10 +164,14 @@ public class AddNote extends AppCompatActivity {
         final LinearLayout audioRow = (LinearLayout)layout.findViewById(R.id.audioRow);
         final LinearLayout moneyRow = (LinearLayout)layout.findViewById(R.id.moneyRow);
         final LinearLayout carRow = (LinearLayout)layout.findViewById(R.id.carRow);
+        final LinearLayout gamesRow = (LinearLayout)layout.findViewById(R.id.gamesRow);
+        final LinearLayout booksRow = (LinearLayout)layout.findViewById(R.id.booksRow);
         final LinearLayout videoBorder = (LinearLayout)layout.findViewById(R.id.videoBorder);
         final LinearLayout audioBorder = (LinearLayout)layout.findViewById(R.id.audioBorder);
         final LinearLayout moneyBorder = (LinearLayout)layout.findViewById(R.id.moneyBorder);
         final LinearLayout carBorder = (LinearLayout)layout.findViewById(R.id.carBorder);
+        final LinearLayout gamesBorder = (LinearLayout)layout.findViewById(R.id.gamesBorder);
+        final LinearLayout booksBorder = (LinearLayout)layout.findViewById(R.id.booksBorder);
 
         // Setting OK and Cancel button listeners
         Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
@@ -187,6 +191,12 @@ public class AddNote extends AppCompatActivity {
                         break;
                     case 4:
                         selectedIcon.setImageResource(R.drawable.note_icon_4);
+                        break;
+                    case 5:
+                        selectedIcon.setImageResource(R.drawable.note_icon_5);
+                        break;
+                    case 6:
+                        selectedIcon.setImageResource(R.drawable.note_icon_6);
                         break;
                 }
                 selectedBorder.setVisibility(View.VISIBLE);
@@ -221,6 +231,8 @@ public class AddNote extends AppCompatActivity {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
                 return true;
@@ -242,6 +254,8 @@ public class AddNote extends AppCompatActivity {
                         audioBorder.setBackgroundResource(R.drawable.border_big_selected);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
                 return true;
@@ -263,6 +277,8 @@ public class AddNote extends AppCompatActivity {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_big_selected);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
                 return true;
@@ -284,6 +300,54 @@ public class AddNote extends AppCompatActivity {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        gamesRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (note.count == 5)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        gamesRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        gamesRow.setBackgroundColor(0x00000000);
+                        note.count = 5;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        booksRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (note.count == 6)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        booksRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        booksRow.setBackgroundColor(0x00000000);
+                        note.count = 6;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_big_selected);
                         break;
                 }
                 return true;
@@ -304,6 +368,12 @@ public class AddNote extends AppCompatActivity {
             case 4:
                 carBorder.setBackgroundResource(R.drawable.border_big_selected);
                 break;
+            case 5:
+                gamesBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 6:
+                booksBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
             case 0:
                 videoBorder.setBackgroundResource(R.drawable.border_big_selected);
                 note.count = 1;
@@ -312,7 +382,6 @@ public class AddNote extends AppCompatActivity {
 
         // Showing
         selectIconDialog.show();
-
     }
 
 }

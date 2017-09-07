@@ -134,6 +134,12 @@ public class TaskView {
                 case 4:
                     noteIcon.setImageResource(R.drawable.note_icon_4);
                     break;
+                case 5:
+                    noteIcon.setImageResource(R.drawable.note_icon_5);
+                    break;
+                case 6:
+                    noteIcon.setImageResource(R.drawable.note_icon_6);
+                    break;
             }
             numberRow.addView(noteIcon);
         }
@@ -1142,6 +1148,7 @@ public class TaskView {
             radioNoCount.setChecked(true);
             editTask.setText("");
         }
+        editTask.setSelection(editTask.getText().length());
         editTask.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1294,20 +1301,24 @@ public class TaskView {
         LinearLayout root = (LinearLayout)layout.findViewById(R.id.dialog_root);
         root.setMinimumWidth((int)(displaySize.x * 0.85f));
 
-        // Showing "no icon" option
-        final LinearLayout noIconRow = (LinearLayout)layout.findViewById(R.id.noIconRow);
-        final LinearLayout noIconBorder = (LinearLayout)layout.findViewById(R.id.noIconBorder);
-        noIconRow.setVisibility(View.VISIBLE);
-
         // Setting up dialog elements
         final LinearLayout videoRow = (LinearLayout)layout.findViewById(R.id.videoRow);
         final LinearLayout audioRow = (LinearLayout)layout.findViewById(R.id.audioRow);
         final LinearLayout moneyRow = (LinearLayout)layout.findViewById(R.id.moneyRow);
         final LinearLayout carRow = (LinearLayout)layout.findViewById(R.id.carRow);
+        final LinearLayout gamesRow = (LinearLayout)layout.findViewById(R.id.gamesRow);
+        final LinearLayout booksRow = (LinearLayout)layout.findViewById(R.id.booksRow);
         final LinearLayout videoBorder = (LinearLayout)layout.findViewById(R.id.videoBorder);
         final LinearLayout audioBorder = (LinearLayout)layout.findViewById(R.id.audioBorder);
         final LinearLayout moneyBorder = (LinearLayout)layout.findViewById(R.id.moneyBorder);
         final LinearLayout carBorder = (LinearLayout)layout.findViewById(R.id.carBorder);
+        final LinearLayout gamesBorder = (LinearLayout)layout.findViewById(R.id.gamesBorder);
+        final LinearLayout booksBorder = (LinearLayout)layout.findViewById(R.id.booksBorder);
+
+        // Showing "no icon" option
+        final LinearLayout noIconRow = (LinearLayout)layout.findViewById(R.id.noIconRow);
+        final LinearLayout noIconBorder = (LinearLayout)layout.findViewById(R.id.noIconBorder);
+        noIconRow.setVisibility(View.VISIBLE);
 
         // Setting OK and Cancel button listeners
         Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
@@ -1348,6 +1359,8 @@ public class TaskView {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         noIconBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
@@ -1370,6 +1383,8 @@ public class TaskView {
                         audioBorder.setBackgroundResource(R.drawable.border_big_selected);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         noIconBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
@@ -1392,6 +1407,8 @@ public class TaskView {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_big_selected);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         noIconBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
@@ -1414,6 +1431,56 @@ public class TaskView {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
+                        noIconBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        gamesRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 5)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        gamesRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        gamesRow.setBackgroundColor(0x00000000);
+                        task.count = 5;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_big_selected);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
+                        noIconBorder.setBackgroundResource(R.drawable.border_small);
+                        break;
+                }
+                return true;
+            }
+        });
+        booksRow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (task.count == 6)
+                    return true;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        booksRow.setBackgroundColor(0x88CCCCCC);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        booksRow.setBackgroundColor(0x00000000);
+                        task.count = 6;
+                        videoBorder.setBackgroundResource(R.drawable.border_small);
+                        audioBorder.setBackgroundResource(R.drawable.border_small);
+                        moneyBorder.setBackgroundResource(R.drawable.border_small);
+                        carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_big_selected);
                         noIconBorder.setBackgroundResource(R.drawable.border_small);
                         break;
                 }
@@ -1436,6 +1503,8 @@ public class TaskView {
                         audioBorder.setBackgroundResource(R.drawable.border_small);
                         moneyBorder.setBackgroundResource(R.drawable.border_small);
                         carBorder.setBackgroundResource(R.drawable.border_small);
+                        gamesBorder.setBackgroundResource(R.drawable.border_small);
+                        booksBorder.setBackgroundResource(R.drawable.border_small);
                         noIconBorder.setBackgroundResource(R.drawable.border_big_selected);
                         break;
                 }
@@ -1459,6 +1528,12 @@ public class TaskView {
                 break;
             case 4:
                 carBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 5:
+                gamesBorder.setBackgroundResource(R.drawable.border_big_selected);
+                break;
+            case 6:
+                booksBorder.setBackgroundResource(R.drawable.border_big_selected);
                 break;
         }
 
