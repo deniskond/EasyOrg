@@ -891,11 +891,21 @@ public class TaskView {
     }
 
     private static void showEditTaskEndDateDialog(final Context context, final Task task) {
-        Calendar calendar = new GregorianCalendar(
-                task.customEndDate.year,
-                task.customEndDate.month - 1,
-                task.customEndDate.day
-        );
+        Calendar calendar = Calendar.getInstance();
+        if (task.customEndDate.toString().compareTo(swapStartDate.toString()) <= 0) {
+            calendar = new GregorianCalendar(
+                    swapStartDate.year,
+                    swapStartDate.month - 1,
+                    swapStartDate.day
+            );
+        }
+        else {
+            calendar = new GregorianCalendar(
+                    task.customEndDate.year,
+                    task.customEndDate.month - 1,
+                    task.customEndDate.day
+            );
+        }
         WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point displaySize = new Point();
