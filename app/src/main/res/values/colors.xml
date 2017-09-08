@@ -8,7 +8,7 @@
     <color name="colorTaskActual">#ffffff</color>
     <color name="colorTaskDone">#ffd966</color>
     <color name="colorTaskPostponed">#cccccc</color>
-    <color name="colorTaskFailed">#ff8e8e</color>
+    <color name="colorTaskFailed">#feb4b3</color>
     <color name="colorTaskInProcess">#c8e4fc</color>
 
     <!-- UI Colors -->

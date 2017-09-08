@@ -243,7 +243,6 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         timeCustom.setBackgroundColor(0x00000000);
                         selectRadioOption(startingTimeList, 1);
-                        task.startTime = Task.START_TIME.CUSTOM;
                         needReminderText.setTextColor(0xFF555555);
                         setTime();
                         break;
@@ -436,26 +435,37 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     };
 
     public void setTime() {
+        int hours, minutes;
+        if (task.startTime == Task.START_TIME.CUSTOM) {
+            hours = task.customStartTime.hours;
+            minutes = task.customStartTime.minutes;
+        }
+        else {
+            hours = dateAndTime.get(Calendar.HOUR_OF_DAY);
+            minutes = dateAndTime.get(Calendar.MINUTE);
+        }
         TimePickerDialog timePickerDialog =
                 new TimePickerDialog(
                         NewTaskSecondScreen.this,
                         onTimeSetListener,
-                        dateAndTime.get(Calendar.HOUR_OF_DAY),
-                        dateAndTime.get(Calendar.MINUTE),
+                        hours,
+                        minutes,
                         true
                 );
-        timePickerDialog.setOnCancelListener(onTimeCancelListener);
+        timePickerDialog.setOnDismissListener(onTimeDismissListener);
         timePickerDialog.show();
     }
 
-    TimePickerDialog.OnCancelListener onTimeCancelListener = new TimePickerDialog.OnCancelListener() {
+    TimePickerDialog.OnDismissListener onTimeDismissListener = new TimePickerDialog.OnDismissListener() {
         @Override
-        public void onCancel(DialogInterface dialogInterface) {
-            selectRadioOption(startingTimeList, 0);
-            task.startTime = Task.START_TIME.NONE;
-            customTime.setText("Не выбрано");
-            task.customStartTime.hours = 0;
-            task.customStartTime.minutes = 0;
+        public void onDismiss(DialogInterface dialogInterface) {
+            if (task.startTime == Task.START_TIME.NONE) {
+                selectRadioOption(startingTimeList, 0);
+                customTime.setText("Не выбрано");
+                task.customStartTime.hours = 0;
+                task.customStartTime.minutes = 0;
+                needReminderText.setTextColor(0xFF999999);
+            }
         }
     };
 
@@ -464,6 +474,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
             customTime.setText(String.format("%02d", hours) + ":" +
                     String.format("%02d", minutes));
+            task.startTime = Task.START_TIME.CUSTOM;
             task.customStartTime.hours = hours;
             task.customStartTime.minutes = minutes;
         }
