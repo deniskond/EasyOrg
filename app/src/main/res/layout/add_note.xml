@@ -111,7 +111,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginStart="15dp"
                     android:background="@drawable/border"
-                    android:inputType="textPersonName" />
+                    android:inputType="textCapSentences" />
             </LinearLayout>
 
             <LinearLayout

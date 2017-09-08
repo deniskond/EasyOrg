@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -117,6 +120,17 @@ public class TaskCalendar extends AppCompatActivity {
                     currentPressed.setImageResource(R.drawable.calendar_day_header_bg);
                     needChangeOnCurrentPressed = false;
                 }
+            }
+        });
+
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (needChangeOnCurrentPressed) {
+                    currentPressed.setImageResource(R.drawable.calendar_day_header_bg);
+                    needChangeOnCurrentPressed = false;
+                }
+                return false;
             }
         });
 
@@ -420,9 +434,6 @@ public class TaskCalendar extends AppCompatActivity {
                         intent.putExtra("month", month);
                         intent.putExtra("year", year);
                         startActivity(intent);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        dayNameRow.setBackgroundColor(0xFFEFEFEF);
                         break;
                 }
                 return true;
