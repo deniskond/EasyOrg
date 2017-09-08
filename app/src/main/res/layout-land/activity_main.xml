@@ -21,12 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#888888"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/newTask"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="1px"
                 android:layout_marginEnd="1px"
@@ -47,8 +46,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/new_task"
                     android:textColor="#000000" />
@@ -56,7 +54,7 @@
 
             <LinearLayout
                 android:id="@+id/currentTaskList"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="1px"
                 android:layout_weight="1"
@@ -75,29 +73,19 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/task_list"
                     android:textColor="#000000" />
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#888888"
-            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="1px"
-                android:layout_marginEnd="1px"
-                android:layout_marginRight="1px"
+                android:layout_marginLeft="1px"
+                android:layout_marginStart="1px"
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:orientation="vertical"
@@ -114,18 +102,26 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/calendar"
                     android:textColor="#000000" />
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
             <LinearLayout
                 android:id="@+id/shoppingLists"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="1px"
+                android:layout_marginEnd="1px"
+                android:layout_marginRight="1px"
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:orientation="vertical"
@@ -142,27 +138,16 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Списки покупок"
                     android:textColor="#000000" />
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#888888"
-            android:orientation="horizontal">
-
             <LinearLayout
                 android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="1px"
                 android:layout_marginEnd="1px"
                 android:layout_marginRight="1px"
                 android:layout_weight="1"
@@ -181,8 +166,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Заметки"
                     android:textColor="#000000" />
@@ -192,7 +176,6 @@
                 android:id="@+id/settings"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="1px"
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:orientation="vertical"
@@ -209,12 +192,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/settings"
                     android:textColor="#000000" />
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

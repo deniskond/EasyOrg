@@ -264,7 +264,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                                 task.needReminder = false;
                                 needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
                                 reminderSelected = false;
-                                needReminderText.setText("Нужно напоминание");
+                                needReminderText.setText("Напоминание");
                             } else {
                                 task.needReminder = true;
                                 needReminderImage.setImageResource(R.drawable.checkbox_checked_medium);
@@ -573,7 +573,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     task.reminderTime = Task.REMINDER_TIME.ONE_HOUR;
                     reminderOption = "за 1 час";
                 }
-                needReminderText.setText("Нужно напоминание (" + reminderOption + ")");
+                needReminderText.setText("Напоминание (" + reminderOption + ")");
                 editReminderDialog.dismiss();
             }
         });
@@ -589,7 +589,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 if (reminderSelected == false) {
                     task.needReminder = false;
                     needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
-                    needReminderText.setText("Нужно напоминание");
+                    needReminderText.setText("Напоминание");
                 }
             }
         });

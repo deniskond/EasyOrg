@@ -23,7 +23,7 @@
     <string name="start_time">Время начала:</string>
     <string name="time_during_day">В течение дня</string>
     <string name="time_custom">Конкретное:</string>
-    <string name="need_reminder">Нужно напоминание</string>
+    <string name="need_reminder">Напоминание</string>
     <string name="date_not_set">Не выбрана</string>
     <string name="time_not_set">Не выбрано</string>
     <string name="add">Добавить</string>
