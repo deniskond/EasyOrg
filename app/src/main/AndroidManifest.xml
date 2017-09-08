@@ -46,7 +46,7 @@
         </activity>
         <activity android:name=".Notes.AddNote" android:label="Добавление заметки" android:noHistory="true" android:windowSoftInputMode="stateHidden">
         </activity>
-        <activity android:name=".Notes.ViewNote" android:label="Добавление заметки" android:noHistory="true" android:windowSoftInputMode="stateHidden">
+        <activity android:name=".Notes.ViewNote" android:label="Просмотр заметки" android:noHistory="true">
         </activity>
         <receiver android:name=".Reminder.Receiver" />
     </application>

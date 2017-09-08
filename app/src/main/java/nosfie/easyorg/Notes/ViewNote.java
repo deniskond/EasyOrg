@@ -26,6 +26,7 @@ public class ViewNote extends AppCompatActivity {
     TextView noteTitle, windowTitle;
     ImageView noteIcon;
     LinearLayout noteContainer, buttonClose, buttonSave;
+    boolean firstTouch = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +87,17 @@ public class ViewNote extends AppCompatActivity {
         }
 
         // Setting note container onClickListener to activate note text editing
-        noteText.setOnTouchListener(new View.OnTouchListener() {
+        noteText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                noteText.setFocusableInTouchMode(true);
-                noteText.setFocusable(true);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(noteText, InputMethodManager.SHOW_IMPLICIT);
-                noteText.setSelection(noteText.getText().length());
-                return true;
+            public void onClick(View v) {
+                if (firstTouch) {
+                    noteText.setFocusableInTouchMode(true);
+                    noteText.setFocusable(true);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(noteText, InputMethodManager.SHOW_IMPLICIT);
+                    noteText.setSelection(noteText.getText().length());
+                    firstTouch = false;
+                }
             }
         });
 
