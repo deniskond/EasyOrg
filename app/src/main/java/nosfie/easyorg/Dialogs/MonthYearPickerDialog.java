@@ -18,10 +18,14 @@ public class MonthYearPickerDialog extends DialogFragment {
 
     private static final int MAX_YEAR = 2099;
     private DatePickerDialog.OnDateSetListener listener;
-    private int startMonth;
+    private int startMonth, startYear;
 
     public void setStartMonth(int startMonth) {
         this.startMonth = startMonth;
+    }
+
+    public void setStartYear(int startYear) {
+        this.startYear = startYear;
     }
 
     public void setListener(DatePickerDialog.OnDateSetListener listener) {
@@ -50,10 +54,9 @@ public class MonthYearPickerDialog extends DialogFragment {
             "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
         } );
 
-        int year = cal.get(Calendar.YEAR);
-        yearPicker.setMinValue(year - 10);
+        yearPicker.setMinValue(this.startYear - 10);
         yearPicker.setMaxValue(MAX_YEAR);
-        yearPicker.setValue(year);
+        yearPicker.setValue(this.startYear);
 
         builder.setView(dialog)
                 // Add action buttons

@@ -41,7 +41,7 @@ public class TaskCalendar extends AppCompatActivity {
     TextView monthText;
     ArrayList<Task> allMonthTasks = new ArrayList<>();
     LinearLayout buttonSelectMonth, buttonBack;
-    int startMonth;
+    int startMonth, startYear;
     LinearLayout currentDayLayout = null;
     ScrollView scrollView;
     int dayTasksYear = 0, dayTasksMonth = 0;
@@ -53,6 +53,7 @@ public class TaskCalendar extends AppCompatActivity {
         colorTaskInProcess = 0,
         colorTaskPostponed = 0;
     DayValues dayValues;
+    Calendar todayCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,9 @@ public class TaskCalendar extends AppCompatActivity {
         actionBar.hide();
 
         // Setting variables primary values
-        Calendar calendar = Calendar.getInstance();
-        startMonth = calendar.get(Calendar.MONTH) + 1;
+        todayCalendar = Calendar.getInstance();
+        startMonth = todayCalendar.get(Calendar.MONTH) + 1;
+        startYear = todayCalendar.get(Calendar.YEAR);
         DP = convertDpToPixels(this, 1);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         colorTaskActual = preferences.getInt("colorTaskActual", -1);
@@ -87,11 +89,13 @@ public class TaskCalendar extends AppCompatActivity {
             public void onClick(View view) {
                 MonthYearPickerDialog monthYearPickerDialog = new MonthYearPickerDialog();
                 monthYearPickerDialog.setStartMonth(startMonth);
+                monthYearPickerDialog.setStartYear(startYear);
                 monthYearPickerDialog.setListener(new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         drawTasksCalendar(year, month - 1);
                         startMonth = month;
+                        startYear = year;
                     }
                 });
                 monthYearPickerDialog.show(getFragmentManager(), "MonthYearPickerDialog");
@@ -116,16 +120,8 @@ public class TaskCalendar extends AppCompatActivity {
             }
         });
 
-        // Drawing calendar for the current month
-        drawTasksCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
-        if (currentDayLayout != null) {
-            scrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.scrollTo(0, currentDayLayout.getTop() + 5 * DP);
-                }
-            });
-        }
+        // Drawing todayCalendar for the current month
+        drawTasksCalendar(todayCalendar.get(Calendar.YEAR), todayCalendar.get(Calendar.MONTH));
     }
 
     private void drawTasksCalendar(int year, int month) {
@@ -156,6 +152,24 @@ public class TaskCalendar extends AppCompatActivity {
             addCalendarRow(monthMax - 1, monthMax, 0,
                     calendar.get(Calendar.MONTH) + 1,
                     calendar.get(Calendar.YEAR));
+
+        if (currentDayLayout != null &&
+                ((int)todayCalendar.get(Calendar.MONTH) == month &&
+                 (int)todayCalendar.get(Calendar.YEAR) == year)) {
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.scrollTo(0, currentDayLayout.getTop() + 5 * DP);
+                }
+            });
+        }
+        else
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.scrollTo(0, 0);
+                }
+            });
     }
 
     private void addCalendarRow(int firstDay, int secondDay, int thirdDay, int month, int year) {
