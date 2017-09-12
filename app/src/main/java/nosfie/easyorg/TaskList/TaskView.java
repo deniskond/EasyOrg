@@ -746,7 +746,7 @@ public class TaskView {
 
     private static void showEditTaskStartDateDialog(final Context context, final Task task) {
         //swapStartDate = task.customStartDate;
-        Calendar calendar = new GregorianCalendar(
+        Calendar currentStartDateCalendar = new GregorianCalendar(
                 task.customStartDate.year,
                 task.customStartDate.month - 1,
                 task.customStartDate.day
@@ -773,18 +773,6 @@ public class TaskView {
         todayCalendar.add(Calendar.MINUTE, -todayCalendar.get(Calendar.MINUTE));
         todayCalendar.add(Calendar.SECOND, -todayCalendar.get(Calendar.SECOND));
 
-        calendarView.setMinDate(todayCalendar.getTimeInMillis());
-        calendarView.setDate(calendar.getTimeInMillis(), false, true);
-
-        // MinDate bug workaround
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            calendar.add(Calendar.MONTH, 24);
-            calendarView.setDate(calendar.getTimeInMillis(), false, true);
-            calendar.add(Calendar.MONTH, -24);
-            calendar.add(Calendar.SECOND, 1);
-            calendarView.setDate(calendar.getTimeInMillis(), false, true);
-        }
-
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView,
@@ -793,6 +781,25 @@ public class TaskView {
             }
         });
 
+        calendarView.setMinDate(todayCalendar.getTimeInMillis());
+        Calendar targetCalendar;
+        if (todayCalendar.getTimeInMillis() <= currentStartDateCalendar.getTimeInMillis())
+            targetCalendar = currentStartDateCalendar;
+        else
+            targetCalendar = todayCalendar;
+
+        alertDialogCalendar = new GregorianCalendar(targetCalendar.get(Calendar.YEAR),
+                targetCalendar.get(Calendar.MONTH), targetCalendar.get(Calendar.DATE));
+
+        // MinDate bug workaround
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            currentStartDateCalendar.add(Calendar.MONTH, 24);
+            calendarView.setDate(targetCalendar.getTimeInMillis(), false, true);
+            currentStartDateCalendar.add(Calendar.MONTH, -24);
+            currentStartDateCalendar.add(Calendar.SECOND, 1);
+            calendarView.setDate(targetCalendar.getTimeInMillis(), false, true);
+        }
+
         LinearLayout editStartDateRoot = (LinearLayout)layout.findViewById(R.id.edit_start_date_root);
         editStartDateRoot.setMinimumWidth((int)(displaySize.x * 0.85f));
         Button buttonOK = (Button)layout.findViewById(R.id.buttonOK);
@@ -800,15 +807,9 @@ public class TaskView {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //task.startDate = Task.START_DATE.CUSTOM;
-                //task.customStartDate.year = alertDialogCalendar.get(Calendar.YEAR);
-                //task.customStartDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
-                //task.customStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
                 swapStartDate.year = alertDialogCalendar.get(Calendar.YEAR);
                 swapStartDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
                 swapStartDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
-                //if (task.customEndDate.toString().compareTo(task.customStartDate.toString()) <= 0)
-                //    task.customEndDate = task.customStartDate;
                 editStartDateDialog.dismiss();
                 showEditTaskEndDateDialog(context, task);
             }
@@ -891,13 +892,15 @@ public class TaskView {
     }
 
     private static void showEditTaskEndDateDialog(final Context context, final Task task) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar;
         if (task.customEndDate.toString().compareTo(swapStartDate.toString()) <= 0) {
             calendar = new GregorianCalendar(
                     swapStartDate.year,
                     swapStartDate.month - 1,
                     swapStartDate.day
             );
+            alertDialogCalendar = new GregorianCalendar(
+                    swapStartDate.year, swapStartDate.month - 1, swapStartDate.day);
         }
         else {
             calendar = new GregorianCalendar(
@@ -905,6 +908,8 @@ public class TaskView {
                     task.customEndDate.month - 1,
                     task.customEndDate.day
             );
+            alertDialogCalendar = new GregorianCalendar(
+                    task.customEndDate.year, task.customEndDate.month - 1, task.customEndDate.day);
         }
         WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
