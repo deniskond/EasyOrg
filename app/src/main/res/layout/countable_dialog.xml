@@ -14,7 +14,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Отметить статус задачи"
+        android:text="@string/task_status_title"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -25,7 +25,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Количественная цель:"
+        android:text="@string/count_goal"
         android:textSize="16sp" />
 
     <LinearLayout
@@ -73,7 +73,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Актуальна"
+            android:text="@string/task_status_actual"
             android:textSize="18sp" />
 
         <RadioButton
@@ -84,7 +84,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Выполнена"
+            android:text="@string/task_status_done"
             android:textSize="18sp" />
 
         <RadioButton
@@ -95,7 +95,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Не будет выполнена"
+            android:text="@string/task_status_failed"
             android:textSize="18sp" />
 
         <RadioButton
@@ -107,7 +107,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Отложена"
+            android:text="@string/task_status_postponed"
             android:textSize="18sp" />
     </RadioGroup>
 
@@ -137,7 +137,7 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 
 </LinearLayout>

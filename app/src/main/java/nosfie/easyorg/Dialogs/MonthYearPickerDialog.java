@@ -35,7 +35,7 @@ public class MonthYearPickerDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Выберите месяц");
+        builder.setTitle(getResources().getString(R.string.choose_month));
 
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -50,8 +50,18 @@ public class MonthYearPickerDialog extends DialogFragment {
         monthPicker.setMaxValue(12);
         monthPicker.setValue(this.startMonth);
         monthPicker.setDisplayedValues( new String[] {
-            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+            getResources().getString(R.string.january),
+            getResources().getString(R.string.february),
+            getResources().getString(R.string.march),
+            getResources().getString(R.string.april),
+            getResources().getString(R.string.may),
+            getResources().getString(R.string.june),
+            getResources().getString(R.string.july),
+            getResources().getString(R.string.august),
+            getResources().getString(R.string.september),
+            getResources().getString(R.string.october),
+            getResources().getString(R.string.november),
+            getResources().getString(R.string.december)
         } );
 
         yearPicker.setMinValue(this.startYear - 10);

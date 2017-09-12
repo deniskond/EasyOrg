@@ -14,7 +14,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Изменить название задачи"
+        android:text="@string/change_task_name"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -53,6 +53,6 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 </LinearLayout>

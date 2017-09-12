@@ -15,7 +15,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Выберите иконку заметки:"
+        android:text="@string/choose_note_icon"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Видео"
+                        android:text="@string/note_icon_video"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Аудио"
+                        android:text="@string/note_icon_audio"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Деньги"
+                        android:text="@string/note_icon_money"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 
@@ -169,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Машина"
+                        android:text="@string/note_icon_car"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 
@@ -202,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Игры"
+                        android:text="@string/note_icon_games"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 
@@ -235,7 +235,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Книги"
+                        android:text="@string/note_icon_books"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 
@@ -302,7 +302,7 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 
 </LinearLayout>

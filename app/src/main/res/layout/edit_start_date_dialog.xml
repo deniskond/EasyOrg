@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="Изменить дату начала"
+        android:text="@string/change_start_date"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -57,6 +57,6 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 </LinearLayout>

@@ -1,14 +1,17 @@
 package nosfie.easyorg.Helpers;
 
-import android.util.Log;
+import android.content.Context;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class DateStringsHelper {
-    public static void getHumanDateString(int year, int month, int date) {
+import nosfie.easyorg.MainActivity;
+import nosfie.easyorg.R;
 
-    }
+public class DateStringsHelper {
+
+    static Context context = MainActivity.getInstance();
+
     public static String getHumanMonthName(int month) {
         return getHumanMonthName(month, true);
     }
@@ -16,29 +19,29 @@ public class DateStringsHelper {
         String result = "";
         switch (month) {
             case 1:
-                result = "Январь"; break;
+                result = context.getResources().getString(R.string.january); break;
             case 2:
-                result = "Февраль"; break;
+                result = context.getResources().getString(R.string.february); break;
             case 3:
-                result = "Март"; break;
+                result = context.getResources().getString(R.string.march); break;
             case 4:
-                result = "Апрель"; break;
+                result = context.getResources().getString(R.string.april); break;
             case 5:
-                result = "Май"; break;
+                result = context.getResources().getString(R.string.may); break;
             case 6:
-                result = "Июнь"; break;
+                result = context.getResources().getString(R.string.june); break;
             case 7:
-                result = "Июль"; break;
+                result = context.getResources().getString(R.string.july); break;
             case 8:
-                result = "Август"; break;
+                result = context.getResources().getString(R.string.august); break;
             case 9:
-                result = "Сентябрь"; break;
+                result = context.getResources().getString(R.string.september); break;
             case 10:
-                result = "Октябрь"; break;
+                result = context.getResources().getString(R.string.october); break;
             case 11:
-                result = "Ноябрь"; break;
+                result = context.getResources().getString(R.string.november); break;
             case 12:
-                result = "Декабрь"; break;
+                result = context.getResources().getString(R.string.december); break;
         }
         if (!startWithCapital)
             result = result.toLowerCase();
@@ -51,29 +54,29 @@ public class DateStringsHelper {
         String result = "";
         switch (month) {
             case 1:
-                result = "Января"; break;
+                result = context.getResources().getString(R.string.january_gen); break;
             case 2:
-                result = "Февраля"; break;
+                result = context.getResources().getString(R.string.february_gen); break;
             case 3:
-                result = "Марта"; break;
+                result = context.getResources().getString(R.string.march_gen); break;
             case 4:
-                result = "Апреля"; break;
+                result = context.getResources().getString(R.string.april_gen); break;
             case 5:
-                result = "Мая"; break;
+                result = context.getResources().getString(R.string.may_gen); break;
             case 6:
-                result = "Июня"; break;
+                result = context.getResources().getString(R.string.june_gen); break;
             case 7:
-                result = "Июля"; break;
+                result = context.getResources().getString(R.string.july_gen); break;
             case 8:
-                result = "Августа"; break;
+                result = context.getResources().getString(R.string.august_gen); break;
             case 9:
-                result = "Сентября"; break;
+                result = context.getResources().getString(R.string.september_gen); break;
             case 10:
-                result = "Октября"; break;
+                result = context.getResources().getString(R.string.october_gen); break;
             case 11:
-                result = "Ноября"; break;
+                result = context.getResources().getString(R.string.november_gen); break;
             case 12:
-                result = "Декабря"; break;
+                result = context.getResources().getString(R.string.december_gen); break;
         }
         if (!startWithCapital)
             result = result.toLowerCase();
@@ -88,25 +91,25 @@ public class DateStringsHelper {
         String dayOfWeekStr = "";
         switch (dayOfWeek) {
             case 1:
-                dayOfWeekStr = "вс";
+                dayOfWeekStr = context.getResources().getString(R.string.sunday_short);
                 break;
             case 2:
-                dayOfWeekStr = "пн";
+                dayOfWeekStr = context.getResources().getString(R.string.monday_short);
                 break;
             case 3:
-                dayOfWeekStr = "вт";
+                dayOfWeekStr = context.getResources().getString(R.string.tuesday_short);
                 break;
             case 4:
-                dayOfWeekStr = "ср";
+                dayOfWeekStr = context.getResources().getString(R.string.wednesday_short);
                 break;
             case 5:
-                dayOfWeekStr = "чт";
+                dayOfWeekStr = context.getResources().getString(R.string.thursday_short);
                 break;
             case 6:
-                dayOfWeekStr = "пт";
+                dayOfWeekStr = context.getResources().getString(R.string.friday_short);
                 break;
             case 7:
-                dayOfWeekStr = "сб";
+                dayOfWeekStr = context.getResources().getString(R.string.saturday_short);
                 break;
         }
         return dayOfWeekStr;
@@ -116,29 +119,29 @@ public class DateStringsHelper {
         String result = "";
         switch (month) {
             case 0:
-                return "Янв";
+                return context.getResources().getString(R.string.january_short);
             case 1:
-                return "Фев";
+                return context.getResources().getString(R.string.february_short);
             case 2:
-                return "Мар";
+                return context.getResources().getString(R.string.march_short);
             case 3:
-                return "Апр";
+                return context.getResources().getString(R.string.april_short);
             case 4:
-                return "Мая";
+                return context.getResources().getString(R.string.may_short);
             case 5:
-                return "Июн";
+                return context.getResources().getString(R.string.june_short);
             case 6:
-                return "Июл";
+                return context.getResources().getString(R.string.july_short);
             case 7:
-                return "Авг";
+                return context.getResources().getString(R.string.august_short);
             case 8:
-                return "Сен";
+                return context.getResources().getString(R.string.september_short);
             case 9:
-                return "Окт";
+                return context.getResources().getString(R.string.october_short);
             case 10:
-                return "Ноя";
+                return context.getResources().getString(R.string.november_short);
             case 11:
-                return "Дек";
+                return context.getResources().getString(R.string.december_short);
         }
         if (!startUppercase)
             result = result.toLowerCase();

@@ -161,7 +161,7 @@ public class ShoppingLists extends AppCompatActivity {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             noTemplatesText.setLayoutParams(noShopListTextParams);
-            noTemplatesText.setText("Нет шаблонов");
+            noTemplatesText.setText(getResources().getString(R.string.no_templates));
             noTemplatesText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             noTemplatesText.setTextColor(0xFF555555);
 
@@ -205,7 +205,7 @@ public class ShoppingLists extends AppCompatActivity {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             noShopListText.setLayoutParams(noShopListTextParams);
-            noShopListText.setText("Нет активных списков покупок");
+            noShopListText.setText(getResources().getString(R.string.no_active_shopping_lists));
             noShopListText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             noShopListText.setTextColor(0xFF555555);
 

@@ -131,7 +131,6 @@ public class TaskList extends AppCompatActivity {
         tasks = filterTasksByTimespan(tasks, timespan);
         int num = 1;
         for (final Task task: tasks) {
-            Log.d("qq", task.toString());
             LinearLayout taskRow = TaskView.getTaskRow(
                     TaskList.this, num, task, true, true, timespan, new Callable() {
                         @Override
@@ -166,7 +165,7 @@ public class TaskList extends AppCompatActivity {
         timespanOptionToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timespanText.setText("Задачи на сегодня");
+                timespanText.setText(getResources().getString(R.string.today_tasks));
                 timespan = Timespan.TODAY;
                 getTasks();
                 timespanSelector.setVisibility(View.INVISIBLE);
@@ -177,7 +176,7 @@ public class TaskList extends AppCompatActivity {
         timespanOptionWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timespanText.setText("Задачи на неделю");
+                timespanText.setText(getResources().getString(R.string.week_tasks));
                 timespan = Timespan.WEEK;
                 getTasks();
                 timespanSelector.setVisibility(View.INVISIBLE);
@@ -188,7 +187,7 @@ public class TaskList extends AppCompatActivity {
         timespanOptionMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timespanText.setText("Задачи на месяц");
+                timespanText.setText(getResources().getString(R.string.month_tasks));
                 timespan = Timespan.MONTH;
                 getTasks();
                 timespanSelector.setVisibility(View.INVISIBLE);
@@ -199,7 +198,7 @@ public class TaskList extends AppCompatActivity {
         timespanOptionYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timespanText.setText("Задачи на год");
+                timespanText.setText(getResources().getString(R.string.year_tasks));
                 timespan = Timespan.YEAR;
                 getTasks();
                 timespanSelector.setVisibility(View.INVISIBLE);
@@ -210,7 +209,7 @@ public class TaskList extends AppCompatActivity {
         timespanOptionUnlimited.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timespanText.setText("Бессрочные задачи");
+                timespanText.setText(getResources().getString(R.string.perpetual_tasks));
                 timespan = Timespan.UNLIMITED;
                 getTasks();
                 timespanSelector.setVisibility(View.INVISIBLE);

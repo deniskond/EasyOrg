@@ -57,7 +57,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="98"
-                            android:text="Задачи на сегодня"
+                            android:text="@string/today_tasks"
                             android:textColor="#ffffff"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -109,6 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"
+                    android:layout_marginRight="15dp"
                     android:text="0/0"
                     android:textAlignment="center" />
             </LinearLayout>
@@ -264,11 +265,10 @@
                     android:paddingLeft="12dp">
 
                     <TextView
-                        android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Задачи на сегодня"
+                        android:text="@string/today_tasks"
                         android:textColor="#ffffff"
                         android:textSize="18sp" />
 
@@ -298,11 +298,10 @@
                     android:paddingLeft="12dp">
 
                     <TextView
-                        android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Задачи на неделю"
+                        android:text="@string/week_tasks"
                         android:textColor="#ffffff"
                         android:textSize="18sp" />
 
@@ -332,11 +331,10 @@
                     android:paddingLeft="12dp">
 
                     <TextView
-                        android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Задачи на месяц"
+                        android:text="@string/month_tasks"
                         android:textColor="#ffffff"
                         android:textSize="18sp" />
 
@@ -366,11 +364,10 @@
                     android:paddingLeft="12dp">
 
                     <TextView
-                        android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Задачи на год"
+                        android:text="@string/year_tasks"
                         android:textColor="#ffffff"
                         android:textSize="18sp" />
 
@@ -400,11 +397,10 @@
                     android:paddingLeft="12dp">
 
                     <TextView
-                        android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Бессрочные задачи"
+                        android:text="@string/perpetual_tasks"
                         android:textColor="#ffffff"
                         android:textSize="18sp" />
 

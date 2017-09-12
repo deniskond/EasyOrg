@@ -157,7 +157,7 @@ public class EditShoppingList extends AppCompatActivity {
             public void onClick(View view) {
                 if (insertRowId == 2) {
                     Toast.makeText(EditShoppingList.this,
-                            "В списке покупок должен быть хотя бы один элемент ",
+                            getResources().getString(R.string.error_need_shopping_element),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }

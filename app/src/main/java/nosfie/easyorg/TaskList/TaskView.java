@@ -551,14 +551,14 @@ public class TaskView {
         }
 
         final CharSequence[] items = {
-                "Актуальна",
-                "Выполнена",
-                "Не будет выполнена",
-                "Частично выполнена",
-                "Отложена"};
+                context.getResources().getString(R.string.task_status_actual),
+                context.getResources().getString(R.string.task_status_done),
+                context.getResources().getString(R.string.task_status_failed),
+                context.getResources().getString(R.string.task_status_partly_done),
+                context.getResources().getString(R.string.task_status_postponed)};
         final AlertDialog simpleTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Отметить статус задачи");
+        builder.setTitle(context.getResources().getString(R.string.task_status_title));
 
         builder.setSingleChoiceItems(items, status, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
@@ -604,19 +604,19 @@ public class TaskView {
 
     private static void processDeleteImageClick(final Context context, final Task task) {
         AlertDialog.Builder ad = new AlertDialog.Builder(context);
-        ad.setTitle("Подтвердите удаление");
+        ad.setTitle(context.getResources().getString(R.string.confirm_delete));
         switch (task.type) {
             case TEMPLATE:
-                ad.setMessage("Вы действительно хотите удалить шаблон \"" + task.name + "\" ?");
+                ad.setMessage(context.getResources().getString(R.string.confirm_delete_template) + " \"" + task.name + "\" ?");
                 break;
             case NOTE:
-                ad.setMessage("Вы действительно хотите удалить заметку \"" + task.name + "\" ?");
+                ad.setMessage(context.getResources().getString(R.string.confirm_delete_note) + " \"" + task.name + "\" ?");
                 break;
             default:
-                ad.setMessage("Вы действительно хотите удалить задачу \"" + task.name + "\" ?");
+                ad.setMessage(context.getResources().getString(R.string.confirm_delete_task) + " \"" + task.name + "\" ?");
                 break;
         }
-        ad.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+        ad.setPositiveButton(context.getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 task.delete(context);
                 try {
@@ -626,18 +626,18 @@ public class TaskView {
                 }
                 switch (task.type) {
                     case TEMPLATE:
-                        Toast.makeText(context, "Шаблон удален", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.template_deleted), Toast.LENGTH_SHORT).show();
                         break;
                     case NOTE:
-                        Toast.makeText(context, "Заметка удалена", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.note_deleted), Toast.LENGTH_SHORT).show();
                         break;
                     default:
-                        Toast.makeText(context, "Задача удалена", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.task_deleted), Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         });
-        ad.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+        ad.setNegativeButton(context.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 ///
             }
@@ -665,14 +665,14 @@ public class TaskView {
 
     private static void showSimpleTaskEditDialog(final Context context, final Task task) {
         final CharSequence[] items = {
-                "Название",
-                "Количественную цель",
-                "Дату начала и окончания",
-                "Время начала",
-                "Напоминание"};
+                context.getResources().getString(R.string.edit_name),
+                context.getResources().getString(R.string.edit_countable_goal),
+                context.getResources().getString(R.string.edit_time_interval),
+                context.getResources().getString(R.string.edit_start_time),
+                context.getResources().getString(R.string.edit_reminder)};
         final AlertDialog simpleTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Изменить:");
+        builder.setTitle(context.getResources().getString(R.string.change) + ":");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
@@ -729,9 +729,9 @@ public class TaskView {
                     e.printStackTrace();
                 }
                 if (task.type != Task.TYPE.NOTE)
-                    Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.task_updated), Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(context, "Заметка обновлена", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -745,7 +745,6 @@ public class TaskView {
 
 
     private static void showEditTaskStartDateDialog(final Context context, final Task task) {
-        //swapStartDate = task.customStartDate;
         Calendar currentStartDateCalendar = new GregorianCalendar(
                 task.customStartDate.year,
                 task.customStartDate.month - 1,
@@ -879,7 +878,7 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.task_updated), Toast.LENGTH_SHORT).show();
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -981,7 +980,6 @@ public class TaskView {
                     task.customEndDate.month = alertDialogCalendar.get(Calendar.MONTH) + 1;
                     task.customEndDate.day = alertDialogCalendar.get(Calendar.DAY_OF_MONTH);
                 }
-                Log.d("qq", task.toString());
                 task.synchronize(context);
                 swapStartDate = new CustomDate();
                 editEndDateDialog.dismiss();
@@ -990,7 +988,7 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.task_updated), Toast.LENGTH_SHORT).show();
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -1004,7 +1002,7 @@ public class TaskView {
 
     private static void showEditTaskReminder(final Context context, final Task task) {
         if (task.startTime.toString().equals("NONE")) {
-            Toast.makeText(context, "Установите сначала время начала задачи",
+            Toast.makeText(context, context.getResources().getString(R.string.error_set_task_time_first),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1088,9 +1086,9 @@ public class TaskView {
                     e.printStackTrace();
                 }
                 if (task.needReminder)
-                    Toast.makeText(context, "Напоминание изменено", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.reminder_updated), Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(context, "Напоминание убрано", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.reminder_deleted), Toast.LENGTH_SHORT).show();
                 editReminderDialog.dismiss();
             }
         });
@@ -1105,15 +1103,15 @@ public class TaskView {
 
     private static void showCountableTaskEditDialog(final Context context, final Task task) {
         final CharSequence[] items = {
-                "Название",
-                "Количественную цель",
-                "Дату начала и окончания",
-                "Время начала",
-                "Напоминание"
+                context.getResources().getString(R.string.edit_name),
+                context.getResources().getString(R.string.edit_countable_goal),
+                context.getResources().getString(R.string.edit_time_interval),
+                context.getResources().getString(R.string.edit_start_time),
+                context.getResources().getString(R.string.edit_reminder)
         };
         final AlertDialog countableTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Изменить:");
+        builder.setTitle(context.getResources().getString(R.string.change) + ":");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
@@ -1222,7 +1220,7 @@ public class TaskView {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(context, "Задача обновлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.task_updated), Toast.LENGTH_SHORT).show();
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -1236,15 +1234,15 @@ public class TaskView {
 
     private static void showShoppingListTaskEditDialog(final Context context, final Task task) {
         final CharSequence[] items = {
-                "Название",
-                "Список покупок",
-                "Дату начала и окончания",
-                "Время начала",
-                "Напоминание"
+                context.getResources().getString(R.string.edit_name),
+                context.getResources().getString(R.string.shopping_list),
+                context.getResources().getString(R.string.edit_time_interval),
+                context.getResources().getString(R.string.edit_start_time),
+                context.getResources().getString(R.string.edit_reminder)
         };
         final AlertDialog countableTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Изменить:");
+        builder.setTitle(context.getResources().getString(R.string.change) + ":");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
@@ -1277,12 +1275,12 @@ public class TaskView {
 
     private static void showNoteEditDialog(final Context context, final Task task) {
         final CharSequence[] items = {
-                "Название",
-                "Иконку"
+                context.getResources().getString(R.string.edit_name),
+                context.getResources().getString(R.string.edit_note)
         };
         final AlertDialog noteDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Изменить:");
+        builder.setTitle(context.getResources().getString(R.string.change) + ":");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
@@ -1342,7 +1340,7 @@ public class TaskView {
             @Override
             public void onClick(View view) {
                 task.synchronize(context);
-                Toast.makeText(context, "Заметка обновлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
                 try {
                     updateCallback.call();
                 }

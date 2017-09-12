@@ -34,6 +34,16 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase DB;
     LinearLayout newTask, currentTaskList, settings, shoppingLists, taskCalendar, notes;
 
+    // This is used to get context from helpers
+    private static MainActivity instance;
+    public MainActivity() {
+        super();
+        instance = this;
+    }
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Setting up view and hiding action bar

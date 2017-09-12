@@ -13,7 +13,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Количественная цель"
+        android:text="@string/count_goal"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -35,7 +35,7 @@
             android:checked="true"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Нет"
+            android:text="@string/no"
             android:textSize="18sp" />
 
         <RadioButton
@@ -46,7 +46,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Есть:"
+            android:text="@string/present"
             android:textSize="18sp" />
     </RadioGroup>
 
@@ -92,6 +92,6 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 </LinearLayout>

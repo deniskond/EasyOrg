@@ -38,7 +38,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="20dp"
                 android:paddingStart="8dp"
-                android:text="Список покупок"
+                android:text="@string/shopping_list"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -91,6 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
+                        android:layout_marginRight="15dp"
                         android:text="0/0"
                         android:textAlignment="center" />
                 </LinearLayout>
@@ -144,7 +145,8 @@
                         android:layout_height="wrap_content"
                         android:capitalize="characters"
                         android:duplicateParentState="false"
-                        android:text="СОХРАНИТЬ"
+                        android:text="@string/save"
+                        android:textAllCaps="true"
                         android:textColor="@android:color/white"
                         android:textSize="17sp"
                         android:textStyle="bold" />

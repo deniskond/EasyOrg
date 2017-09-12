@@ -40,7 +40,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="20dp"
                 android:paddingStart="5dp"
-                android:text="Списки покупок"
+                android:text="@string/shopping_lists"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -116,7 +116,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Шаблоны списков покупок"
+                        android:text="@string/shopping_lists_templates"
                         android:textColor="#666666"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -148,7 +148,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Нет шаблонов"
+                            android:text="@string/no_templates"
                             android:textColor="#555555"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -203,7 +203,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Текущие списки покупок"
+                        android:text="@string/actual_shopping_lists"
                         android:textColor="#666666"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -235,7 +235,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Нет активных списков покупок"
+                            android:text="@string/no_active_shopping_lists"
                             android:textColor="#555555"
                             android:textSize="16sp" />
                     </LinearLayout>

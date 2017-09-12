@@ -57,7 +57,7 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="20dp"
-                        android:text="Добавление новой задачи"
+                        android:text="@string/add_task"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -124,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:gravity="center"
-                            android:text="Обычная"
+                            android:text="@string/simple_task"
                             android:textColor="#3C3C3C"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -171,7 +171,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:gravity="center"
-                            android:text="Количественная"
+                            android:text="@string/countable_task"
                             android:textColor="#3C3C3C"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -218,7 +218,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:gravity="center"
-                            android:text="Список покупок"
+                            android:text="@string/shopping_list"
                             android:textColor="#3C3C3C"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -326,7 +326,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:layout_marginTop="15dp"
-                    android:text="Время выполнения задачи:"
+                    android:text="@string/start_time"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -376,7 +376,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="Настраиваемый интервал"
+                        android:text="@string/start_time_custom"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -402,7 +402,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="Бессрочная"
+                        android:text="@string/start_time_none"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -459,7 +459,8 @@
                         android:layout_height="wrap_content"
                         android:capitalize="characters"
                         android:duplicateParentState="false"
-                        android:text="ГОТОВО"
+                        android:text="@string/done"
+                        android:textAllCaps="true"
                         android:textColor="@android:color/white"
                         android:textSize="17sp"
                         android:textStyle="bold" />

@@ -95,7 +95,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
                 insertRowIndex = num;
             lastScreen = extras.getBoolean("lastScreen");
             if (lastScreen)
-                buttonNextText.setText("ГОТОВО");
+                buttonNextText.setText(getResources().getString(R.string.done));
         }
         else
             for (int num = 1; num < insertRowIndex; num++)
@@ -179,14 +179,14 @@ public class NewTaskShoppingList extends AppCompatActivity {
                             }
                         }
                         if (task.shoppingList.size() == 0) {
-                            Toast.makeText(getApplicationContext(), "Введите список покупок", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_input_shopping_list), Toast.LENGTH_SHORT).show();
                             return true;
                         }
                         task.count = task.shoppingList.size();
                         Intent intent;
                         if (lastScreen) {
                             task.insertIntoDatabase(getApplicationContext());
-                            Toast.makeText(getApplicationContext(), "Задача успешно добавлена!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.success_added_task), Toast.LENGTH_SHORT).show();
                             finish();
                             return true;
                         } else {
@@ -210,7 +210,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
             public void onClick(View view) {
                 if (insertRowIndex == 2) {
                     Toast.makeText(NewTaskShoppingList.this,
-                            "В списке покупок должен быть хотя бы один элемент ",
+                            getResources().getString(R.string.error_need_shopping_element),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -239,7 +239,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
         // Getting templates and checking if there are any
         final ArrayList<Task> templates = getAllTemplatesFromDB(this);
         if (templates.size() == 0) {
-            Toast.makeText(NewTaskShoppingList.this, "Нет ни одного шаблона списка покупок",
+            Toast.makeText(NewTaskShoppingList.this, getResources().getString(R.string.error_no_templates),
                     Toast.LENGTH_SHORT).show();
             return;
         }

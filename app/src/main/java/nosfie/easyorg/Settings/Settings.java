@@ -2,7 +2,6 @@ package nosfie.easyorg.Settings;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
     ImageView timeMidnightRadio, timeCustomRadio;
     Daytime dayMargin = new Daytime();
     TextView customTime;
-    Button buttonRT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +154,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                         dayMargin.minutes = 0;
                         timeMidnightRadio.setImageResource(R.drawable.radio_checked_medium);
                         timeCustomRadio.setImageResource(R.drawable.radio_unchecked_medium);
-                        customTime.setText("Не выбрано");
+                        customTime.setText(getResources().getString(R.string.not_set_n));
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = preferences.edit();
                         String dayMarginStr = dayMargin.toString();
@@ -232,15 +229,15 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
 
     private void showByDefaultPromptDialog() {
         AlertDialog.Builder ad = new AlertDialog.Builder(Settings.this);
-        ad.setTitle("Подтвердите действие");
-        ad.setMessage("Вы действительно хотите установить цвета статусов задач по умолчанию?");
-        ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+        ad.setTitle(getResources().getString(R.string.confirm_action));
+        ad.setMessage(getResources().getString(R.string.set_default_colors_prompt));
+        ad.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 setDefaultTaskColors();
-                Toast.makeText(Settings.this, "Цвета по умолчанию установлены", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Settings.this, getResources().getString(R.string.success_default_colors_set), Toast.LENGTH_SHORT).show();
             }
         });
-        ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+        ad.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 ///
             }
@@ -286,7 +283,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
                 if (dayMargin.hours == 0 && dayMargin.minutes == 0) {
                     timeMidnightRadio.setImageResource(R.drawable.radio_checked_medium);
                     timeCustomRadio.setImageResource(R.drawable.radio_unchecked_medium);
-                    customTime.setText("Не выбрано");
+                    customTime.setText(getResources().getString(R.string.not_set_n));
                 }
             }
         });

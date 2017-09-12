@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="Изменить время начала"
+        android:text="@string/change_start_time"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -24,14 +24,14 @@
             android:id="@+id/radioNoTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Без времени начала"
+            android:text="@string/change_start_time_none"
             android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/radioCustomTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Конкретное время"
+            android:text="@string/change_start_time_concrete"
             android:textSize="16sp" />
     </RadioGroup>
 
@@ -67,6 +67,6 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 </LinearLayout>

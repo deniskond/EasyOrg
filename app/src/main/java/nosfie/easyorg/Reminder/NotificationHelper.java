@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import nosfie.easyorg.DataStructures.Task;
+import nosfie.easyorg.R;
 
 import static android.content.Context.ALARM_SERVICE;
 import static nosfie.easyorg.Database.Queries.getAllTasksFromDB;
@@ -26,12 +27,11 @@ public class NotificationHelper {
     public static void createNotification(Context context, Task task) {
         Intent intent = new Intent(context, Receiver.class);
         intent.setAction(Integer.toString(task.id));
-        //Log.d("qq", "Content: " + task.customStartTime.toString().replace("-", ":") + " " + task.name);
-        intent.putExtra("Title", "Напоминание о задаче");
+        intent.putExtra("Title", context.getResources().getString(R.string.notification_title));
         intent.putExtra("Content", task.customStartTime.toString().replace("-", ":") + " " + task.name);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
-        long timeDiff = getTimeDiffMillis(context, task);
+        long timeDiff = getTimeDiffMillis(task);
         if (timeDiff > 0)
             am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeDiff, pIntent);
     }
@@ -47,23 +47,17 @@ public class NotificationHelper {
     public static void updateNotification(Context context, Task task) {
         Intent intent = new Intent(context, Receiver.class);
         intent.setAction(Integer.toString(task.id));
-        intent.putExtra("Title", "EasyOrg - Напоминание");
+        intent.putExtra("Title", context.getResources().getString(R.string.notification_title));
         intent.putExtra("Content", task.customStartTime.toString().replace("-", ":") + " " + task.name);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
-        long timeDiff = getTimeDiffMillis(context, task);
+        long timeDiff = getTimeDiffMillis(task);
         if (timeDiff > 0)
             am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeDiff, pIntent);
     }
 
-    public static void updateAllNotifications(Context context) {
-        ArrayList<Task> tasks = getAllTasksFromDB(context);
-        for (Task task: tasks)
-            updateNotification(context, task);
-    }
-
-    private static long getTimeDiffMillis(Context context, Task task) {
+    private static long getTimeDiffMillis(Task task) {
         Calendar taskCalendar = new GregorianCalendar(
                 task.customStartDate.year,
                 task.customStartDate.month - 1,
@@ -90,7 +84,6 @@ public class NotificationHelper {
                 reminderBias = 60 * 60 * 1000;
                 break;
         }
-
         Log.d("qq", "Alarm in " + Long.toString((taskTime - reminderBias - currentTime) / 1000));
         return taskTime - reminderBias - currentTime;
     }

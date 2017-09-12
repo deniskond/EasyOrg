@@ -62,7 +62,7 @@ public class EditTemplate extends AppCompatActivity {
         }
 
         // Filling the view with template data
-        header.setText("Редактирование шаблона");
+        header.setText(getResources().getString(R.string.editing_template));
         templateName.setText(task.name);
         shoppingListContainer.removeAllViews();
         int num = 1;
@@ -115,7 +115,7 @@ public class EditTemplate extends AppCompatActivity {
                         buttonSave.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
                         task.name = templateName.getText().toString();
                         if (task.name.equals("")) {
-                            Toast.makeText(EditTemplate.this, "Введите название шаблона",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditTemplate.this, getResources().getString(R.string.error_no_template_name),Toast.LENGTH_SHORT).show();
                             return true;
                         }
                         task.type = Task.TYPE.TEMPLATE;
@@ -134,12 +134,12 @@ public class EditTemplate extends AppCompatActivity {
                             }
                         }
                         if (task.shoppingList.size() == 0) {
-                            Toast.makeText(EditTemplate.this, "Введите список покупок", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditTemplate.this, getResources().getString(R.string.error_input_shopping_list), Toast.LENGTH_SHORT).show();
                             return true;
                         }
                         task.count = task.shoppingList.size();
                         task.synchronize(getApplicationContext());
-                        Toast.makeText(getApplicationContext(), "Шаблон успешно сохранен!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.success_saved_template),Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                 }
@@ -157,7 +157,7 @@ public class EditTemplate extends AppCompatActivity {
             public void onClick(View view) {
                 if (insertRowIndex == 2) {
                     Toast.makeText(EditTemplate.this,
-                            "В списке покупок должен быть хотя бы один элемент ",
+                            getResources().getString(R.string.error_need_shopping_element),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }

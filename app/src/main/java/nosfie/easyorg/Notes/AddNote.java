@@ -127,12 +127,12 @@ public class AddNote extends AppCompatActivity {
                         note.text = noteText.getText().toString();
                         note.type = Task.TYPE.NOTE;
                         if (note.text.equals("")) {
-                            Toast.makeText(getApplicationContext(), "Введите текст заметки",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_no_note_text),Toast.LENGTH_SHORT).show();
                             return true;
                         }
 
                         note.insertIntoDatabase(AddNote.this);
-                        Toast.makeText(getApplicationContext(), "Заметка добавлена",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.success_added_note),Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                 }

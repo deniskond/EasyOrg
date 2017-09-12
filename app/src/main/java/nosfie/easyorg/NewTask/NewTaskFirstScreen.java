@@ -76,7 +76,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
                     countableTaskSelector.setBackgroundResource(R.drawable.border_small);
                     shoppingListSelector.setBackgroundResource(R.drawable.border_big_selected);
-                    buttonNextText.setText("ДАЛЕЕ");
+                    buttonNextText.setText(getResources().getString(R.string.next));
                     break;
                 case COUNTABLE:
                     simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
@@ -98,7 +98,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
             }
             if (task.predefinedShoppingList) {
                 if (task.name == null)
-                    taskName.setText("Список покупок");
+                    taskName.setText(getResources().getString(R.string.shopping_list));
                 simpleTaskSelector.setVisibility(View.GONE);
                 countableTaskSelector.setVisibility(View.GONE);
                 LinearLayout padding1 = (LinearLayout)findViewById(R.id.padding1);
@@ -116,19 +116,19 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 if (task.usePredefinedTimespan) {
                     switch (task.deadline) {
                         case DAY:
-                            predefinedText.setText("Сегодня");
+                            predefinedText.setText(getResources().getString(R.string.today));
                             break;
                         case WEEK:
-                            predefinedText.setText("До конца недели");
+                            predefinedText.setText(getResources().getString(R.string.till_the_end_of_week));
                             break;
                         case MONTH:
-                            predefinedText.setText("До конца месяца");
+                            predefinedText.setText(getResources().getString(R.string.till_the_end_of_month));
                             break;
                         case YEAR:
-                            predefinedText.setText("До конца года");
+                            predefinedText.setText(getResources().getString(R.string.till_the_end_of_year));
                             break;
                         case NONE:
-                            predefinedText.setText("Бессрочная");
+                            predefinedText.setText(getResources().getString(R.string.perpetual));
                             break;
                     }
                 }
@@ -148,12 +148,12 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 countableTaskSelector.setBackgroundResource(R.drawable.border_small);
                 shoppingListSelector.setBackgroundResource(R.drawable.border_small);
                 task.type = Task.TYPE.SIMPLE;
-                if (taskName.getText().toString().equals("Список покупок"))
+                if (taskName.getText().toString().equals(getResources().getString(R.string.shopping_list)))
                     taskName.setText("");
                 countText.setVisibility(View.GONE);
                 countEdit.setVisibility(View.GONE);
                 if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE)
-                    buttonNextText.setText("ГОТОВО");
+                    buttonNextText.setText(getResources().getString(R.string.done));
             }
         });
         countableTaskSelector.setOnClickListener(new View.OnClickListener() {
@@ -165,13 +165,13 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 countableTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
                 shoppingListSelector.setBackgroundResource(R.drawable.border_small);
                 task.type = Task.TYPE.COUNTABLE;
-                if (taskName.getText().toString().equals("Список покупок"))
+                if (taskName.getText().toString().equals(getResources().getString(R.string.shopping_list)))
                     taskName.setText("");
                 countText.setVisibility(View.VISIBLE);
                 countEdit.setVisibility(View.VISIBLE);
                 countEdit.setText("");
                 if (task.deadline == Task.DEADLINE.DAY || task.deadline == Task.DEADLINE.NONE)
-                    buttonNextText.setText("ГОТОВО");
+                    buttonNextText.setText(getResources().getString(R.string.done));
             }
         });
         shoppingListSelector.setOnClickListener(new View.OnClickListener() {
@@ -184,10 +184,10 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                 shoppingListSelector.setBackgroundResource(R.drawable.border_big_selected);
                 task.type = Task.TYPE.SHOPPING_LIST;
                 if (taskName.getText().toString().equals(""))
-                    taskName.setText("Список покупок");
+                    taskName.setText(getResources().getString(R.string.shopping_list));
                 countText.setVisibility(View.GONE);
                 countEdit.setVisibility(View.GONE);
-                buttonNextText.setText("ДАЛЕЕ");
+                buttonNextText.setText(getResources().getString(R.string.next));
             }
         });
 
@@ -202,7 +202,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         selectInterval.setBackgroundColor(0x00000000);
-                        buttonNextText.setText("ДАЛЕЕ");
+                        buttonNextText.setText(getResources().getString(R.string.next));
                         task.deadline = Task.DEADLINE.CUSTOM;
                         intervalRadio.setImageResource(R.drawable.radio_checked_medium);
                         todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
@@ -223,7 +223,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         selectToday.setBackgroundColor(0x00000000);
                         if (task.type != Task.TYPE.SHOPPING_LIST)
-                            buttonNextText.setText("ГОТОВО");
+                            buttonNextText.setText(getResources().getString(R.string.done));
                         task.deadline = Task.DEADLINE.DAY;
                         intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
                         todayRadio.setImageResource(R.drawable.radio_checked_medium);
@@ -244,7 +244,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         selectTimeless.setBackgroundColor(0x00000000);
                         if (task.type != Task.TYPE.SHOPPING_LIST)
-                            buttonNextText.setText("ГОТОВО");
+                            buttonNextText.setText(getResources().getString(R.string.done));
                         task.deadline = Task.DEADLINE.NONE;
                         intervalRadio.setImageResource(R.drawable.radio_unchecked_medium);
                         todayRadio.setImageResource(R.drawable.radio_unchecked_medium);
@@ -288,11 +288,11 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                         else
                             task.count = 0;
                         if (task.name.equals("")) {
-                            Toast.makeText(getApplicationContext(), "Введите название задачи",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_input_task_name),Toast.LENGTH_SHORT).show();
                             return true;
                         }
                         if (task.type == Task.TYPE.COUNTABLE && task.count == 0) {
-                            Toast.makeText(getApplicationContext(), "Введите количественную цель",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_input_countable_goal),Toast.LENGTH_SHORT).show();
                             return true;
                         }
 
@@ -304,7 +304,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
                                 task.startDate = Task.START_DATE.TODAY;
                             if (task.type != Task.TYPE.SHOPPING_LIST) {
                                 task.insertIntoDatabase(getApplicationContext());
-                                Toast.makeText(getApplicationContext(), "Задача успешно добавлена!",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.success_added_task),Toast.LENGTH_SHORT).show();
                                 finish();
                                 return true;
                             } else {

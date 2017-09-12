@@ -70,7 +70,6 @@ public class AddTemplate extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         buttonAdd.setImageResource(R.drawable.add_item_button_medium);
                         addShoppingItemRow(insertRowIndex, "");
-                        //shoppingListContainer.addView(getShoppingItemRow(AddTemplate.this, insertRowIndex, ""));
                         scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                         insertRowIndex++;
                         break;
@@ -91,7 +90,7 @@ public class AddTemplate extends AppCompatActivity {
                         buttonSave.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
                         task.name = templateName.getText().toString();
                         if (task.name.equals("")) {
-                            Toast.makeText(AddTemplate.this, "Введите название шаблона",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTemplate.this, getResources().getString(R.string.error_no_template_name),Toast.LENGTH_SHORT).show();
                             return true;
                         }
                         task.type = Task.TYPE.TEMPLATE;
@@ -110,12 +109,12 @@ public class AddTemplate extends AppCompatActivity {
                             }
                         }
                         if (task.shoppingList.size() == 0) {
-                            Toast.makeText(AddTemplate.this, "Введите список покупок", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTemplate.this, getResources().getString(R.string.error_input_shopping_list), Toast.LENGTH_SHORT).show();
                             return true;
                         }
                         task.count = task.shoppingList.size();
                         task.insertIntoDatabase(getApplicationContext());
-                        Toast.makeText(AddTemplate.this, "Шаблон успешно добавлен!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTemplate.this, getResources().getString(R.string.success_added_template), Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                 }
@@ -137,7 +136,7 @@ public class AddTemplate extends AppCompatActivity {
             public void onClick(View view) {
                 if (insertRowIndex == 2) {
                     Toast.makeText(AddTemplate.this,
-                            "В списке покупок должен быть хотя бы один элемент ",
+                            getResources().getString(R.string.error_need_shopping_element),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }

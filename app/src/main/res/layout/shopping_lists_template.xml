@@ -57,7 +57,7 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="20dp"
-                        android:text="Добавление шаблона покупок"
+                        android:text="@string/add_template"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -80,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="Название шаблона:"
+                    android:text="@string/template_name"
                     android:textColor="#555555"
                     android:textSize="17sp" />
 
@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:text="Список покупок:"
+                    android:text="@string/template_shopping_list"
                     android:textColor="#555555"
                     android:textSize="17sp" />
 
@@ -171,7 +171,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:capitalize="characters"
-                        android:text="СОХРАНИТЬ"
+                        android:text="@string/save"
+                        android:textAllCaps="true"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />

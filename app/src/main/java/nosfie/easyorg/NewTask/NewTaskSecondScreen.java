@@ -89,7 +89,6 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         buttonCancel = (LinearLayout)findViewById(R.id.buttonCancel);
         customDate = (TextView)findViewById(R.id.customDate);
         customTime = (TextView)findViewById(R.id.customTime);
-        //reminderCheckbox = (CheckBox)findViewById(R.id.reminderCheckbox);
         customDeadlineDate = (TextView)findViewById(R.id.customDeadlineDate);
         //// Starting date elements
         startToday = (LinearLayout)findViewById(R.id.startToday);
@@ -170,7 +169,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         startToday.setBackgroundColor(0x00000000);
                         task.startDate = Task.START_DATE.TODAY;
-                        customDate.setText("Не выбрана");
+                        customDate.setText(getResources().getString(R.string.not_set_f));
                         selectRadioOption(startingDateList, 0);
                         break;
                 }
@@ -187,7 +186,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         startTomorrow.setBackgroundColor(0x00000000);
                         task.startDate = Task.START_DATE.TOMORROW;
-                        customDate.setText("Не выбрана");
+                        customDate.setText(getResources().getString(R.string.not_set_f));
                         selectRadioOption(startingDateList, 1);
                         break;
                 }
@@ -227,7 +226,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
                         needReminderText.setTextColor(0xFF999999);
                         task.needReminder = false;
-                        customTime.setText("Не выбрано");
+                        customTime.setText(getResources().getString(R.string.not_set_n));
                         break;
                 }
                 return true;
@@ -264,7 +263,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                                 task.needReminder = false;
                                 needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
                                 reminderSelected = false;
-                                needReminderText.setText("Напоминание");
+                                needReminderText.setText(getResources().getString(R.string.reminder));
                             } else {
                                 task.needReminder = true;
                                 needReminderImage.setImageResource(R.drawable.checkbox_checked_medium);
@@ -288,7 +287,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         deadlineDay.setBackgroundColor(0x00000000);
                         task.deadline = Task.DEADLINE.DAY;
-                        customDeadlineDate.setText("Не выбрана");
+                        customDeadlineDate.setText(getResources().getString(R.string.not_set_f));
                         selectRadioOption(deadlineList, 0);
                         deadlineChanged = true;
                         break;
@@ -306,7 +305,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         deadlineWeek.setBackgroundColor(0x00000000);
                         task.deadline = Task.DEADLINE.WEEK;
-                        customDeadlineDate.setText("Не выбрана");
+                        customDeadlineDate.setText(getResources().getString(R.string.not_set_f));
                         selectRadioOption(deadlineList, 1);
                         deadlineChanged = true;
                         break;
@@ -324,7 +323,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         deadlineMonth.setBackgroundColor(0x00000000);
                         task.deadline = Task.DEADLINE.MONTH;
-                        customDeadlineDate.setText("Не выбрана");
+                        customDeadlineDate.setText(getResources().getString(R.string.not_set_f));
                         selectRadioOption(deadlineList, 2);
                         deadlineChanged = true;
                         break;
@@ -342,7 +341,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         deadlineYear.setBackgroundColor(0x00000000);
                         task.deadline = Task.DEADLINE.YEAR;
-                        customDeadlineDate.setText("Не выбрана");
+                        customDeadlineDate.setText(getResources().getString(R.string.not_set_f));
                         selectRadioOption(deadlineList, 3);
                         deadlineChanged = true;
                         break;
@@ -382,7 +381,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         if (!deadlineChanged)
                             task.deadline = Task.DEADLINE.DAY;
                         task.insertIntoDatabase(getApplicationContext());
-                        Toast.makeText(getApplicationContext(), "Задача успешно добавлена!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.success_added_task), Toast.LENGTH_SHORT).show();
                         finish();
                         break;
                 }
@@ -415,7 +414,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         public void onCancel(DialogInterface dialogInterface) {
             selectRadioOption(startingDateList, 0);
             task.startDate = Task.START_DATE.TODAY;
-            customDate.setText("Не выбрана");
+            customDate.setText(getResources().getString(R.string.not_set_f));
             task.customStartDate.day = 0;
             task.customStartDate.month = 0;
             task.customStartDate.year = 0;
@@ -461,7 +460,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         public void onDismiss(DialogInterface dialogInterface) {
             if (task.startTime == Task.START_TIME.NONE) {
                 selectRadioOption(startingTimeList, 0);
-                customTime.setText("Не выбрано");
+                customTime.setText(getResources().getString(R.string.not_set_n));
                 task.customStartTime.hours = 0;
                 task.customStartTime.minutes = 0;
                 needReminderText.setTextColor(0xFF999999);
@@ -499,7 +498,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         public void onCancel(DialogInterface dialogInterface) {
             selectRadioOption(deadlineList, 0);
             task.deadline = Task.DEADLINE.DAY;
-            customDeadlineDate.setText("Не выбрана");
+            customDeadlineDate.setText(getResources().getString(R.string.not_set_f));
             task.customEndDate.day = 0;
             task.customEndDate.month = 0;
             task.customEndDate.year = 0;
@@ -555,25 +554,26 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 String reminderOption = "";
                 if (radioExact.isChecked()) {
                     task.reminderTime = Task.REMINDER_TIME.EXACT;
-                    reminderOption = "ровно по времени";
+                    reminderOption = getResources().getString(R.string.reminder_exact).toLowerCase();
                 }
                 else if (radio5Min.isChecked()) {
                     task.reminderTime = Task.REMINDER_TIME.FIVE_MINS;
-                    reminderOption = "за 5 минут";
+                    reminderOption = getResources().getString(R.string.reminder_5min).toLowerCase();
                 }
                 else if (radio10Min.isChecked()) {
                     task.reminderTime = Task.REMINDER_TIME.TEN_MINS;
-                    reminderOption = "за 10 минут";
+                    reminderOption = getResources().getString(R.string.reminder_10min).toLowerCase();
                 }
                 else if (radio30Min.isChecked()) {
                     task.reminderTime = Task.REMINDER_TIME.THIRTY_MINS;
-                    reminderOption = "за 30 минут";
+                    reminderOption = getResources().getString(R.string.reminder_30min).toLowerCase();
                 }
                 else if (radio1Hour.isChecked()) {
                     task.reminderTime = Task.REMINDER_TIME.ONE_HOUR;
-                    reminderOption = "за 1 час";
+                    reminderOption = getResources().getString(R.string.reminder_1hour).toLowerCase();
                 }
-                needReminderText.setText("Напоминание (" + reminderOption + ")");
+                needReminderText.setText(getResources().getString(R.string.reminder) +
+                        " (" + reminderOption + ")");
                 editReminderDialog.dismiss();
             }
         });
@@ -589,7 +589,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                 if (reminderSelected == false) {
                     task.needReminder = false;
                     needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
-                    needReminderText.setText("Напоминание");
+                    needReminderText.setText(getResources().getString(R.string.reminder));
                 }
             }
         });

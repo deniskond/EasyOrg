@@ -13,7 +13,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Напоминание:"
+        android:text="@string/reminder_header"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -35,7 +35,7 @@
             android:checked="true"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Нет напоминания"
+            android:text="@string/reminder_none"
             android:textSize="18sp"
             android:visibility="gone" />
 
@@ -48,7 +48,7 @@
             android:checked="true"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="Ровно по времени задачи"
+            android:text="@string/reminder_exact"
             android:textSize="18sp" />
 
         <RadioButton
@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="За 5 минут"
+            android:text="@string/reminder_5min"
             android:textSize="18sp" />
 
         <RadioButton
@@ -70,7 +70,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="За 10 минут"
+            android:text="@string/reminder_10min"
             android:textSize="18sp" />
 
         <RadioButton
@@ -81,7 +81,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="За 30 минут"
+            android:text="@string/reminder_30min"
             android:textSize="18sp" />
 
         <RadioButton
@@ -93,7 +93,7 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:text="За 1 час"
+            android:text="@string/reminder_1hour"
             android:textSize="18sp" />
 
     </RadioGroup>
@@ -124,7 +124,7 @@
             android:layout_marginStart="1px"
             android:layout_weight="50"
             android:background="#d6d7d7"
-            android:text="OK" />
+            android:text="@string/ok" />
     </LinearLayout>
 
 </LinearLayout>

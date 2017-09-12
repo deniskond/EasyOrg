@@ -109,32 +109,6 @@ public class ShoppingListView {
         iconParams.height = 28 * DP;
         deleteIcon.setLayoutParams(iconParams);
         deleteIcon.setAdjustViewBounds(true);
-        /*deleteIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    deleteCallback.call();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (insertRowId == 2) {
-                    Toast.makeText(context, "В списке покупок должен быть хотя бы один элемент ",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                LinearLayout row = (LinearLayout)(view.getParent()).getParent();
-                int id = row.getId();
-                ((ViewManager)row.getParent()).removeView(row);
-                for (int i = id + 1; i < insertRowId; i++) {
-                    LinearLayout nextRow = (LinearLayout)findViewById(i);
-                    nextRow.setId(i - 1);
-                    TextView number = (TextView)(((LinearLayout)nextRow.getChildAt(0)).getChildAt(0));
-                    number.setText(Integer.toString(i - 1));
-                }
-                insertRowId--;
-            }
-        });*/
-
         itemContainer.addView(item);
 
         linearRow.addView(number);

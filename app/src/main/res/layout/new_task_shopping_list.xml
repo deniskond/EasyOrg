@@ -58,7 +58,7 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="20dp"
-                        android:text="Ввод списка покупок"
+                        android:text="@string/input_shopping_list"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -140,7 +140,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:capitalize="characters"
-                        android:text="ДАЛЕЕ"
+                        android:text="@string/next"
+                        android:textAllCaps="true"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />

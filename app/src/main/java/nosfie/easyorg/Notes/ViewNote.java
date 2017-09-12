@@ -45,7 +45,6 @@ public class ViewNote extends AppCompatActivity {
         buttonClose = (LinearLayout)findViewById(R.id.buttonClose);
         buttonSave = (LinearLayout)findViewById(R.id.buttonSave);
 
-        //noteText.setClickable(false);
         noteText.setFocusable(false);
         noteText.setEnabled(true);
 
@@ -61,7 +60,7 @@ public class ViewNote extends AppCompatActivity {
             note.customEndDate.year = Integer.parseInt(dateSplit[0]);
             note.customEndDate.month = Integer.parseInt(dateSplit[1]);
             note.customEndDate.day = Integer.parseInt(dateSplit[2]);
-            windowTitle.setText("Заметка от " +
+            windowTitle.setText(getResources().getString(R.string.note_dated_by) + " " +
                     note.customEndDate.day + " " +
                     getHumanMonthNameGenitive(note.customEndDate.month) + " " +
                     note.customEndDate.year
@@ -116,7 +115,7 @@ public class ViewNote extends AppCompatActivity {
                 note.text = noteText.getText().toString();
                 note.type = Task.TYPE.NOTE;
                 note.synchronize(ViewNote.this);
-                Toast.makeText(getApplicationContext(), "Заметка сохранена",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.success_saved_note),Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

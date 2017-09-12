@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
                 android:paddingRight="20dp"
-                android:text="Настройки"
+                android:text="@string/settings"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="Цвета статусов задач:"
+                    android:text="@string/task_status_colors"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -82,7 +82,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="В процессе"
+                        android:text="@string/task_status_actual"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -113,7 +113,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Выполнена"
+                        android:text="@string/task_status_done"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -144,7 +144,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Не будет выполнена"
+                        android:text="@string/task_status_failed"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -175,7 +175,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Частично выполнена"
+                        android:text="@string/task_status_partly_done"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -206,7 +206,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Отложена"
+                        android:text="@string/task_status_postponed"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
@@ -252,7 +252,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Считать, что день заканчивается:"
+                    android:text="@string/day_margin"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -287,7 +287,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="8dp"
                                 android:layout_marginStart="8dp"
-                                android:text="В полночь (00:00)"
+                                android:text="@string/day_margin_midnight"
                                 android:textColor="#555555"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -312,7 +312,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="8dp"
                                 android:layout_marginStart="8dp"
-                                android:text="В другое время:"
+                                android:text="@string/day_margin_custom"
                                 android:textColor="#555555"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -339,7 +339,7 @@
                             android:paddingRight="5dp"
                             android:paddingStart="8dp"
                             android:paddingTop="5dp"
-                            android:text="@string/time_not_set"
+                            android:text="@string/not_set_n"
                             android:textColor="#555555"
                             android:textSize="16sp" />
                     </LinearLayout>
