@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -28,7 +29,8 @@ import nosfie.easyorg.R;
 public class Settings extends AppCompatActivity  implements ColorPickerDialogListener {
 
     LinearLayout rectInProcess, rectDone, rectNotDone, rectPartlyDone, rectPostponed;
-    LinearLayout byDefaultButton, buttonBack;
+    LinearLayout buttonBack;
+    RelativeLayout byDefaultButton;
     ImageView byDefaultImage;
     int colorLayoutId = 0;
     LinearLayout timeMidnight, timeCustom;
@@ -50,7 +52,7 @@ public class Settings extends AppCompatActivity  implements ColorPickerDialogLis
         rectNotDone = (LinearLayout)findViewById(R.id.rectNotDone);
         rectPartlyDone = (LinearLayout)findViewById(R.id.rectPartlyDone);
         rectPostponed = (LinearLayout)findViewById(R.id.rectPostponed);
-        byDefaultButton = (LinearLayout)findViewById(R.id.byDefaultButton);
+        byDefaultButton = (RelativeLayout)findViewById(R.id.byDefaultButton);
         byDefaultImage = (ImageView)findViewById(R.id.byDefaultImage);
         buttonBack = (LinearLayout)findViewById(R.id.buttonBack);
         timeMidnight = (LinearLayout)findViewById(R.id.timeMidnight);

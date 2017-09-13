@@ -214,5 +214,7 @@
     <string name="edit_shopping_list">Редактирование списка покупок</string>
     <string name="no_notes">Нет заметок</string>
     <string name="choose_template">Выберите шаблон покупок</string>
+    <string name="fill_with_template">Заполнить по шаблону</string>
+    <string name="by_default">По умолчанию</string>
 
 </resources>

@@ -489,7 +489,13 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setOnCancelListener(onDeadlineDateCancelListener);
-        datePickerDialog.getDatePicker().setMinDate(task.customStartDate.toMillis());
+        long today = new Date().getTime();
+        today -= dayMargin.hours * 60 * 60 * 1000;
+        today -= dayMargin.hours * 60 * 1000;
+        if (today <= task.customStartDate.toMillis())
+            datePickerDialog.getDatePicker().setMinDate(task.customStartDate.toMillis());
+        else
+            datePickerDialog.getDatePicker().setMinDate(today);
         datePickerDialog.show();
     }
 

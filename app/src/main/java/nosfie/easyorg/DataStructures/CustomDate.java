@@ -1,7 +1,7 @@
 package nosfie.easyorg.DataStructures;
 
-import android.icu.util.Calendar;
-import android.icu.util.GregorianCalendar;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import static nosfie.easyorg.Helpers.DateStringsHelper.getDayOfWeekStr;
 import static nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
