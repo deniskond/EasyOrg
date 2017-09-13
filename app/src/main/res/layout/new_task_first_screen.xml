@@ -350,7 +350,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="Сегодня в течение дня"
+                        android:text="@string/start_time_today"
                         android:textColor="#555555"
                         android:textSize="16sp" />
 
