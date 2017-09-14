@@ -24,9 +24,9 @@ public class DayValues {
         int minutes = Integer.parseInt(timeSplit[1]);
 
         Calendar calendar = Calendar.getInstance();
-        if ((int)calendar.get(Calendar.HOUR) < hours)
+        if (calendar.get(Calendar.HOUR) < hours)
             calendar.add(Calendar.HOUR, -hours);
-        if ((int)calendar.get(Calendar.HOUR) == hours && calendar.get(Calendar.MINUTE) < minutes) {
+        if (calendar.get(Calendar.HOUR) == hours && (calendar.get(Calendar.MINUTE) < minutes)) {
             calendar.add(Calendar.HOUR, -hours);
             calendar.add(Calendar.MINUTE, -minutes);
         }

@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
-import java.util.Calendar;
-
 import nosfie.easyorg.R;
 
 public class MonthYearPickerDialog extends DialogFragment {
@@ -39,8 +37,6 @@ public class MonthYearPickerDialog extends DialogFragment {
 
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        Calendar cal = Calendar.getInstance();
 
         View dialog = inflater.inflate(R.layout.date_picker_dialog, null);
         final NumberPicker monthPicker = (NumberPicker) dialog.findViewById(R.id.picker_month);

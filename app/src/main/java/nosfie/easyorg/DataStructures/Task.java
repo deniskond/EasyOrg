@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -109,10 +108,7 @@ public class Task {
 
         this.count = count;
         this.currentCount = currentCount;
-        if (reminder == 0)
-            this.needReminder = false;
-        else
-            this.needReminder = true;
+        this.needReminder = reminder != 0;
         if (reminderTime != null)
             this.reminderTime = REMINDER_TIME.valueOf(reminderTime);
         else
@@ -176,7 +172,7 @@ public class Task {
         this.status = STATUS.ACTUAL;
         // Getting predefined task info
         this.predefinedShoppingList = info.getBoolean("predefinedShoppingList");
-        if (this.predefinedShoppingList == true) {
+        if (this.predefinedShoppingList) {
             this.type = Task.TYPE.SHOPPING_LIST;
         }
         String predefinedTimespanStr = info.getString("predefinedTimespan");
@@ -261,7 +257,7 @@ public class Task {
             deleteNotification(context, this);
     }
 
-    public ContentValues getContentValues(Context context) {
+    private ContentValues getContentValues(Context context) {
         Calendar calendar = Calendar.getInstance();
         DayValues dayValues = new DayValues(context);
         ContentValues CV = new ContentValues();

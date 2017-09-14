@@ -2,30 +2,21 @@ package nosfie.easyorg;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.NewTask.NewTaskFirstScreen;
 import nosfie.easyorg.Notes.Notes;
 import nosfie.easyorg.Settings.Settings;
 import nosfie.easyorg.ShoppingLists.ShoppingLists;
 import nosfie.easyorg.TaskCalendar.TaskCalendar;
-import nosfie.easyorg.TaskList.ShoppingList;
 import nosfie.easyorg.TaskList.TaskList;
 
 public class MainActivity extends AppCompatActivity {

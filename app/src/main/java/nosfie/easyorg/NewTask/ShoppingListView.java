@@ -6,7 +6,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,20 +14,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.Callable;
-
 import nosfie.easyorg.Helpers.ViewHelper;
 import nosfie.easyorg.R;
 
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
-/**
- * Created by Nosf on 17.08.2017.
- */
-
 public class ShoppingListView {
 
-    static int DP = 0;
+    private static int DP = 0;
 
     public static TableRow getShoppingItemRow(final Context context, int num, String value) {
 

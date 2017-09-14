@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/holo_blue_dark"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/buttonBack"
@@ -23,7 +25,8 @@
                 android:layout_height="22dp"
                 android:layout_marginTop="1dp"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/arrow_back" />
+                app:srcCompat="@drawable/arrow_back"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <LinearLayout
@@ -34,15 +37,18 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingEnd="20dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="20dp"
+                android:paddingStart="5dp"
                 android:text="@string/settings"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="NestedWeights" />
         </LinearLayout>
 
     </LinearLayout>
@@ -238,6 +244,7 @@
                         android:layout_width="130dp"
                         android:layout_height="29dp"
                         android:adjustViewBounds="true"
+                        android:contentDescription="@string/by_default"
                         app:srcCompat="@drawable/by_default_button_medium" />
 
                     <TextView
@@ -285,11 +292,12 @@
 
                             <ImageView
                                 android:id="@+id/timeMidnightRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -310,11 +318,12 @@
 
                             <ImageView
                                 android:id="@+id/timeCustomRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"

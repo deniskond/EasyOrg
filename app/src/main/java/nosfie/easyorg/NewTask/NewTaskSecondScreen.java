@@ -15,7 +15,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,7 +23,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,10 +35,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import nosfie.easyorg.DataStructures.CustomDate;
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
 public class NewTaskSecondScreen extends AppCompatActivity {
@@ -73,6 +69,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_second_screen);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Getting SharedPreferences day margin
@@ -259,7 +256,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         needReminder.setBackgroundColor(0x00000000);
                         if (task.startTime == Task.START_TIME.CUSTOM) {
-                            if (task.needReminder == true) {
+                            if (task.needReminder) {
                                 task.needReminder = false;
                                 needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
                                 reminderSelected = false;
@@ -393,7 +390,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     }
 
     public void setDate() {
-        DatePickerDialog datePickerDialog =
+        @SuppressWarnings("deprecation") DatePickerDialog datePickerDialog =
             new DatePickerDialog(
                     NewTaskSecondScreen.this,
                     AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,
@@ -480,7 +477,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
     };
 
     public void setDeadlineDate() {
-        DatePickerDialog datePickerDialog =
+        @SuppressWarnings("deprecation") DatePickerDialog datePickerDialog =
                 new DatePickerDialog(
                         NewTaskSecondScreen.this,
                         AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,
@@ -592,7 +589,7 @@ public class NewTaskSecondScreen extends AppCompatActivity {
         editReminderDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if (reminderSelected == false) {
+                if (!reminderSelected) {
                     task.needReminder = false;
                     needReminderImage.setImageResource(R.drawable.checkbox_unchecked_medium);
                     needReminderText.setText(getResources().getString(R.string.reminder));

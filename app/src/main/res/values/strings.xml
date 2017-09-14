@@ -78,6 +78,7 @@
     <string name="note_icon_car">Car</string>
     <string name="note_icon_games">Games</string>
     <string name="note_icon_books">Books</string>
+    <string name="no_icon">No icon</string>
 
     <!-- REMINDER OPTIONS -->
     <string name="reminder_header">Reminder:</string>
@@ -145,14 +146,14 @@
     <string name="august_gen">August</string>
     <string name="september_gen">September</string>
     <string name="october_gen">October</string>
-    <string name="november_gen">Novermber</string>
+    <string name="november_gen">November</string>
     <string name="december_gen">December</string>
 
     <!-- DAY OF WEEK (SHORT) -->
     <string name="monday_short">mo</string>
     <string name="tuesday_short">tu</string>
     <string name="wednesday_short">we</string>
-    <string name="thursday_short">tu</string>
+    <string name="thursday_short">th</string>
     <string name="friday_short">fr</string>
     <string name="saturday_short">sa</string>
     <string name="sunday_short">su</string>

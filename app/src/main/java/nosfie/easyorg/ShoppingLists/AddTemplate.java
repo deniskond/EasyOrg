@@ -1,6 +1,5 @@
 package nosfie.easyorg.ShoppingLists;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.NewTask.NewTaskShoppingList;
 import nosfie.easyorg.R;
 
 import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
@@ -40,6 +38,7 @@ public class AddTemplate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shopping_lists_template);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Setting up view elements
@@ -150,7 +149,6 @@ public class AddTemplate extends AppCompatActivity {
                     number.setText(Integer.toString(i - 1));
                 }
                 insertRowIndex--;
-                return;
             }
         };
 

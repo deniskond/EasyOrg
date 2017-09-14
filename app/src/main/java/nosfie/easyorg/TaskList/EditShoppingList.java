@@ -1,19 +1,13 @@
 package nosfie.easyorg.TaskList;
 
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +20,6 @@ import java.util.ArrayList;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.Helpers.ViewHelper;
 import nosfie.easyorg.R;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
@@ -51,6 +44,7 @@ public class EditShoppingList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_shopping_list);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Setting up DB
@@ -171,7 +165,6 @@ public class EditShoppingList extends AppCompatActivity {
                     number.setText(Integer.toString(i - 1));
                 }
                 insertRowId--;
-                return;
             }
         };
 

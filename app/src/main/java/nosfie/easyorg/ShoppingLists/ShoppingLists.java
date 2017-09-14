@@ -42,6 +42,7 @@ public class ShoppingLists extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shopping_lists);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // DP setup

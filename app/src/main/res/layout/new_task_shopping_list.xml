@@ -27,7 +27,8 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="5dp"
                 android:background="@android:color/holo_blue_dark"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:id="@+id/buttonBack"
@@ -41,7 +42,8 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:layout_marginTop="1dp"
-                        app:srcCompat="@drawable/arrow_back" />
+                        app:srcCompat="@drawable/arrow_back"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -53,15 +55,18 @@
 
                     <TextView
                         android:id="@+id/textView13"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingEnd="20dp"
                         android:paddingLeft="5dp"
                         android:paddingRight="20dp"
+                        android:paddingStart="5dp"
                         android:text="@string/input_shopping_list"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="NestedWeights" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -76,7 +81,8 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_marginTop="1dp"
-                        app:srcCompat="@drawable/cross" />
+                        app:srcCompat="@drawable/cross"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -84,11 +90,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <TableLayout
                     android:id="@+id/shoppingListContainer"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
@@ -113,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
+                        android:contentDescription="@string/add"
                         android:scaleType="fitXY"
                         app:srcCompat="@drawable/add_item_button_medium" />
 
@@ -144,6 +152,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
+                        android:contentDescription="@string/fill_with_template"
                         android:scaleType="fitXY"
                         app:srcCompat="@drawable/template_fill_button_medium" />
 
@@ -181,7 +190,6 @@
                         android:id="@+id/buttonNextText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:capitalize="characters"
                         android:text="@string/next"
                         android:textAllCaps="true"
                         android:textColor="@android:color/white"

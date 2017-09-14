@@ -25,7 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@android:color/holo_blue_dark"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:id="@+id/buttonBack"
@@ -39,7 +40,8 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:layout_marginTop="1dp"
-                        app:srcCompat="@drawable/arrow_back" />
+                        app:srcCompat="@drawable/arrow_back"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -49,13 +51,14 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="5dp"
-                    android:paddingStart="5dp">
+                    android:paddingStart="5dp"
+                    tools:ignore="RtlSymmetry">
 
                     <TextView
                         android:id="@+id/textView17"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Установка времени задачи"
+                        android:text="@string/setting_task_time"
                         android:textColor="#ffffff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -73,7 +76,8 @@
                         android:layout_width="16dp"
                         android:layout_height="22dp"
                         android:layout_marginTop="1dp"
-                        app:srcCompat="@drawable/cross" />
+                        app:srcCompat="@drawable/cross"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -117,11 +121,12 @@
 
                             <ImageView
                                 android:id="@+id/startTodayRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_checked_medium" />
+                                app:srcCompat="@drawable/radio_checked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -142,11 +147,12 @@
 
                             <ImageView
                                 android:id="@+id/startTomorrowRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -167,11 +173,12 @@
 
                             <ImageView
                                 android:id="@+id/startCustomRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -256,11 +263,12 @@
 
                             <ImageView
                                 android:id="@+id/timeDuringDayRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_checked_medium" />
+                                app:srcCompat="@drawable/radio_checked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -281,11 +289,12 @@
 
                             <ImageView
                                 android:id="@+id/timeCustomRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -334,13 +343,15 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginStart="15dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:id="@+id/needReminderImage"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        app:srcCompat="@drawable/checkbox_unchecked_medium" />
+                        app:srcCompat="@drawable/checkbox_unchecked_medium"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/needReminderText"
@@ -405,11 +416,12 @@
 
                             <ImageView
                                 android:id="@+id/deadlineDayRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_checked_medium" />
+                                app:srcCompat="@drawable/radio_checked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -430,11 +442,12 @@
 
                             <ImageView
                                 android:id="@+id/deadlineWeekRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -455,11 +468,12 @@
 
                             <ImageView
                                 android:id="@+id/deadlineMonthRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -480,11 +494,12 @@
 
                             <ImageView
                                 android:id="@+id/deadlineYearRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -505,11 +520,12 @@
 
                             <ImageView
                                 android:id="@+id/deadlineCustomRadio"
-                                android:layout_width="20dp"
+                                android:layout_width="0dp"
                                 android:layout_height="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/radio_unchecked_medium" />
+                                app:srcCompat="@drawable/radio_unchecked_medium"
+                                tools:ignore="ContentDescription" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -525,6 +541,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginStart="10dp"

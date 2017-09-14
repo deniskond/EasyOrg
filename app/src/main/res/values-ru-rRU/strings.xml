@@ -78,6 +78,7 @@
     <string name="note_icon_car">Машина</string>
     <string name="note_icon_games">Игры</string>
     <string name="note_icon_books">Книги</string>
+    <string name="no_icon">Нет иконки</string>
 
     <!-- REMINDER OPTIONS -->
     <string name="reminder_header">Напоминание:</string>

@@ -22,7 +22,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#888888"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/newTask"
@@ -34,7 +35,8 @@
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:orientation="vertical"
-                android:padding="10dip">
+                android:padding="10dip"
+                tools:ignore="NestedWeights">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -89,7 +91,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#888888"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/calendar"
@@ -101,7 +104,8 @@
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:orientation="vertical"
-                android:padding="10dip">
+                android:padding="10dip"
+                tools:ignore="NestedWeights">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -156,7 +160,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#888888"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/notes"
@@ -168,7 +173,8 @@
                 android:layout_weight="1"
                 android:background="#ffffff"
                 android:orientation="vertical"
-                android:padding="10dip">
+                android:padding="10dip"
+                tools:ignore="NestedWeights">
 
                 <ImageView
                     android:layout_width="match_parent"

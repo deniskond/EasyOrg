@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -35,10 +33,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
 import static nosfie.easyorg.Database.Queries.getAllTemplatesFromDB;
@@ -63,6 +58,7 @@ public class NewTaskShoppingList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_shopping_list);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Setting up view elements
@@ -224,7 +220,6 @@ public class NewTaskShoppingList extends AppCompatActivity {
                     number.setText(Integer.toString(i - 1));
                 }
                 insertRowIndex--;
-                return;
             }
         };
 

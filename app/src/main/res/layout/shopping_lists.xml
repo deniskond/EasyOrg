@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/holo_blue_dark"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/buttonBack"
@@ -19,10 +21,11 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="22dp"
+                android:layout_width="0dp"
                 android:layout_height="22dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/arrow_back" />
+                app:srcCompat="@drawable/arrow_back"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <LinearLayout
@@ -33,7 +36,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingEnd="20dp"
@@ -43,7 +46,8 @@
                 android:text="@string/shopping_lists"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="NestedWeights" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,11 +58,12 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="16dp"
+                android:layout_width="0dp"
                 android:layout_height="16dp"
                 android:layout_weight="1"
                 android:visibility="gone"
-                app:srcCompat="@drawable/cross" />
+                app:srcCompat="@drawable/cross"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
     </LinearLayout>
 
@@ -81,7 +86,7 @@
 
                 <TextView
                     android:id="@+id/result"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
             </LinearLayout>
@@ -107,10 +112,11 @@
 
                         <ImageView
                             android:id="@+id/addTemplateImage"
-                            android:layout_width="28dp"
+                            android:layout_width="0dp"
                             android:layout_height="28dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/plus" />
+                            app:srcCompat="@drawable/plus"
+                            tools:ignore="ContentDescription" />
                     </LinearLayout>
 
                     <TextView
@@ -167,7 +173,8 @@
                         android:layout_height="2px"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/shadow_light" />
+                        android:src="@drawable/shadow_light"
+                        tools:ignore="ContentDescription,PxUsage" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -194,10 +201,11 @@
 
                         <ImageView
                             android:id="@+id/addShoppingListImage"
-                            android:layout_width="28dp"
+                            android:layout_width="0dp"
                             android:layout_height="28dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/plus" />
+                            app:srcCompat="@drawable/plus"
+                            tools:ignore="ContentDescription" />
                     </LinearLayout>
 
                     <TextView
@@ -254,7 +262,8 @@
                         android:layout_height="2px"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/shadow_light" />
+                        android:src="@drawable/shadow_light"
+                        tools:ignore="ContentDescription,PxUsage" />
                 </LinearLayout>
 
             </LinearLayout>

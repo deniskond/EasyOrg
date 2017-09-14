@@ -1,7 +1,6 @@
 package nosfie.easyorg.NewTask;
 
 import android.content.Intent;
-import android.support.annotation.IdRes;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +10,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.MainActivity;
 import nosfie.easyorg.R;
 
 public class NewTaskFirstScreen extends AppCompatActivity {
@@ -37,6 +32,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_task_first_screen);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Setting up view elements
@@ -142,7 +138,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         simpleTaskSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (task.type == Task.TYPE.SIMPLE || task.predefinedShoppingList == true)
+                if (task.type == Task.TYPE.SIMPLE || task.predefinedShoppingList)
                     return;
                 simpleTaskSelector.setBackgroundResource(R.drawable.border_big_selected);
                 countableTaskSelector.setBackgroundResource(R.drawable.border_small);
@@ -159,7 +155,7 @@ public class NewTaskFirstScreen extends AppCompatActivity {
         countableTaskSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (task.type == Task.TYPE.COUNTABLE || task.predefinedShoppingList == true)
+                if (task.type == Task.TYPE.COUNTABLE || task.predefinedShoppingList)
                     return;
                 simpleTaskSelector.setBackgroundResource(R.drawable.border_small);
                 countableTaskSelector.setBackgroundResource(R.drawable.border_big_selected);

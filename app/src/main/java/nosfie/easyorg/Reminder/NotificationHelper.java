@@ -4,11 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -16,11 +13,6 @@ import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.R;
 
 import static android.content.Context.ALARM_SERVICE;
-import static nosfie.easyorg.Database.Queries.getAllTasksFromDB;
-
-/**
- * Created by Nosf on 30.08.2017.
- */
 
 public class NotificationHelper {
 

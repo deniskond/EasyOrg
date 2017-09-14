@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -34,6 +32,7 @@ public class ViewNote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_note);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Setting up view elements
@@ -56,7 +55,7 @@ public class ViewNote extends AppCompatActivity {
             note.text = extras.getString("text");
             noteTitle.setText(note.name);
             noteText.setText(note.text);
-            String[] dateSplit = extras.getString("date").toString().split("\\.");
+            String[] dateSplit = extras.getString("date").split("\\.");
             note.customEndDate.year = Integer.parseInt(dateSplit[0]);
             note.customEndDate.month = Integer.parseInt(dateSplit[1]);
             note.customEndDate.day = Integer.parseInt(dateSplit[2]);

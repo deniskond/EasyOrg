@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/holo_blue_dark"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/addTaskButton"
@@ -19,10 +21,11 @@
 
             <ImageView
                 android:id="@+id/addTaskImage"
-                android:layout_width="28dp"
+                android:layout_width="0dp"
                 android:layout_height="28dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/plus" />
+                app:srcCompat="@drawable/plus"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <LinearLayout
@@ -32,18 +35,21 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingEnd="20dp"
             android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingRight="20dp"
+            android:paddingStart="10dp">
 
             <TextView
                 android:id="@+id/timespanText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/today_tasks"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="NestedWeights" />
 
         </LinearLayout>
 
@@ -55,10 +61,11 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="16dp"
+                android:layout_width="0dp"
                 android:layout_height="16dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/cross" />
+                app:srcCompat="@drawable/cross"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
     </LinearLayout>
@@ -94,7 +101,8 @@
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:text="0/0"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <ScrollView
@@ -120,7 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="3px"
                 android:background="@drawable/shadow_light"
-                android:orientation="horizontal"></LinearLayout>
+                android:orientation="horizontal"
+                tools:ignore="PxUsage"></LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +29,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:id="@+id/iconsContainer"
@@ -61,6 +63,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/note_icon_video"
                             app:srcCompat="@drawable/note_icon_1" />
                     </LinearLayout>
 
@@ -95,6 +98,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/note_icon_audio"
                             app:srcCompat="@drawable/note_icon_2" />
                     </LinearLayout>
 
@@ -128,6 +132,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/note_icon_money"
                             app:srcCompat="@drawable/note_icon_3" />
                     </LinearLayout>
 
@@ -161,6 +166,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/note_icon_car"
                             app:srcCompat="@drawable/note_icon_4" />
                     </LinearLayout>
 
@@ -194,6 +200,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/note_icon_games"
                             app:srcCompat="@drawable/note_icon_5" />
                     </LinearLayout>
 
@@ -227,6 +234,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/note_icon_books"
                             app:srcCompat="@drawable/note_icon_6" />
                     </LinearLayout>
 
@@ -265,7 +273,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Нет иконки"
+                        android:text="@string/no_icon"
                         android:textColor="#555555"
                         android:textSize="17sp" />
 

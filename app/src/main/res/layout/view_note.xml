@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/holo_blue_dark"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/buttonSave"
@@ -22,7 +23,8 @@
                 android:id="@+id/icon"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                app:srcCompat="@drawable/white_tick_icon" />
+                app:srcCompat="@drawable/white_tick_icon"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 
@@ -33,7 +35,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="5dp"
-            android:paddingStart="5dp">
+            android:paddingStart="5dp"
+            tools:ignore="RtlSymmetry">
 
             <TextView
                 android:id="@+id/windowTitle"
@@ -42,7 +45,8 @@
                 android:text="Заметка от 22 августа 2017"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,7 +59,8 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                app:srcCompat="@drawable/cross" />
+                app:srcCompat="@drawable/cross"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 
@@ -82,7 +87,8 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
                 android:background="#AAAAAA"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -93,7 +99,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/calendar_day_header_bg" />
+                        app:srcCompat="@drawable/calendar_day_header_bg"
+                        tools:ignore="ContentDescription" />
 
                     <LinearLayout
                         android:layout_width="40dp"
@@ -103,11 +110,12 @@
 
                         <ImageView
                             android:id="@+id/noteIcon"
-                            android:layout_width="24dp"
+                            android:layout_width="0dp"
                             android:layout_height="24dp"
                             android:layout_weight="1"
                             android:adjustViewBounds="true"
-                            app:srcCompat="@drawable/note_icon_1" />
+                            app:srcCompat="@drawable/note_icon_1"
+                            tools:ignore="ContentDescription" />
                     </LinearLayout>
 
                     <TextView
@@ -116,10 +124,10 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:layout_weight="1"
                         android:text="Заголовок заметки"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -137,7 +145,7 @@
 
                     <EditText
                         android:id="@+id/noteText"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="#FFFFFF"
@@ -146,7 +154,8 @@
                         android:inputType="textMultiLine"
                         android:text="Ооооооооооооооооооооооооооооооооооооооооооооооочень много текста"
                         android:textColor="#555555"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        tools:ignore="HardcodedText" />
                 </LinearLayout>
 
             </LinearLayout>

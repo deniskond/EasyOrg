@@ -41,6 +41,7 @@ public class ShoppingList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shopping_list);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         // Setting up DB
@@ -60,6 +61,7 @@ public class ShoppingList extends AppCompatActivity {
         if (extras != null) {
             taskId = extras.getInt("id");
             taskName = extras.getString("taskName");
+            assert taskName != null;
             if (taskName.length() > 25)
                 taskName = taskName.substring(0, 25) + "...";
             shoppingListName.setText(taskName);
@@ -67,6 +69,7 @@ public class ShoppingList extends AppCompatActivity {
             shoppingListState = extras.getIntegerArrayList("shoppingListState");
             int num = 1;
             for (String item: shoppingList) {
+                assert shoppingListState != null;
                 addShoppingItemRow(num, item, shoppingListState.get(num - 1));
                 num++;
             }
@@ -143,7 +146,7 @@ public class ShoppingList extends AppCompatActivity {
         LinearLayout.LayoutParams tickParams = new LinearLayout.LayoutParams(0, 0);
         tickParams.setMargins(convertDpToPixels(this, 20), 0, 0, 0);
         tickParams.width = convertDpToPixels(this, 24);
-        tickParams.height = tickParams.width;
+        tickParams.height = convertDpToPixels(this, 24);
         tick.setLayoutParams(tickParams);
 
         TextView itemText = new TextView(this);

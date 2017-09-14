@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/countable_dialog_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,7 +37,7 @@
 
         <SeekBar
             android:id="@+id/countableSeekbar"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
@@ -53,7 +54,8 @@
             android:gravity="center_vertical"
             android:text="0/0"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <RadioGroup
@@ -74,7 +76,8 @@
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
             android:text="@string/task_status_actual"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
 
         <RadioButton
             android:id="@+id/radioDone"
@@ -85,7 +88,8 @@
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
             android:text="@string/task_status_done"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
 
         <RadioButton
             android:id="@+id/radioNotDone"
@@ -96,7 +100,8 @@
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
             android:text="@string/task_status_failed"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
 
         <RadioButton
             android:id="@+id/radioPostponed"
@@ -108,7 +113,8 @@
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
             android:text="@string/task_status_postponed"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:ignore="RtlSymmetry" />
     </RadioGroup>
 
     <LinearLayout

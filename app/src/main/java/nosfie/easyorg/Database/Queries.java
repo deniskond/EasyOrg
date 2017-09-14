@@ -13,17 +13,13 @@ import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
 
-/**
- * Created by Nosf on 22.08.2017.
- */
-
 public class Queries {
 
-    final static String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
+    private final static String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
             "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState",
             "reminderTime"};
-    static TasksConnector tasksConnector;
-    static SQLiteDatabase DB;
+    private static TasksConnector tasksConnector;
+    private static SQLiteDatabase DB;
 
     public static ArrayList<Task> getNotesFromDB(Context context) {
         tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);

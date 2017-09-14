@@ -10,7 +10,7 @@ import nosfie.easyorg.R;
 
 public class DateStringsHelper {
 
-    static Context context = MainActivity.getInstance();
+    private static Context context = MainActivity.getInstance();
 
     public static String getHumanMonthName(int month) {
         return getHumanMonthName(month, true);
@@ -90,25 +90,25 @@ public class DateStringsHelper {
 
         String dayOfWeekStr = "";
         switch (dayOfWeek) {
-            case 1:
+            case Calendar.SUNDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.sunday_short);
                 break;
-            case 2:
+            case Calendar.MONDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.monday_short);
                 break;
-            case 3:
+            case Calendar.TUESDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.tuesday_short);
                 break;
-            case 4:
+            case Calendar.WEDNESDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.wednesday_short);
                 break;
-            case 5:
+            case Calendar.THURSDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.thursday_short);
                 break;
-            case 6:
+            case Calendar.FRIDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.friday_short);
                 break;
-            case 7:
+            case Calendar.SATURDAY:
                 dayOfWeekStr = context.getResources().getString(R.string.saturday_short);
                 break;
         }

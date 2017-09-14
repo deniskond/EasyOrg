@@ -15,11 +15,9 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +39,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import nosfie.easyorg.Constants;
@@ -60,7 +59,6 @@ public class TaskView {
 
     private static boolean ignoreCheckedChange = false;
     private static Calendar alertDialogCalendar = Calendar.getInstance();
-    private static int DP = 0;
     private static int taskRowHeight = Constants.TASK_ROW_HEIGHT;
     private static Callable updateCallback;
     private static Callable stateCallback;
@@ -79,7 +77,7 @@ public class TaskView {
             Callable uc, Callable sc) {
 
         // Filling values
-        DP = convertDpToPixels(context, 1);
+        int DP = convertDpToPixels(context, 1);
         updateCallback = uc;
         stateCallback = sc;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -311,7 +309,7 @@ public class TaskView {
             taskName.setText(task.name);
         }
         else if (task.type == Task.TYPE.NOTE) {
-            if (task.name == null || task.name == "" || task.name.length() == 0) {
+            if (task.name == null || Objects.equals(task.name, "") || task.name.length() == 0) {
                 if (task.text.length() > 20)
                     task.name = task.text.substring(0, 20) + "...";
                 else
@@ -1027,7 +1025,7 @@ public class TaskView {
         final RadioButton radio10Min = (RadioButton)layout.findViewById(R.id.radio10Min);
         final RadioButton radio30Min = (RadioButton)layout.findViewById(R.id.radio30Min);
         final RadioButton radio1Hour = (RadioButton)layout.findViewById(R.id.radio1Hour);
-        if (task.needReminder == false) {
+        if (!task.needReminder) {
             radioNone.setChecked(true);
         }
         else {
