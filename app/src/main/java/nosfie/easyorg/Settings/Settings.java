@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,6 +26,8 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.R;
+
+import static nosfie.easyorg.Database.Queries.addField;
 
 public class Settings extends AppCompatActivity  implements ColorPickerDialogListener {
 

@@ -150,13 +150,13 @@
     <string name="december_gen">December</string>
 
     <!-- DAY OF WEEK (SHORT) -->
-    <string name="monday_short">mo</string>
-    <string name="tuesday_short">tu</string>
-    <string name="wednesday_short">we</string>
-    <string name="thursday_short">th</string>
-    <string name="friday_short">fr</string>
-    <string name="saturday_short">sa</string>
-    <string name="sunday_short">su</string>
+    <string name="monday_short">Mo</string>
+    <string name="tuesday_short">Tu</string>
+    <string name="wednesday_short">We</string>
+    <string name="thursday_short">Th</string>
+    <string name="friday_short">Fr</string>
+    <string name="saturday_short">Sa</string>
+    <string name="sunday_short">Su</string>
 
     <!-- TOASTS -->
     <string name="error_input_task_name">Please input task name</string>

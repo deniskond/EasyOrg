@@ -18,6 +18,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import nosfie.easyorg.Constants;
+import nosfie.easyorg.DataStructures.CustomDate;
+import nosfie.easyorg.DataStructures.DayValues;
+import nosfie.easyorg.DataStructures.Task;
+import nosfie.easyorg.DataStructures.Timespan;
 import nosfie.easyorg.Database.TasksConnector;
 import nosfie.easyorg.R;
 import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
@@ -34,6 +38,8 @@ public class ShoppingList extends AppCompatActivity {
     TasksConnector tasksConnector;
     TextView shoppingListName, progressBarText, buttonSaveText;
     ProgressBar progressBar;
+    Task.STATUS taskStatus;
+    Timespan globalTimespan = Timespan.TODAY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,8 @@ public class ShoppingList extends AppCompatActivity {
         if (extras != null) {
             taskId = extras.getInt("id");
             taskName = extras.getString("taskName");
+            taskStatus = Task.STATUS.valueOf(extras.getString("taskStatus"));
+            globalTimespan = Timespan.valueOf(extras.getString("timespan"));
             assert taskName != null;
             if (taskName.length() > 25)
                 taskName = taskName.substring(0, 25) + "...";
@@ -93,12 +101,51 @@ public class ShoppingList extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         buttonSave.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorButtonNext, null));
+                        CustomDate intervalFinishedTime = new CustomDate();
+                        boolean initialPositive = false;
+                        if (taskStatus == Task.STATUS.DONE ||
+                            taskStatus == Task.STATUS.IN_PROCESS ||
+                            taskStatus == Task.STATUS.NOT_DONE)
+                                initialPositive = true;
                         String shoppingListStateStr = "";
                         int currentCount = 0;
                         for (int item: shoppingListState) {
                             shoppingListStateStr += Integer.toString(item);
                             currentCount += item;
                         }
+                        boolean afterChangePositive = false;
+                        if (currentCount == shoppingList.size())
+                            afterChangePositive = true;
+
+                        String intervalFinishedQuery = "";
+                        if (initialPositive && afterChangePositive) {
+                            // do nothing
+                        }
+                        else if (!afterChangePositive) {
+                            intervalFinishedQuery = ", intervalFinishedTime = '0000.00.00'";
+                        }
+                        else if (!initialPositive && afterChangePositive) {
+                            DayValues dayValues = new DayValues(ShoppingList.this);
+                            switch (globalTimespan) {
+                                case TODAY:
+                                    intervalFinishedTime = dayValues.today;
+                                    break;
+                                case WEEK:
+                                    intervalFinishedTime = dayValues.endOfWeek;
+                                    break;
+                                case MONTH:
+                                    intervalFinishedTime = dayValues.endOfMonth;
+                                    break;
+                                case YEAR:
+                                    intervalFinishedTime = dayValues.endOfYear;
+                                    break;
+                                default:
+                                    intervalFinishedTime = dayValues.today;
+                                    break;
+                            }
+                            intervalFinishedQuery = ", intervalFinishedTime = '" + intervalFinishedTime.toString() + "'";
+                        }
+
                         DB = tasksConnector.getWritableDatabase();
                         String query = "UPDATE tasks " +
                                 "SET shoppingListState = '" + shoppingListStateStr + "', " +
@@ -107,6 +154,7 @@ public class ShoppingList extends AppCompatActivity {
                             query += ", status = 'DONE'";
                         else
                             query += ", status = 'ACTUAL'";
+                        query += intervalFinishedQuery;
                         query += " WHERE _id = '" + taskId + "'";
                         DB.execSQL(query);
                         DB.close();

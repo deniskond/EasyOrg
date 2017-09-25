@@ -17,9 +17,16 @@ public class Queries {
 
     private final static String columns[] = {"_id", "name", "type", "startDate", "startTime", "count",
             "reminder", "endDate", "shoppingList", "status", "currentCount", "shoppingListState",
-            "reminderTime"};
+            "reminderTime", "intervalFinishedTime"};
     private static TasksConnector tasksConnector;
     private static SQLiteDatabase DB;
+
+    public static void addField(Context context) {
+        tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
+        DB = tasksConnector.getWritableDatabase();
+        DB.execSQL("ALTER TABLE tasks ADD COLUMN intervalFinishedTime TEXT");
+        DB.close();
+    }
 
     public static ArrayList<Task> getNotesFromDB(Context context) {
         tasksConnector = new TasksConnector(context, Constants.DB_NAME, null, 1);
@@ -106,7 +113,8 @@ public class Queries {
                 cursor.getString(9),
                 cursor.getInt(10),
                 cursor.getString(11),
-                cursor.getString(12)
+                cursor.getString(12),
+                cursor.getString(13)
         );
     }
 

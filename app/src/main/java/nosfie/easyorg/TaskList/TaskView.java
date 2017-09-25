@@ -44,6 +44,7 @@ import java.util.concurrent.Callable;
 
 import nosfie.easyorg.Constants;
 import nosfie.easyorg.DataStructures.CustomDate;
+import nosfie.easyorg.DataStructures.DayValues;
 import nosfie.easyorg.DataStructures.Daytime;
 import nosfie.easyorg.DataStructures.Task;
 import nosfie.easyorg.DataStructures.Timespan;
@@ -70,6 +71,7 @@ public class TaskView {
             colorTaskPostponed = 0;
     private static Daytime dayMargin;
     private static CustomDate swapStartDate = new CustomDate();
+    private static Timespan globalTimespan;
 
     public static LinearLayout getTaskRow(
             final Context context, int num, final Task task,
@@ -77,6 +79,7 @@ public class TaskView {
             Callable uc, Callable sc) {
 
         // Filling values
+        globalTimespan = timespan;
         int DP = convertDpToPixels(context, 1);
         updateCallback = uc;
         stateCallback = sc;
@@ -148,7 +151,26 @@ public class TaskView {
             reminderParams.width = 24 * DP;
             reminder.setLayoutParams(reminderParams);
             reminder.setAdjustViewBounds(true);
-            reminder.setImageResource(R.drawable.bell_icon_small);
+            switch (task.reminderTime) {
+                case EXACT:
+                    reminder.setImageResource(R.drawable.bell_icon_small);
+                    break;
+                case FIVE_MINS:
+                    reminder.setImageResource(R.drawable.reminder_5m);
+                    break;
+                case TEN_MINS:
+                    reminder.setImageResource(R.drawable.reminder_10m);
+                    break;
+                case THIRTY_MINS:
+                    reminder.setImageResource(R.drawable.reminder_30m);
+                    break;
+                case ONE_HOUR:
+                    reminder.setImageResource(R.drawable.reminder_1h);
+                    break;
+                default:
+                    reminder.setImageResource(R.drawable.bell_icon_small);
+                    break;
+            }
             numberRow.addView(reminder);
         }
         else {
@@ -403,6 +425,8 @@ public class TaskView {
                 Intent intent = new Intent(context, ShoppingList.class);
                 intent.putExtra("id", task.id);
                 intent.putExtra("taskName", task.name);
+                intent.putExtra("timespan", globalTimespan.toString());
+                intent.putExtra("taskStatus", task.status.toString());
                 intent.putExtra("shoppingList", task.shoppingList);
                 intent.putExtra("shoppingListState", task.shoppingListState);
                 context.startActivity(intent);
@@ -427,6 +451,8 @@ public class TaskView {
     }
 
     private static void showCountableTaskDialog(final Context context, final Task task) {
+        final Task.STATUS initialStatus = task.status;
+
         WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point displaySize = new Point();
@@ -516,6 +542,7 @@ public class TaskView {
                 task.currentCount = seekBar.getProgress();
                 if (task.currentCount == task.count)
                     task.status = Task.STATUS.DONE;
+                task.intervalFinishedTime = getTaskIntervalFinishedTime(context, task, initialStatus);
                 task.synchronize(context);
                 try {
                     stateCallback.call();
@@ -530,6 +557,7 @@ public class TaskView {
 
     private static void showSimpleTaskDialog(final Context context, final Task task) {
         int status = 0;
+        final Task.STATUS initialStatus = task.status;
         switch (task.status) {
             case ACTUAL:
                 status = 0;
@@ -587,6 +615,7 @@ public class TaskView {
                 View rootView = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
                 LinearLayout taskRow = (LinearLayout)rootView.findViewById(task.id);
                 taskRow.setBackgroundColor(color);
+                task.intervalFinishedTime = getTaskIntervalFinishedTime(context, task, initialStatus);
                 task.synchronize(context);
                 try {
                     stateCallback.call();
@@ -1550,6 +1579,54 @@ public class TaskView {
 
         // Showing
         selectIconDialog.show();
+    }
+
+    private static CustomDate getTaskIntervalFinishedTime(Context context,
+                   Task task, Task.STATUS initialStatus) {
+        CustomDate intervalFinishedTime = new CustomDate();
+        boolean initialPositive = false;
+        if (initialStatus == Task.STATUS.DONE ||
+            initialStatus == Task.STATUS.IN_PROCESS ||
+            initialStatus == Task.STATUS.NOT_DONE)
+            initialPositive = true;
+        boolean afterChangePositive = false;
+        if (task.status == Task.STATUS.DONE ||
+            task.status == Task.STATUS.IN_PROCESS ||
+            task.status == Task.STATUS.NOT_DONE)
+            afterChangePositive = true;
+
+        if (initialPositive && afterChangePositive) {
+            intervalFinishedTime.year = task.intervalFinishedTime.year;
+            intervalFinishedTime.month = task.intervalFinishedTime.month;
+            intervalFinishedTime.day = task.intervalFinishedTime.day;
+        }
+        else if (!afterChangePositive) {
+            intervalFinishedTime.year = 0;
+            intervalFinishedTime.month = 0;
+            intervalFinishedTime.day = 0;
+        }
+        else if (!initialPositive && afterChangePositive) {
+            DayValues dayValues = new DayValues(context);
+            switch (globalTimespan) {
+                case TODAY:
+                    intervalFinishedTime = dayValues.today;
+                    break;
+                case WEEK:
+                    intervalFinishedTime = dayValues.endOfWeek;
+                    break;
+                case MONTH:
+                    intervalFinishedTime = dayValues.endOfMonth;
+                    break;
+                case YEAR:
+                    intervalFinishedTime = dayValues.endOfYear;
+                    break;
+                default:
+                    intervalFinishedTime = dayValues.today;
+                    break;
+            }
+        }
+
+        return intervalFinishedTime;
     }
 
 }

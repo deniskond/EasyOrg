@@ -49,7 +49,10 @@ public class Task {
     public String text;
     public int count, currentCount;
     public boolean needReminder;
-    public CustomDate customStartDate = new CustomDate(), customEndDate = new CustomDate();
+    public CustomDate
+            customStartDate = new CustomDate(),
+            customEndDate = new CustomDate(),
+            intervalFinishedTime = new CustomDate();
     public TYPE type;
     public START_DATE startDate;
     public START_TIME startTime;
@@ -84,7 +87,7 @@ public class Task {
 
     public Task(int id, String name, String type, String startDate, String startTime,
                 int count, int reminder, String endDate, String shoppingList, String taskStatus,
-                int currentCount, String shoppingListState, String reminderTime) {
+                int currentCount, String shoppingListState, String reminderTime, String intervalFinishedTime) {
         this.id = id;
         this.name = name;
         this.type = TYPE.valueOf(type);
@@ -136,6 +139,14 @@ public class Task {
                 this.shoppingListState.add(Integer.parseInt(shoppingListState.substring(pos, pos + 1)));
 
         this.text = shoppingList;
+
+        if (intervalFinishedTime == null || intervalFinishedTime.equals(""))
+            intervalFinishedTime = "0000.00.00";
+        String[] intervalDateSplit = intervalFinishedTime.split("\\.");
+        this.intervalFinishedTime = new CustomDate();
+        this.intervalFinishedTime.year = Integer.parseInt(intervalDateSplit[0]);
+        this.intervalFinishedTime.month = Integer.parseInt(intervalDateSplit[1]);
+        this.intervalFinishedTime.day = Integer.parseInt(intervalDateSplit[2]);
     }
 
     public Task(Bundle info) {
@@ -358,6 +369,8 @@ public class Task {
         for (int digit: shoppingListState)
             shoppingListStateStr += Integer.toString(digit);
         CV.put("shoppingListState", shoppingListStateStr);
+
+        CV.put("intervalFinishedTime", this.intervalFinishedTime.toString());
 
         return CV;
     }

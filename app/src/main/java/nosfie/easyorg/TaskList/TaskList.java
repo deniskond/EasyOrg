@@ -37,8 +37,6 @@ public class TaskList extends AppCompatActivity {
     TextView progressBarText;
     ProgressBar progressBar;
     ImageView addTaskImage;
-    int lockedID = -1;
-    Timespan lockedTimespan = Timespan.TODAY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +132,6 @@ public class TaskList extends AppCompatActivity {
                     TaskList.this, num, task, true, true, timespan, new Callable() {
                         @Override
                         public Object call() throws Exception {
-                            lockedID = -1;
                             redrawProgressBar();
                             getTasks();
                             return null;
@@ -142,8 +139,6 @@ public class TaskList extends AppCompatActivity {
                     }, new Callable() {
                         @Override
                         public Object call() throws Exception {
-                            lockedTimespan = timespan;
-                            lockedID = task.id;
                             redrawProgressBar();
                             getTasks();
                             return null;
@@ -261,6 +256,7 @@ public class TaskList extends AppCompatActivity {
     }
 
     protected ArrayList<Task> filterTasksByTimespan(ArrayList<Task> tasks, Timespan timespan) {
+        // PERPETUAL TASKS
         if (timespan == Timespan.UNLIMITED) {
             ArrayList<Task> unlimitedTasks = new ArrayList<>();
             for (Task task: tasks)
@@ -269,6 +265,7 @@ public class TaskList extends AppCompatActivity {
             return unlimitedTasks;
         }
 
+        // TODAY TASKS
         ArrayList<Task> todayTasks = new ArrayList<>();
         DayValues dayValues = new DayValues(TaskList.this);
         for (Task task: tasks) {
@@ -283,13 +280,14 @@ public class TaskList extends AppCompatActivity {
                  task.status != Task.STATUS.IN_PROCESS
                 )
                 ||
-                (lockedTimespan == Timespan.TODAY && lockedID == task.id)
+                (task.intervalFinishedTime.toString().equals(today))
                )
                 todayTasks.add(task);
         }
         if (timespan == Timespan.TODAY)
             return todayTasks;
 
+        // WEEK TASKS
         ArrayList<Task> weekTasks = new ArrayList<>();
         for (Task task: tasks) {
             String startDate = task.customStartDate.toString();
@@ -313,7 +311,7 @@ public class TaskList extends AppCompatActivity {
                  !startDate.equals(endDate)
                 )
                  ||
-                (lockedTimespan == Timespan.WEEK && lockedID == task.id)
+                (task.intervalFinishedTime.toString().equals(endOfWeek))
                ) {
                    if (!todayTasks.contains(task))
                        weekTasks.add(task);
@@ -322,6 +320,7 @@ public class TaskList extends AppCompatActivity {
         if (timespan == Timespan.WEEK)
             return weekTasks;
 
+        // MONTH TASKS
         ArrayList<Task> monthTasks = new ArrayList<>();
         for (Task task: tasks) {
             String startDate = task.customStartDate.toString();
@@ -339,7 +338,7 @@ public class TaskList extends AppCompatActivity {
                  task.status != Task.STATUS.IN_PROCESS
                 )
                 ||
-                (lockedTimespan == Timespan.MONTH && lockedID == task.id)
+                (task.intervalFinishedTime.toString().equals(endOfMonth))
                ) {
                    if (!todayTasks.contains(task) && !weekTasks.contains(task))
                        monthTasks.add(task);
@@ -348,6 +347,7 @@ public class TaskList extends AppCompatActivity {
         if (timespan == Timespan.MONTH)
             return monthTasks;
 
+        // YEAR TASKS
         ArrayList<Task> yearTasks = new ArrayList<>();
         for (Task task: tasks) {
             String endDate = task.customEndDate.toString();
@@ -362,7 +362,7 @@ public class TaskList extends AppCompatActivity {
                  task.status != Task.STATUS.IN_PROCESS
                 )
                 ||
-                (lockedTimespan == Timespan.YEAR && lockedID == task.id)
+                (task.intervalFinishedTime.toString().equals(endOfYear))
             ) {
                 if (!todayTasks.contains(task) && !weekTasks.contains(task) && !monthTasks.contains(task))
                     yearTasks.add(task);
