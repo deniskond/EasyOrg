@@ -244,7 +244,7 @@ public class Task {
         this.id = (int)DB.insert("tasks", null, CV);
         DB.close();
         if (this.needReminder)
-            createNotification(context, this);
+            createNotification(context.getApplicationContext(), this);
     }
 
     public void synchronize(Context context) {

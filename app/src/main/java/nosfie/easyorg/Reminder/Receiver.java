@@ -27,7 +27,6 @@ public class Receiver extends BroadcastReceiver {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setSound(path)
                 .build();
-        //notification.flags = Notification.FLAG_INSISTENT;
         nm.notify(1, notification);
     }
 }

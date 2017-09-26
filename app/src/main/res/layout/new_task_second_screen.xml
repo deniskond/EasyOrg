@@ -344,6 +344,7 @@
                     android:layout_marginStart="15dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView

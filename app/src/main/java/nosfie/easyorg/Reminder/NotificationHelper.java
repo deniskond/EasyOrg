@@ -4,8 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -24,9 +22,7 @@ public class NotificationHelper {
         intent.putExtra("Content", task.customStartTime.toString().replace("-", ":") + " " + task.name);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
-        long timeDiff = getTimeDiffMillis(context, task);
-        if (timeDiff > 0)
-            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeDiff, pIntent);
+        am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 60 * 1000, pIntent);
     }
 
     public static void deleteNotification(Context context, Task task) {
@@ -43,11 +39,11 @@ public class NotificationHelper {
         intent.putExtra("Title", context.getResources().getString(R.string.notification_title));
         intent.putExtra("Content", task.customStartTime.toString().replace("-", ":") + " " + task.name);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
         long timeDiff = getTimeDiffMillis(context, task);
         if (timeDiff > 0)
-            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeDiff, pIntent);
+            am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeDiff, pIntent);
     }
 
     private static long getTimeDiffMillis(Context context, Task task) {
@@ -77,8 +73,6 @@ public class NotificationHelper {
                 reminderBias = 60 * 60 * 1000;
                 break;
         }
-        Toast.makeText(context, "Alarm in " + Long.toString((taskTime - reminderBias - currentTime) / 1000) , Toast.LENGTH_SHORT).show();
-        //Log.d("qq", "Alarm in " + Long.toString((taskTime - reminderBias - currentTime) / 1000));
         return taskTime - reminderBias - currentTime;
     }
 

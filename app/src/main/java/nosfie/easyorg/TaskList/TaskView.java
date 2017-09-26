@@ -695,8 +695,8 @@ public class TaskView {
                 context.getResources().getString(R.string.edit_name),
                 context.getResources().getString(R.string.edit_countable_goal),
                 context.getResources().getString(R.string.edit_time_interval),
-                context.getResources().getString(R.string.edit_start_time),
-                context.getResources().getString(R.string.edit_reminder)};
+                context.getResources().getString(R.string.edit_start_time)
+                /*,context.getResources().getString(R.string.edit_reminder)*/};
         final AlertDialog simpleTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getResources().getString(R.string.change) + ":");
@@ -1133,8 +1133,8 @@ public class TaskView {
                 context.getResources().getString(R.string.edit_name),
                 context.getResources().getString(R.string.edit_countable_goal),
                 context.getResources().getString(R.string.edit_time_interval),
-                context.getResources().getString(R.string.edit_start_time),
-                context.getResources().getString(R.string.edit_reminder)
+                context.getResources().getString(R.string.edit_start_time)
+                /*,context.getResources().getString(R.string.edit_reminder)*/
         };
         final AlertDialog countableTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -1264,8 +1264,8 @@ public class TaskView {
                 context.getResources().getString(R.string.edit_name),
                 context.getResources().getString(R.string.shopping_list),
                 context.getResources().getString(R.string.edit_time_interval),
-                context.getResources().getString(R.string.edit_start_time),
-                context.getResources().getString(R.string.edit_reminder)
+                context.getResources().getString(R.string.edit_start_time)
+                /*,context.getResources().getString(R.string.edit_reminder)*/
         };
         final AlertDialog countableTaskDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
