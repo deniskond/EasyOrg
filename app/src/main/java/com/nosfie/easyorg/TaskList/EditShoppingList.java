@@ -1,4 +1,4 @@
-package nosfie.easyorg.TaskList;
+package com.nosfie.easyorg.TaskList;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,11 +18,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.R;
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
-import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
+import com.nosfie.easyorg.Constants;
+import com.nosfie.easyorg.Database.TasksConnector;
+import com.nosfie.easyorg.R;
+import static com.nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import static com.nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
 
 public class EditShoppingList extends AppCompatActivity {
 

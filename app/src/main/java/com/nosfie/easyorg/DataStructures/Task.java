@@ -1,4 +1,4 @@
-package nosfie.easyorg.DataStructures;
+package com.nosfie.easyorg.DataStructures;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,12 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.Database.TasksConnector;
+import com.nosfie.easyorg.Constants;
+import com.nosfie.easyorg.Database.TasksConnector;
 
-import static nosfie.easyorg.Reminder.NotificationHelper.createNotification;
-import static nosfie.easyorg.Reminder.NotificationHelper.deleteNotification;
-import static nosfie.easyorg.Reminder.NotificationHelper.updateNotification;
+import static com.nosfie.easyorg.Reminder.NotificationHelper.createNotification;
+import static com.nosfie.easyorg.Reminder.NotificationHelper.deleteNotification;
+import static com.nosfie.easyorg.Reminder.NotificationHelper.updateNotification;
 
 public class Task {
 

@@ -1,4 +1,4 @@
-package nosfie.easyorg.Notes;
+package com.nosfie.easyorg.Notes;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
-import static nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
+import static com.nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
 
 public class ViewNote extends AppCompatActivity {
 

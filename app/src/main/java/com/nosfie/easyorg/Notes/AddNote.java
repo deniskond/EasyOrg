@@ -1,4 +1,4 @@
-package nosfie.easyorg.Notes;
+package com.nosfie.easyorg.Notes;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -22,8 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
 public class AddNote extends AppCompatActivity {
 

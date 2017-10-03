@@ -1,4 +1,4 @@
-package nosfie.easyorg.TaskList;
+package com.nosfie.easyorg.TaskList;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -42,19 +42,19 @@ import java.util.GregorianCalendar;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.DataStructures.CustomDate;
-import nosfie.easyorg.DataStructures.DayValues;
-import nosfie.easyorg.DataStructures.Daytime;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.Notes.ViewNote;
-import nosfie.easyorg.R;
-import nosfie.easyorg.ShoppingLists.EditTemplate;
+import com.nosfie.easyorg.Constants;
+import com.nosfie.easyorg.DataStructures.CustomDate;
+import com.nosfie.easyorg.DataStructures.DayValues;
+import com.nosfie.easyorg.DataStructures.Daytime;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.DataStructures.Timespan;
+import com.nosfie.easyorg.Notes.ViewNote;
+import com.nosfie.easyorg.R;
+import com.nosfie.easyorg.ShoppingLists.EditTemplate;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static nosfie.easyorg.Helpers.DateStringsHelper.getShortMonthName;
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import static com.nosfie.easyorg.Helpers.DateStringsHelper.getShortMonthName;
+import static com.nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
 public class TaskView {
 

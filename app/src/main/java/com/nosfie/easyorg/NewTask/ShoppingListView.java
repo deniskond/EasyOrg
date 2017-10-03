@@ -1,4 +1,4 @@
-package nosfie.easyorg.NewTask;
+package com.nosfie.easyorg.NewTask;
 
 import android.content.Context;
 import android.text.InputType;
@@ -14,10 +14,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import nosfie.easyorg.Helpers.ViewHelper;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.Helpers.ViewHelper;
+import com.nosfie.easyorg.R;
 
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import static com.nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
 public class ShoppingListView {
 

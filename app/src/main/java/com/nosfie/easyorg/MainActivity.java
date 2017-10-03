@@ -1,4 +1,4 @@
-package nosfie.easyorg;
+package com.nosfie.easyorg;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,13 +11,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.NewTask.NewTaskFirstScreen;
-import nosfie.easyorg.Notes.Notes;
-import nosfie.easyorg.Settings.Settings;
-import nosfie.easyorg.ShoppingLists.ShoppingLists;
-import nosfie.easyorg.TaskCalendar.TaskCalendar;
-import nosfie.easyorg.TaskList.TaskList;
+import com.nosfie.easyorg.Database.TasksConnector;
+import com.nosfie.easyorg.NewTask.NewTaskFirstScreen;
+import com.nosfie.easyorg.Notes.Notes;
+import com.nosfie.easyorg.Settings.Settings;
+import com.nosfie.easyorg.ShoppingLists.ShoppingLists;
+import com.nosfie.easyorg.TaskCalendar.TaskCalendar;
+import com.nosfie.easyorg.TaskList.TaskList;
 
 public class MainActivity extends AppCompatActivity {
 

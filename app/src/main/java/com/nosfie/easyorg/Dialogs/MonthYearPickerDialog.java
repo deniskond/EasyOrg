@@ -1,4 +1,4 @@
-package nosfie.easyorg.Dialogs;
+package com.nosfie.easyorg.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.R;
 
 public class MonthYearPickerDialog extends DialogFragment {
 

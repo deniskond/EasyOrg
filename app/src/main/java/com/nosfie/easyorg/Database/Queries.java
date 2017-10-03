@@ -1,4 +1,4 @@
-package nosfie.easyorg.Database;
+package com.nosfie.easyorg.Database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,10 +8,10 @@ import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.DataStructures.Daytime;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
+import com.nosfie.easyorg.Constants;
+import com.nosfie.easyorg.DataStructures.Daytime;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.DataStructures.Timespan;
 
 public class Queries {
 

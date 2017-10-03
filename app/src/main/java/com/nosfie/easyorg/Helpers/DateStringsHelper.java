@@ -1,12 +1,12 @@
-package nosfie.easyorg.Helpers;
+package com.nosfie.easyorg.Helpers;
 
 import android.content.Context;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import nosfie.easyorg.MainActivity;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.MainActivity;
+import com.nosfie.easyorg.R;
 
 public class DateStringsHelper {
 

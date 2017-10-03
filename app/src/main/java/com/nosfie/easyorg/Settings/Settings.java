@@ -1,4 +1,4 @@
-package nosfie.easyorg.Settings;
+package com.nosfie.easyorg.Settings;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
-import nosfie.easyorg.DataStructures.Daytime;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Daytime;
+import com.nosfie.easyorg.R;
 
 public class Settings extends AppCompatActivity  implements ColorPickerDialogListener {
 

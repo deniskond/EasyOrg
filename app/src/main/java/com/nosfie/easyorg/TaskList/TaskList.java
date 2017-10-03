@@ -1,4 +1,4 @@
-package nosfie.easyorg.TaskList;
+package com.nosfie.easyorg.TaskList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,15 +14,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.DataStructures.DayValues;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.NewTask.NewTaskFirstScreen;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.Constants;
+import com.nosfie.easyorg.DataStructures.DayValues;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.DataStructures.Timespan;
+import com.nosfie.easyorg.Database.TasksConnector;
+import com.nosfie.easyorg.NewTask.NewTaskFirstScreen;
+import com.nosfie.easyorg.R;
 
-import static nosfie.easyorg.Database.Queries.getTasksForTaskListFromDB;
+import static com.nosfie.easyorg.Database.Queries.getTasksForTaskListFromDB;
 
 public class TaskList extends AppCompatActivity {
 

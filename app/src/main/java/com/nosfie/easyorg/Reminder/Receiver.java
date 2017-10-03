@@ -1,4 +1,4 @@
-package nosfie.easyorg.Reminder;
+package com.nosfie.easyorg.Reminder;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.R;
 
 public class Receiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        /*NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         Uri path = Uri.parse("android.resource://nosfie.easyorg/" + R.raw.alarm_tone);
         Notification notification = new NotificationCompat.Builder(ctx)
                 .setContentTitle(intent.getExtras().getString("Title"))
@@ -27,6 +27,6 @@ public class Receiver extends BroadcastReceiver {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setSound(path)
                 .build();
-        nm.notify(1, notification);
+        nm.notify(1, notification);*/
     }
 }

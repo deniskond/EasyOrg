@@ -1,4 +1,4 @@
-package nosfie.easyorg.ShoppingLists;
+package com.nosfie.easyorg.ShoppingLists;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -16,10 +16,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
-import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
+import static com.nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
 
 public class AddTemplate extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package nosfie.easyorg.DataStructures;
+package com.nosfie.easyorg.DataStructures;
 
 public class Daytime {
     public int hours;

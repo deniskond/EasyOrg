@@ -1,4 +1,4 @@
-package nosfie.easyorg.TaskCalendar;
+package com.nosfie.easyorg.TaskCalendar;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,21 +20,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import nosfie.easyorg.DataStructures.DayValues;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.Dialogs.MonthYearPickerDialog;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.DayValues;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.Dialogs.MonthYearPickerDialog;
+import com.nosfie.easyorg.R;
 
-import static nosfie.easyorg.Database.Queries.getCalendarTasksFromDB;
-import static nosfie.easyorg.Helpers.ViewHelper.*;
-import static nosfie.easyorg.Helpers.DateStringsHelper.*;
+import static com.nosfie.easyorg.Database.Queries.getCalendarTasksFromDB;
+import static com.nosfie.easyorg.Helpers.ViewHelper.*;
+import static com.nosfie.easyorg.Helpers.DateStringsHelper.*;
 
 public class TaskCalendar extends AppCompatActivity {
 

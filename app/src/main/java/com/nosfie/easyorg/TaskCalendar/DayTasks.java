@@ -1,4 +1,4 @@
-package nosfie.easyorg.TaskCalendar;
+package com.nosfie.easyorg.TaskCalendar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,15 +14,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import nosfie.easyorg.DataStructures.CustomDate;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.NewTask.NewTaskFirstScreen;
-import nosfie.easyorg.R;
-import nosfie.easyorg.TaskList.TaskView;
+import com.nosfie.easyorg.DataStructures.CustomDate;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.DataStructures.Timespan;
+import com.nosfie.easyorg.NewTask.NewTaskFirstScreen;
+import com.nosfie.easyorg.R;
+import com.nosfie.easyorg.TaskList.TaskView;
 
-import static nosfie.easyorg.Database.Queries.getDayTasksFromDB;
-import static nosfie.easyorg.Helpers.DateStringsHelper.*;
+import static com.nosfie.easyorg.Database.Queries.getDayTasksFromDB;
+import static com.nosfie.easyorg.Helpers.DateStringsHelper.*;
 
 public class DayTasks extends AppCompatActivity {
 

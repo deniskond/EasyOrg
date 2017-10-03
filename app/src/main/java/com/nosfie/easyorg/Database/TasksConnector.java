@@ -1,4 +1,4 @@
-package nosfie.easyorg.Database;
+package com.nosfie.easyorg.Database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

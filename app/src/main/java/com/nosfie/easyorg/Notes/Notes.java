@@ -1,4 +1,4 @@
-package nosfie.easyorg.Notes;
+package com.nosfie.easyorg.Notes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,12 +12,12 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.R;
-import nosfie.easyorg.TaskList.TaskView;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.DataStructures.Timespan;
+import com.nosfie.easyorg.R;
+import com.nosfie.easyorg.TaskList.TaskView;
 
-import static nosfie.easyorg.Database.Queries.getNotesFromDB;
+import static com.nosfie.easyorg.Database.Queries.getNotesFromDB;
 
 public class Notes extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package nosfie.easyorg.NewTask;
+package com.nosfie.easyorg.NewTask;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -33,12 +33,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
-import static nosfie.easyorg.Database.Queries.getAllTemplatesFromDB;
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
-import static nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
+import static com.nosfie.easyorg.Database.Queries.getAllTemplatesFromDB;
+import static com.nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import static com.nosfie.easyorg.NewTask.ShoppingListView.getShoppingItemRow;
 
 public class NewTaskShoppingList extends AppCompatActivity {
 

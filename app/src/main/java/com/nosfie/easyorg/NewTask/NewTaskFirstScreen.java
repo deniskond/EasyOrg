@@ -1,4 +1,4 @@
-package nosfie.easyorg.NewTask;
+package com.nosfie.easyorg.NewTask;
 
 import android.content.Intent;
 import android.support.v4.content.res.ResourcesCompat;
@@ -13,8 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
 public class NewTaskFirstScreen extends AppCompatActivity {
 

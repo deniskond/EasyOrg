@@ -1,4 +1,4 @@
-package nosfie.easyorg.NewTask;
+package com.nosfie.easyorg.NewTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,9 +35,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import nosfie.easyorg.DataStructures.Daytime;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Daytime;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
 public class NewTaskSecondScreen extends AppCompatActivity {
 

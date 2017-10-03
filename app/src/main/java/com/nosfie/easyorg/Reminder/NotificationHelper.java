@@ -1,4 +1,4 @@
-package nosfie.easyorg.Reminder;
+package com.nosfie.easyorg.Reminder;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,8 +8,8 @@ import android.content.Intent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.R;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.R;
 
 import static android.content.Context.ALARM_SERVICE;
 

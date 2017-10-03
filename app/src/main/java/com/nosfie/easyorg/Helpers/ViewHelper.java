@@ -1,4 +1,4 @@
-package nosfie.easyorg.Helpers;
+package com.nosfie.easyorg.Helpers;
 
 import android.content.Context;
 

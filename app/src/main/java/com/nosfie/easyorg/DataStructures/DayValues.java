@@ -1,4 +1,4 @@
-package nosfie.easyorg.DataStructures;
+package com.nosfie.easyorg.DataStructures;
 
 import android.content.Context;
 import android.content.SharedPreferences;

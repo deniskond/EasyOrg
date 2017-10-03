@@ -1,10 +1,10 @@
-package nosfie.easyorg.DataStructures;
+package com.nosfie.easyorg.DataStructures;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static nosfie.easyorg.Helpers.DateStringsHelper.getDayOfWeekStr;
-import static nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
+import static com.nosfie.easyorg.Helpers.DateStringsHelper.getDayOfWeekStr;
+import static com.nosfie.easyorg.Helpers.DateStringsHelper.getHumanMonthNameGenitive;
 
 public class CustomDate {
     public int day;

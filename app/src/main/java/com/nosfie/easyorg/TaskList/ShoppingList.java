@@ -1,4 +1,4 @@
-package nosfie.easyorg.TaskList;
+package com.nosfie.easyorg.TaskList;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,14 +17,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import nosfie.easyorg.Constants;
-import nosfie.easyorg.DataStructures.CustomDate;
-import nosfie.easyorg.DataStructures.DayValues;
-import nosfie.easyorg.DataStructures.Task;
-import nosfie.easyorg.DataStructures.Timespan;
-import nosfie.easyorg.Database.TasksConnector;
-import nosfie.easyorg.R;
-import static nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
+import com.nosfie.easyorg.Constants;
+import com.nosfie.easyorg.DataStructures.CustomDate;
+import com.nosfie.easyorg.DataStructures.DayValues;
+import com.nosfie.easyorg.DataStructures.Task;
+import com.nosfie.easyorg.DataStructures.Timespan;
+import com.nosfie.easyorg.Database.TasksConnector;
+import com.nosfie.easyorg.R;
+import static com.nosfie.easyorg.Helpers.ViewHelper.convertDpToPixels;
 
 public class ShoppingList extends AppCompatActivity {
 
