@@ -196,7 +196,7 @@
 
     <!-- SETTINGS -->
     <string name="task_status_colors">Task status colors:</string>
-    <string name="day_margin">Assume day margin:</string>
+    <string name="day_margin">Set day end to:</string>
     <string name="day_margin_midnight">Midnight (00:00)</string>
     <string name="day_margin_custom">Custom time:</string>
 
