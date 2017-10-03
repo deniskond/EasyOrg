@@ -208,7 +208,7 @@
     <string name="set_default_colors_prompt">Do you really want to reset task colors to their defaults?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="present">Present</string>
+    <string name="present">Custom</string>
     <string name="editing_template">Edit template</string>
     <string name="no_templates">No templates</string>
     <string name="no_active_shopping_lists">No active shopping lists</string>
