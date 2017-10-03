@@ -53,6 +53,7 @@ public class Task {
             customStartDate = new CustomDate(),
             customEndDate = new CustomDate(),
             intervalFinishedTime = new CustomDate();
+    public Timespan finishedTimespan = Timespan.TODAY;
     public TYPE type;
     public START_DATE startDate;
     public START_TIME startTime;
@@ -142,6 +143,10 @@ public class Task {
 
         if (intervalFinishedTime == null || intervalFinishedTime.equals(""))
             intervalFinishedTime = "0000.00.00";
+        String[] intervalFirstSplit = intervalFinishedTime.split("\\|");
+        intervalFinishedTime = intervalFirstSplit[0];
+        if (intervalFirstSplit.length == 2)
+            this.finishedTimespan = Timespan.valueOf(intervalFirstSplit[1]);
         String[] intervalDateSplit = intervalFinishedTime.split("\\.");
         this.intervalFinishedTime = new CustomDate();
         this.intervalFinishedTime.year = Integer.parseInt(intervalDateSplit[0]);
@@ -370,7 +375,7 @@ public class Task {
             shoppingListStateStr += Integer.toString(digit);
         CV.put("shoppingListState", shoppingListStateStr);
 
-        CV.put("intervalFinishedTime", this.intervalFinishedTime.toString());
+        CV.put("intervalFinishedTime", this.intervalFinishedTime.toString() + "|" + finishedTimespan.toString());
 
         return CV;
     }
@@ -392,6 +397,15 @@ public class Task {
                 "\n Type: " + this.type +
                 "\n Reminder time: " + this.reminderTime +
                 "\n Text: " + this.text;
+    }
+
+    public boolean isFinished() {
+        if (this.status == STATUS.DONE ||
+                this.status == STATUS.NOT_DONE ||
+                this.status == STATUS.IN_PROCESS)
+            return true;
+        else
+            return false;
     }
 
 }

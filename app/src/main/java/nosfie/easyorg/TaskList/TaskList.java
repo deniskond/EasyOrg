@@ -274,13 +274,10 @@ public class TaskList extends AppCompatActivity {
             String today = dayValues.today.toString();
             if ((startDate.equals(today) && endDate.equals(today))
                 ||
-                (endDate.equals(today) &&
-                 task.status != Task.STATUS.DONE &&
-                 task.status != Task.STATUS.NOT_DONE &&
-                 task.status != Task.STATUS.IN_PROCESS
-                )
+                (endDate.equals(today) && !task.isFinished())
                 ||
-                (task.intervalFinishedTime.toString().equals(today))
+                (task.intervalFinishedTime.toString().equals(today) &&
+                 task.finishedTimespan == Timespan.TODAY)
                )
                 todayTasks.add(task);
         }
@@ -300,9 +297,7 @@ public class TaskList extends AppCompatActivity {
                  startDate.compareTo(endOfWeek) <= 0 &&
                  endDate.compareTo(startOfWeek) > 0 &&
                  endDate.compareTo(endOfWeek) <= 0 &&
-                 task.status != Task.STATUS.DONE &&
-                 task.status != Task.STATUS.NOT_DONE &&
-                 task.status != Task.STATUS.IN_PROCESS)
+                 !task.isFinished())
                  ||
                 (endDate.compareTo(startOfWeek) > 0 &&
                  endDate.compareTo(endOfWeek) <= 0 &&
@@ -311,7 +306,8 @@ public class TaskList extends AppCompatActivity {
                  !startDate.equals(endDate)
                 )
                  ||
-                (task.intervalFinishedTime.toString().equals(endOfWeek))
+                (task.intervalFinishedTime.toString().equals(endOfWeek) &&
+                 task.finishedTimespan == Timespan.WEEK)
                ) {
                    if (!todayTasks.contains(task))
                        weekTasks.add(task);
@@ -333,12 +329,11 @@ public class TaskList extends AppCompatActivity {
                  startDate.compareTo(endOfMonth) <= 0 &&
                  endDate.compareTo(startOfMonth) >= 0 &&
                  endDate.compareTo(endOfMonth) <= 0 &&
-                 task.status != Task.STATUS.DONE &&
-                 task.status != Task.STATUS.NOT_DONE &&
-                 task.status != Task.STATUS.IN_PROCESS
+                 !task.isFinished()
                 )
                 ||
-                (task.intervalFinishedTime.toString().equals(endOfMonth))
+                (task.intervalFinishedTime.toString().equals(endOfMonth) &&
+                 task.finishedTimespan == Timespan.MONTH)
                ) {
                    if (!todayTasks.contains(task) && !weekTasks.contains(task))
                        monthTasks.add(task);
@@ -357,12 +352,11 @@ public class TaskList extends AppCompatActivity {
                 ||
                 (endDate.compareTo(startOfYear) >= 0 &&
                  endDate.compareTo(endOfYear) <= 0 &&
-                 task.status != Task.STATUS.DONE &&
-                 task.status != Task.STATUS.NOT_DONE &&
-                 task.status != Task.STATUS.IN_PROCESS
+                 !task.isFinished()
                 )
                 ||
-                (task.intervalFinishedTime.toString().equals(endOfYear))
+                (task.intervalFinishedTime.toString().equals(endOfYear) &&
+                 task.finishedTimespan == Timespan.YEAR)
             ) {
                 if (!todayTasks.contains(task) && !weekTasks.contains(task) && !monthTasks.contains(task))
                     yearTasks.add(task);

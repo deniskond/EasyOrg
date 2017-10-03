@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import nosfie.easyorg.DataStructures.DayValues;
 import nosfie.easyorg.DataStructures.Task;
@@ -56,7 +57,6 @@ public class TaskCalendar extends AppCompatActivity {
         colorTaskInProcess = 0,
         colorTaskPostponed = 0;
     DayValues dayValues;
-    Calendar todayCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +67,9 @@ public class TaskCalendar extends AppCompatActivity {
         actionBar.hide();
 
         // Setting variables primary values
-        todayCalendar = Calendar.getInstance();
-        startMonth = todayCalendar.get(Calendar.MONTH) + 1;
-        startYear = todayCalendar.get(Calendar.YEAR);
+        dayValues = new DayValues(this);
+        startMonth = dayValues.today.month;
+        startYear = dayValues.today.year;
         DP = convertDpToPixels(this, 1);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         colorTaskActual = preferences.getInt("colorTaskActual", -1);
@@ -77,7 +77,6 @@ public class TaskCalendar extends AppCompatActivity {
         colorTaskFailed = preferences.getInt("colorTaskFailed", -1);
         colorTaskInProcess = preferences.getInt("colorTaskInProcess", -1);
         colorTaskPostponed = preferences.getInt("colorTaskPostponed", -1);
-        dayValues = new DayValues(this);
 
         // Setting up view elements
         tasksCalendar = (LinearLayout)findViewById(R.id.tasks_calendar);
@@ -135,7 +134,7 @@ public class TaskCalendar extends AppCompatActivity {
         });
 
         // Drawing todayCalendar for the current month
-        drawTasksCalendar(todayCalendar.get(Calendar.YEAR), todayCalendar.get(Calendar.MONTH));
+        drawTasksCalendar(startYear, startMonth - 1);
     }
 
     private void drawTasksCalendar(int year, int month) {
@@ -168,8 +167,7 @@ public class TaskCalendar extends AppCompatActivity {
                     calendar.get(Calendar.YEAR));
 
         if (currentDayLayout != null &&
-                ((int)todayCalendar.get(Calendar.MONTH) == month &&
-                 (int)todayCalendar.get(Calendar.YEAR) == year)) {
+                (dayValues.today.month == month && dayValues.today.year == year)) {
             scrollView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -330,11 +328,21 @@ public class TaskCalendar extends AppCompatActivity {
         dayNameParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         dayNameParams.addRule(RelativeLayout.CENTER_VERTICAL);
         dayName.setLayoutParams(dayNameParams);
-        dayName.setTextColor(0xFF333333);
+        if (day == dayValues.today.day &&
+            month == dayValues.today.month &&
+            year == dayValues.today.year)
+                dayName.setTextColor(0xFF006BA2);
+        else
+            dayName.setTextColor(0xFF333333);
         dayName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        if (day != 0)
-            dayName.setText(day + " " + getHumanMonthNameGenitive(month) +
-                    " (" + getDayOfWeekStr(year, month, day) + ")");
+        if (day != 0) {
+            if (Locale.getDefault().getDisplayLanguage().toLowerCase().equals("english"))
+                dayName.setText(getHumanMonthName(month, true) + ", " + day +
+                        " (" + getDayOfWeekStr(year, month, day) + ")");
+            else
+                dayName.setText(day + " " + getHumanMonthNameGenitive(month) +
+                        " (" + getDayOfWeekStr(year, month, day) + ")");
+        }
         dayName.setTypeface(null, Typeface.BOLD);
 
         dayNameRelative.addView(dayNameBg);

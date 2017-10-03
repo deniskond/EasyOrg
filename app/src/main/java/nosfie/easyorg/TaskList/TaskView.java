@@ -543,6 +543,7 @@ public class TaskView {
                 if (task.currentCount == task.count)
                     task.status = Task.STATUS.DONE;
                 task.intervalFinishedTime = getTaskIntervalFinishedTime(context, task, initialStatus);
+                task.finishedTimespan = globalTimespan;
                 task.synchronize(context);
                 try {
                     stateCallback.call();
@@ -616,6 +617,7 @@ public class TaskView {
                 LinearLayout taskRow = (LinearLayout)rootView.findViewById(task.id);
                 taskRow.setBackgroundColor(color);
                 task.intervalFinishedTime = getTaskIntervalFinishedTime(context, task, initialStatus);
+                task.finishedTimespan = globalTimespan;
                 task.synchronize(context);
                 try {
                     stateCallback.call();

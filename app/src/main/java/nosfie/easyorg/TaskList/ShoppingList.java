@@ -143,7 +143,9 @@ public class ShoppingList extends AppCompatActivity {
                                     intervalFinishedTime = dayValues.today;
                                     break;
                             }
-                            intervalFinishedQuery = ", intervalFinishedTime = '" + intervalFinishedTime.toString() + "'";
+                            intervalFinishedQuery = ", intervalFinishedTime = '"
+                                    + intervalFinishedTime.toString() + "|" + globalTimespan.toString()
+                                    + "'";
                         }
 
                         DB = tasksConnector.getWritableDatabase();
