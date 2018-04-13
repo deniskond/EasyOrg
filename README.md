@@ -5,6 +5,7 @@
 * This repository contains source code for EasyOrg application for Android
 * EasyOrg is an organizer application which allows comfortable time and task management
 * Current version is 1.02
+* EasyOrg on Google Play: https://play.google.com/store/apps/details?id=nosfie.easyorg
 
 ### Deployment instructions ###
 
